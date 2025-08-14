@@ -1,0 +1,15 @@
+{
+  "name": "client-site",
+  "private": true,
+  "workspaces": ["web", "api"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev-api\" \"npm run dev-web\"",
+    "dev-api": "npm --workspace api run dev",
+    "dev-web": "npm --workspace web run dev",
+    "build": "npm --workspace api run build && npm --workspace web run build",
+    "start": "npm --workspace api run start & npm --workspace web run preview"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../server/node_modules/.prisma/client"
+}
+
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Level {
+  FIRST
+  SECOND
+  THIRD
+}
+
+model Restaurant {
+  id           Int      @id @default(autoincrement())
+  name         String
+  level        Level
+  city         String?
+  address      String?
+  phone        String?
+  hechsher     String?
+  description  String?
+  images       Json              // <-- no default here
+  website      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
