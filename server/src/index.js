@@ -7,9 +7,9 @@ import morgan from 'morgan';
 
 import authRoute from './routes/authRoute.js';
 import restaurantsRoute from './routes/restaurants.js';
-// import articlesRoutes from "./routes/articles.js";
-// import rabanimRoutes from "./routes/rabanim.js";
-// import hechsheirimRoutes from "./routes/hechsheirim.js";
+import articlesRoutes from "./routes/articles.js";
+import rabanimRoutes from "./routes/rabanim.js";
+import hechsheirimRoutes from "./routes/hechsheirim.js";
 import usersRoute from "./routes/usersRoute.js";
 import contactRoute from "./routes/contactRoute.js";
 
@@ -29,9 +29,9 @@ app.use(passport.initialize());
 
 // routes
 app.use('/auth', authRoute);
-// app.use("/articles", articlesRoutes);
-// app.use("/rabanim", rabanimRoutes);
-// app.use("/hechsheirim", hechsheirimRoutes);
+app.use("/articles", articlesRoutes);
+app.use("/rabanim", rabanimRoutes);
+app.use("/hechsheirim", hechsheirimRoutes);
 app.use('/restaurants', restaurantsRoute);
 app.use('/users', usersRoute);
 app.use('/contact', contactRoute);

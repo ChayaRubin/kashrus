@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-// Small helper so we never return password hashes
 const userSelect = {
   id: true,
   name: true,
@@ -24,70 +23,57 @@ export async function getUserById(id) {
   });
 }
 
+const toBool = (v) => v === true || v === 1 || v === "1" || v === "true";
+
 export async function createUser({ name, email, role = "user", can_self_book = false, password }) {
-  if (!password) {
-    throw new Error("Password is required to create a user");
-  }
+  if (!password) throw new Error("Password is required to create a user");
+
+  const canSelfBook = toBool(can_self_book);
   const password_hash = await bcrypt.hash(String(password), 10);
 
-  return prisma.user.create({
-    data: {
-      name,
-      email,
-      role,
-      can_self_book,
-      // create the related Password row
-      Password: {
-        create: { password_hash },
-      },
-    },
-    select: userSelect,
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: { name, email, role, can_self_book: canSelfBook },
+      select: userSelect,
+    });
+    await tx.password.create({ data: { userId: user.id, password_hash } });
+    return user;
   });
+
+  return result;
 }
 
 export async function updateUser(id, payload) {
   const userId = Number(id);
   const { password, ...rest } = payload;
 
-  // Build update data for the User model
-  const userData = {};
-  if (rest.name !== undefined) userData.name = rest.name;
-  if (rest.email !== undefined) userData.email = rest.email;
-  if (rest.role !== undefined) userData.role = rest.role;
-  if (rest.can_self_book !== undefined) userData.can_self_book = !!rest.can_self_book;
+  const data = {};
+  if (rest.name !== undefined) data.name = rest.name;
+  if (rest.email !== undefined) data.email = rest.email;
+  if (rest.role !== undefined) data.role = rest.role;
+  if (rest.can_self_book !== undefined) data.can_self_book = toBool(rest.can_self_book);
 
-  // If no password change, simple update
   if (!password) {
-    return prisma.user.update({
-      where: { id: userId },
-      data: userData,
-      select: userSelect,
-    });
+    return prisma.user.update({ where: { id: userId }, data, select: userSelect });
   }
 
-  // If password provided, update both user and password in a transaction
   const password_hash = await bcrypt.hash(String(password), 10);
-
   const [updated] = await prisma.$transaction([
-    prisma.user.update({
-      where: { id: userId },
-      data: userData,
-      select: userSelect,
-    }),
+    prisma.user.update({ where: { id: userId }, data, select: userSelect }),
     prisma.password.upsert({
       where: { userId },
       update: { password_hash },
       create: { userId, password_hash },
     }),
   ]);
-
   return updated;
 }
+
 
 export async function deleteUser(id) {
   const userId = Number(id);
   await prisma.$transaction([
-    prisma.password.deleteMany({ where: { userId } }), // ensure no orphaned password row
+    prisma.password.deleteMany({ where: { userId } }),
     prisma.user.delete({ where: { id: userId } }),
   ]);
   return { ok: true };

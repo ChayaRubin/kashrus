@@ -2,18 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { Restaurants } from '../../../app/api.js';
 import { useNavigate } from 'react-router-dom';
 
+const ALL_LEVELS = ['FIRST', 'SECOND', 'THIRD'];
+const ALL_TYPES = [
+  'MEAT',
+  'DAIRY',
+  'FAST_FOOD',
+  'SIT_DOWN',
+  'BAGELS',
+  'SUSHI',
+  'PIZZA',
+  'FALAFEL',
+  'ICE_CREAM',
+];
+
 export default function AdminRestaurants() {
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
   const nav = useNavigate();
 
-  async function load() {
-    setLoading(true);
-    try {
-      const list = await Restaurants.list();
-      setItems(list);
-    } finally { setLoading(false); }
+async function load() {
+  setLoading(true);
+  try {
+    const list = await Restaurants.listAll(); // ✅ new API
+    setItems(list);
+  } finally {
+    setLoading(false);
   }
+}
+
 
   useEffect(() => { load(); }, []);
 
@@ -34,7 +50,13 @@ export default function AdminRestaurants() {
       {!items?.length ? <p>No restaurants yet.</p> : (
         <table style={{ width:'100%', borderCollapse:'collapse' }}>
           <thead>
-            <tr><th align="left">Name</th><th>Level</th><th>City</th><th>Hechsher</th><th></th></tr>
+            <tr>
+              <th align="left">Name</th>
+              <th>Level</th>
+              <th>City</th>
+              <th>Hechsher</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {items.map(r => (

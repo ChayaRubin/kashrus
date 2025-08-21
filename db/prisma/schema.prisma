@@ -1,8 +1,8 @@
 generator client {
   provider = "prisma-client-js"
-  envFiles = ["../db/prisma/.env"]  // 👈 only load this .env
+  output   = "../../node_modules/.prisma/client"
+  envFiles = ["../db/prisma/.env"]
 }
-
 
 datasource db {
   provider = "sqlite"

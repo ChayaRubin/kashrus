@@ -4,37 +4,52 @@ import styles from './AdminUsers.module.css';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({ name: '', email: '', role: 'user', can_self_book: 0, password: '', id: null });
+  const [form, setForm] = useState({
+    id: null,
+    name: '',
+    email: '',
+    role: 'user',
+    can_self_book: false,   // boolean!
+    password: ''
+  });
   const [editingId, setEditingId] = useState(null);
   const [editedUser, setEditedUser] = useState({});
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const fetchUsers = async () => {
+  async function fetchUsers() {
     try {
       const { data } = await axios.get('http://localhost:5000/users', { withCredentials: true });
       setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('שגיאה בשליפת משתמשים:', err);
+      console.error('Error fetching users:', err);
+    }
+  }
+
+  function setFormField(field, value) {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = { ...form };
+    try {
+      await axios.post('http://localhost:5000/users', payload, { withCredentials: true });
+      setForm({ id: null, name: '', email: '', role: 'user', can_self_book: false, password: '' });
+      fetchUsers();
+    } catch (err) {
+      console.error('Error creating user:', err);
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const payload = { ...form };
-  try {
-    await axios.post('http://localhost:5000/users', payload, { withCredentials: true });
-    setForm({ name: '', email: '', role: 'user', can_self_book: 0, password: '', id: null });
-    fetchUsers();
-  } catch (err) {
-    console.error('שגיאה ביצירה:', err);
-  }
-};
-
-
   const handleEdit = (user) => {
     setEditingId(user.id);
-    setEditedUser({ name: user.name, email: user.email, role: user.role || 'user', can_self_book: user.can_self_book });
+    setEditedUser({
+      name: user.name,
+      email: user.email,
+      role: user.role || 'user',
+      can_self_book: !!user.can_self_book, // ensure boolean
+    });
   };
 
   const handleSave = async (id) => {
@@ -44,7 +59,7 @@ const handleSubmit = async (e) => {
       setEditedUser({});
       fetchUsers();
     } catch (err) {
-      console.error('שגיאה בעדכון:', err);
+      console.error('Error updating user:', err);
     }
   };
 
@@ -53,23 +68,15 @@ const handleSubmit = async (e) => {
       await axios.delete(`http://localhost:5000/users/${id}`, { withCredentials: true });
       fetchUsers();
     } catch (err) {
-      console.error('שגיאה במחיקה:', err);
+      console.error('Error deleting user:', err);
     }
   };
-  // All Hebrew strings translated to English
-  // Error messages
-  // 'שגיאה בשליפת משתמשים:' => 'Error fetching users:'
-  // 'שגיאה ביצירה:' => 'Error creating user:'
-  // 'שגיאה בעדכון:' => 'Error updating user:'
-  // 'שגיאה במחיקה:' => 'Error deleting user:'
 
-  // Replace error logs
-  // (already done in the code above, just update the strings in the catch blocks)
   const renderInput = (field, type = 'text', placeholder = '') => (
     <input
       type={type}
       value={form[field]}
-      onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+      onChange={(e) => setFormField(field, e.target.value)}
       className={styles.input}
       placeholder={placeholder}
       required
@@ -78,12 +85,17 @@ const handleSubmit = async (e) => {
 
   const renderSelect = (field, options) => (
     <select
-      value={form[field]}
-      onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+      value={String(form[field])}
+      onChange={(e) => {
+        const val = e.target.value;
+        // for booleans coming from a <select>
+        const parsed = val === 'true' ? true : val === 'false' ? false : val;
+        setFormField(field, parsed);
+      }}
       className={`${styles.input} ${styles.selectCompact}`}
     >
       {options.map(([val, label]) => (
-        <option key={val} value={val}>{label}</option>
+        <option key={String(val)} value={String(val)}>{label}</option>
       ))}
     </select>
   );
@@ -96,9 +108,11 @@ const handleSubmit = async (e) => {
         {renderInput('name', 'text', 'Full Name')}
         {renderInput('email', 'email', 'Email')}
         {renderSelect('role', [['user', 'User'], ['admin', 'Admin']])}
-        {renderSelect('can_self_book', [['0', 'No'], ['1', 'Yes']])}
+        {renderSelect('can_self_book', [['false', 'No'], ['true', 'Yes']])}
         {!form.id && renderInput('password', 'password', 'Password')}
-        <button type="submit" className={styles.saveButton}>{form.id ? 'Update' : 'Create User'}</button>
+        <button type="submit" className={styles.saveButton}>
+          {form.id ? 'Update' : 'Create User'}
+        </button>
       </form>
 
       <table className={styles.userTable}>
@@ -137,12 +151,14 @@ const handleSubmit = async (e) => {
               <td>
                 {editingId === user.id ? (
                   <select
-                    value={editedUser.can_self_book}
-                    onChange={(e) => setEditedUser({ ...editedUser, can_self_book: e.target.value })}
+                    value={String(editedUser.can_self_book)}
+                    onChange={(e) =>
+                      setEditedUser({ ...editedUser, can_self_book: e.target.value === 'true' })
+                    }
                     className={styles.selectCompact}
                   >
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
                   </select>
                 ) : user.can_self_book ? '✔️' : '❌'}
               </td>

@@ -17,19 +17,22 @@ import Login from '../../pages/public/Auth/Login.jsx';
 import SignUp from '../../pages/public/Auth/SignUp.jsx';
 import CategoryPage from '../../pages/public/CategoryPage/CategoryPage.jsx';
 import TypePage from '../../pages/public/TypePage/TypePage.jsx';
-// import Articles from '../../pages/public/Articles/Articles.jsx';
-// import Hechsheirim from '../../pages/public/Hechsheirim/Hechsheirim.jsx';
-// import Rabanim from '../../pages/public/Rabanim/Rabanim.jsx';
+import Articles from '../../pages/public/Articles/Articles.jsx';
+import Hechsheirim from '../../pages/public/Hechsheirim/Hechsheirim.jsx';
+import Rabanim from '../../pages/public/Rabanim/Rabanim.jsx';
 import AboutUs from '../../pages/public/AboutUs/AboutUs.jsx';
 
 // admin pages
 import Dashboard from '../../pages/admin/Dashboard/Dashboard.jsx';
 import AdminRestaurants from '../../pages/admin/Restaurants/Restaurants.jsx';
 import RestaurantForm from '../../pages/admin/RestaurantForm/RestaurantForm.jsx';
-import AdminArticles from '../../pages/admin/AdminArticles/AdminArticles.jsx';
-import AdminRabanim from '../../pages/admin/AdminRabanim/AdminRabanim.jsx';
-import AdminHechsheirim from '../../pages/admin/AdminHechsheirim/AdminHechsheirim.jsx';
+import AdminArticles from '../../pages/admin/AdminArticles/List.jsx';
+import AdminRabanim from '../../pages/admin/AdminRabanim/List.jsx';
+import AdminHechsheirim from '../../pages/admin/AdminHechsheirim/List.jsx';
 import AdminUsers from '../../pages/admin/AdimUsers/AdminUsers.jsx';
+import HechsheirimForm from  '../../pages/admin/AdminHechsheirim/Form.jsx';
+import RabanimForm from '../../pages/admin/AdminRabanim/Form.jsx';
+import ArticleForm from '../../pages/admin/AdminArticles/Form.jsx';
 
 export const router = createBrowserRouter([
   // PUBLIC
@@ -43,16 +46,16 @@ export const router = createBrowserRouter([
       // browse flow: Category -> Type -> Results (levels come from context)
       { path: 'browse', element: <CategoryPage /> },
       { path: 'browse/:category', element: <TypePage /> },
-      { path: 'browse/:category/:type', element: <LevelPage /> }, 
+      { path: 'browse/:category/:type', element: <LevelPage /> },
 
       // details
       { path: 'restaurant/:id', element: <RestaurantDetail /> },
 
       // misc public
       { path: 'about', element: <AboutUs /> },
-      // { path: 'articles', element: <Articles /> },
-      // { path: 'hechsheirim', element: <Hechsheirim /> },
-      // { path: 'rabanim', element: <Rabanim /> },
+      { path: 'articles', element: <Articles /> },
+      { path: 'hechsheirim', element: <Hechsheirim /> },
+      { path: 'rabanim', element: <Rabanim /> },
 
       // auth
       { path: 'login', element: <Login /> },
@@ -69,13 +72,25 @@ export const router = createBrowserRouter([
     ),
     children: [
       { path: '/admin', element: <Dashboard /> },
+
+      // restaurants
       { path: '/admin/restaurants', element: <AdminRestaurants /> },
       { path: '/admin/restaurants/new', element: <RestaurantForm /> },
       { path: '/admin/restaurants/:id', element: <RestaurantForm /> },
+
+      // users
       { path: '/admin/users', element: <AdminUsers /> },
+
+      // content management
       { path: '/admin/articles', element: <AdminArticles /> },
       { path: '/admin/rabanim', element: <AdminRabanim /> },
       { path: '/admin/hechsheirim', element: <AdminHechsheirim /> },
+      { path: '/admin/hechsheirim/new', element: <HechsheirimForm /> },
+      { path: '/admin/hechsheirim/:id', element: <HechsheirimForm /> },
+      { path: '/admin/rabanim/new', element: <RabanimForm /> },
+      { path: '/admin/rabanim/:id', element: <RabanimForm /> },
+      { path: '/admin/articles/new', element: <ArticleForm /> },
+      { path: '/admin/articles/:id', element: <ArticleForm /> }
     ],
   },
 ]);

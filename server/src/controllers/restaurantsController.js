@@ -81,6 +81,19 @@ export async function getById(req, res) {
   }
 }
 
+// in restaurantsController.js
+export async function listAll(req, res) {
+  try {
+    const rows = await restaurantsService.list({
+      orderBy: { name: 'asc' },
+    });
+    res.json(rows);
+  } catch (err) {
+    console.error("restaurantsController.listAll error:", err);
+    res.status(500).json({ error: "Failed to load restaurants" });
+  }
+}
+
 // create/update/remove can stay as you had them
 
 
