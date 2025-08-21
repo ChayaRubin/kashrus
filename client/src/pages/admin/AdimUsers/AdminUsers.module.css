@@ -1,0 +1,228 @@
+
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Heebo', sans-serif;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  color: #BE5F66;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
+
+.formSection {
+  background-color: #fff0f2;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  min-width: 220px;
+  transition: 0.3s ease;
+}
+
+.input:focus {
+  border-color: #BE5F66;
+  box-shadow: 0 0 6px rgba(190, 95, 102, 0.3);
+  outline: none;
+}
+
+.saveButton {
+  background: linear-gradient(90deg, #BE5F66 0%, #E37E7D 100%);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(190, 95, 102, 0.2);
+}
+
+.saveButton:hover {
+  background: linear-gradient(90deg, #E37E7D 0%, #BE5F66 100%);
+  box-shadow: 0 4px 12px rgba(190, 95, 102, 0.25);
+}
+
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+.userTable thead {
+  background-color: #ffe6e6;
+  color: #BE5F66;
+  font-weight: bold;
+}
+
+.userTable th,
+.userTable td {
+  padding: 1.2rem;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.userTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.userRow:hover {
+  background-color: #fff6f7;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.editButton,
+.deleteButton {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #BE5F66;
+  transition: transform 0.2s ease, color 0.2s ease;
+  color: white;
+}
+
+.editButton:hover {
+  color: #8c3c42;
+  transform: scale(1.2);
+}
+
+.deleteButton:hover {
+  color: #d81b27;
+  transform: scale(1.2);
+}
+
+/* רספונסיביות למובייל */
+@media (max-width: 600px) {
+  .formSection {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .saveButton {
+    width: 100%;
+  }
+
+  .userTable {
+    font-size: 0.9rem;
+  }
+
+  .userTable th,
+  .userTable td {
+    padding: 0.75rem;
+  }
+}
+
+.saveButton {
+  background: linear-gradient(90deg, #28a745 60%, #218838 100%);
+  color: white;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.15);
+}
+
+.saveButton:hover {
+  background: linear-gradient(90deg, #218838 60%, #28a745 100%);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25);
+}
+
+.cancelButton {
+  background: linear-gradient(90deg, #BE5F66 60%, #E37E7D 100%);
+  color: white;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(255, 105, 135, 0.15);
+}
+
+.cancelButton:hover {
+  background: linear-gradient(90deg, #E37E7D 60%, #BE5F66 100%);
+  box-shadow: 0 4px 12px rgba(255, 105, 135, 0.25);
+}
+
+/* בתוך תא טבלה – אינפוטים ושדות עריכה יהיו קטנים ומרוכזים */
+.userRow input,
+.userRow select {
+  width: 100%;
+  max-width: 160px;
+  font-size: 0.85rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.userTable td {
+  vertical-align: middle;
+}
+
+/* עריכת שורה בטבלה - קומפקטי */
+.userRow input,
+.userRow select {
+  width: 100%;
+  max-width: 140px;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* תא טבלה יותר הדוק */
+.userTable td {
+  padding: 0.5rem 0.25rem;
+  vertical-align: middle;
+}
+
+/* כפתורי פעולה קטנים */
+.actions button {
+  font-size: 1rem;
+  padding: 4px 8px;
+}
+
+.selectCompact {
+  max-width: 100px;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-align: center;
+}

@@ -1,19 +1,34 @@
+// src/layouts/AdminLayout/AdminLayout.jsx
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import Navbar from '../../components/Navbar/Navbar.jsx';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 export default function AdminLayout() {
-  return (
-    <div style={{ fontFamily:'system-ui, sans-serif' }}>
-      <Navbar />
-      <main style={{ maxWidth:1100, margin:'0 auto', padding:20 }}>
-        <h2 style={{ marginTop:0 }}>Admin</h2>
-        <div style={{ display:'flex', gap:16, marginBottom:16 }}>
-          <NavLink to="/admin" end>Dashboard</NavLink>
-          <NavLink to="/admin/restaurants">Restaurants</NavLink>
-        </div>
-        <Outlet />
-      </main>
-    </div>
-  );
+	const { pathname } = useLocation();
+	const Item = ({ to, children }) => (
+		<Link to={to} style={{
+			padding: '8px 10px',
+			borderRadius: 8,
+			background: pathname === to ? '#eef4ff' : 'transparent',
+			textDecoration: 'none'
+		}}>{children}</Link>
+	);
+
+	return (
+		<div>
+			<header style={{
+				display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+				padding: 16, borderBottom: '1px solid #eee', background: '#fff', position: 'sticky', top: 0, zIndex: 10
+			}}>
+				<h3 style={{ margin: 0 }}>Admin</h3>
+				<nav style={{ display: 'flex', gap: 8 }}>
+					<Item to="/admin">Dashboard</Item>
+					<Item to="/admin/restaurants">Restaurants</Item>
+					<Item to="/admin/users">Manage Users</Item>
+				</nav>
+			</header>
+			<main style={{ padding: 20 }}>
+				<Outlet />
+			</main>
+		</div>
+	);
 }

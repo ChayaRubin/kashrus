@@ -1,12 +1,13 @@
 import React from 'react';
-import { useAuth } from '../../../app/auth/auth.jsx';
+import { useAuth } from '../../../contexts/AuthContext.jsx';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user } = useAuth() || {};
+
   return (
-    <div>
+    <div style={{ display:'grid', gap:16 }}>
       <p>Welcome, {user?.email}</p>
-      <p>Use the sidebar to manage restaurants.</p>
+      <p>Use the sidebar to navigate between admin sections.</p>
     </div>
   );
 }

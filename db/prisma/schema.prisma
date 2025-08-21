@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../../server/node_modules/.prisma/client"
+  envFiles = ["../db/prisma/.env"]  // 👈 only load this .env
 }
 
 
@@ -9,23 +9,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 enum Level {
   FIRST
   SECOND
   THIRD
 }
 
+enum Category { 
+  MEAT 
+  DAIRY 
+}
+
+enum RType { 
+  FAST_FOOD 
+  SIT_DOWN 
+  BAGELS 
+  SUSHI 
+  PIZZA 
+  FALAFEL 
+  ICE_CREAM 
+  }
+
 model Restaurant {
-  id           Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  name        String
+  city        String?
+  address     String?
+  phone       String?
+  hechsher    String?
+  website     String?
+  images      String?
+  level       Level
+  category    Category?
+  type        RType?
+
+  @@index([category, type, level])
+}
+
+
+model User {
+  id           Int       @id @default(autoincrement())
   name         String
-  level        Level
-  city         String?
-  address      String?
-  phone        String?
-  hechsher     String?
-  description  String?
-  images       Json              // <-- no default here
-  website      String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  email        String    @unique
+  role         String
+  can_self_book Boolean  @default(false)
+  Password     Password?
+}
+
+model Password {
+  userId       Int    @id
+  password_hash String
+  User         User   @relation(fields: [userId], references: [id])
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rabbi {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bio       String?
+  area      String?
+}
+
+model Hechsher {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  symbolUrl String?   // optional link to logo
 }

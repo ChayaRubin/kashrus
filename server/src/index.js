@@ -1,25 +1,44 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
 import morgan from 'morgan';
-import restaurants from './routes/restaurants.js';
-import { errorHandler } from './middleware/error.js';
+
+import authRoute from './routes/authRoute.js';
+import restaurantsRoute from './routes/restaurants.js';
+// import articlesRoutes from "./routes/articles.js";
+// import rabanimRoutes from "./routes/rabanim.js";
+// import hechsheirimRoutes from "./routes/hechsheirim.js";
+import usersRoute from "./routes/usersRoute.js";
+import contactRoute from "./routes/contactRoute.js";
+
+
+import './controllers/googleAuth.js'; 
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+
 app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(express.json());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+}));
+app.use(passport.initialize());
 
-app.get('/api', (_req, res) => res.json({ ok: true }));
-app.use('/api/restaurants', restaurants);
+// routes
+app.use('/auth', authRoute);
+// app.use("/articles", articlesRoutes);
+// app.use("/rabanim", rabanimRoutes);
+// app.use("/hechsheirim", hechsheirimRoutes);
+app.use('/restaurants', restaurantsRoute);
+app.use('/users', usersRoute);
+app.use('/contact', contactRoute);
 
-// simple login stub (you can swap later)
-app.post('/api/login', (req, res) => {
-  const { email } = req.body || {};
-  if (!email) return res.status(400).json({ error: 'Missing email' });
-  res.json({ token: 'demo-token', user: { email } });
-});
 
-app.use(errorHandler);
+// health check
+app.get('/', (_req, res) => res.json({ ok: true }));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));

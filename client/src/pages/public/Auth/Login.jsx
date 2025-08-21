@@ -1,24 +1,25 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-//import { useUser } from '../../../../contexts/AuthContext.jsx';
+import styles from './AuthForm.module.css';
+import { useUser } from '../../../contexts/AuthContext.jsx';
+import { Auth } from '../../../app/api.js';   // ✅ use the Auth service we defined in api.js
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [generalError, setGeneralError] = useState('');
   const navigate = useNavigate();
-  const { login } = useUser(); 
+  const { login } = useUser();
 
   const validateForm = () => {
     const errs = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!form.email || !emailRegex.test(form.email)) {
-      errs.email = 'יש להזין אימייל תקין';
+      errs.email = 'Please enter a valid email';
     }
     if (!form.password) {
-      errs.password = 'יש להזין סיסמה';
+      errs.password = 'Please enter a password';
     }
 
     setErrors(errs);
@@ -32,19 +33,15 @@ export default function Login() {
     if (!validateForm()) return;
 
     try {
-      await axios.post('http://localhost:3000/auth/login', {
-        email: form.email,
-        password: form.password
-      }, { withCredentials: true });
-
-      await login(); 
-      alert("התחברת בהצלחה");
+      await Auth.login(form.email, form.password);   // ✅ use shared api
+      await login(form.email, form.password);
+      alert("Logged in successfully");
       navigate("/home");
     } catch (err) {
-      if (err.response?.status === 401) {
-        setGeneralError("אימייל או סיסמה שגויים");
+      if (err.message.includes("401")) {
+        setGeneralError('Email or Password is incorrect');
       } else {
-        setGeneralError("שגיאה במערכת, נסה שוב מאוחר יותר");
+        setGeneralError("System error, please try again later");
         console.error(err);
       }
     }
@@ -68,7 +65,7 @@ export default function Login() {
 
         <input
           name="email"
-          placeholder="אימייל"
+          placeholder="Email"
           value={form.email}
           onChange={handleChange("email")}
           className={`${styles.authInput} ${errors.email ? styles.invalid : ''}`}
@@ -78,25 +75,27 @@ export default function Login() {
         <input
           name="password"
           type="password"
-          placeholder="סיסמה"
+          placeholder="Password"
           value={form.password}
           onChange={handleChange("password")}
           className={`${styles.authInput} ${errors.password ? styles.invalid : ''}`}
         />
         {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-        <button className={styles.authButton}>התחבר</button>
+        <button className={styles.authButton}>Log In</button>
 
-        <a href="http://localhost:3000/auth/google" className={styles.socialButton}>
+        <a href="http://localhost:5000/auth/google" className={styles.socialButton}>
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google"
             className={styles.socialIcon}
           />
-          התחברות עם Google
+          Continue with Google
         </a>
 
-        <Link to="/signup" className={styles.authLink}>אין לך חשבון? להרשמה</Link>
+        <Link to="/signup" className={styles.authLink}>
+          Don’t have an account? Sign up
+        </Link>
       </form>
     </div>
   );

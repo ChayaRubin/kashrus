@@ -1,22 +1,59 @@
-export async function api(path, options = {}) {
-  const res = await fetch(path, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    credentials: 'include',
-    ...options
-  });
-  if (!res.ok) {
-    let msg = '';
-    try { msg = await res.text(); } catch {}
-    throw new Error(msg || `HTTP ${res.status}`);
-  }
-  return res.status === 204 ? null : res.json();
-}
+// client/src/app/api.js
+import axios from "axios";
 
-// typed helpers used in admin pages
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  withCredentials: true,
+});
+
 export const Restaurants = {
-  list: (level) => api(`/api/restaurants${level ? `?level=${level}` : ''}`),
-  get: (id) => api(`/api/restaurants/${id}`),
-  create: (data) => api('/api/restaurants', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id, data) => api(`/api/restaurants/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
-  remove: (id) => api(`/api/restaurants/${id}`, { method: 'DELETE' }),
+  async list(filters = {}) {
+    const params = {};
+    if (filters.q) params.q = String(filters.q);
+    if (filters.category) params.category = String(filters.category);
+
+    if (filters.types) {
+      const arr = Array.isArray(filters.types)
+        ? filters.types
+        : String(filters.types).split(",").map(s => s.trim()).filter(Boolean);
+      if (arr.length) params.types = arr.join(",");
+    }
+
+    if (filters.levels) {
+      const arr = Array.isArray(filters.levels)
+        ? filters.levels
+        : String(filters.levels).split(",").map(s => s.trim()).filter(Boolean);
+      if (arr.length) params.levels = arr.join(",");
+    }
+
+    const { data } = await api.get("/restaurants", { params });
+    return data;
+  },
+
+  async get(id) {
+    const { data } = await api.get(`/restaurants/${id}`);
+    return data;
+  },
 };
+
+// ---- Auth service ----
+export const Auth = {
+  async login(email, password) {
+    await api.post("/auth/login", { email, password });
+    const { data } = await api.get("/auth/me");
+    return data;
+  },
+  async signup(name, email, password) {
+    const { data } = await api.post("/auth/signup", { name, email, password });
+    return data.user;
+  },
+  async me() {
+    const { data } = await api.get("/auth/me");
+    return data;
+  },
+  async logout() {
+    await api.post("/auth/logout", {});
+  },
+};
+
+export { api };

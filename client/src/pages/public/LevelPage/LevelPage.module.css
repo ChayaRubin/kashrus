@@ -1,0 +1,24 @@
+.wrap { display: grid; gap: 16px; }
+.title { margin: 0; }
+
+.levelGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.levelBtn {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fff;
+  cursor: pointer;
+}
+.levelBtn:hover { border-color: #ddd; }
+
+.cards {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}

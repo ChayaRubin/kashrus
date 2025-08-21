@@ -1,10 +1,34 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../app/auth/auth.jsx';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
 export default function Navbar() {
-  const nav = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const onLogout = async () => {
+    try {
+      await logout?.();
+    } finally {
+      navigate('/login');
+    }
+  };
+
+  const goContact = (e) => {
+    e.preventDefault();
+    const doScroll = () => {
+      const el = document.getElementById('contact');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    if (location.pathname !== '/') {
+      navigate('/#contact');
+      setTimeout(doScroll, 0);
+    } else {
+      doScroll();
+    }
+  };
 
   return (
     <header style={{
@@ -15,21 +39,21 @@ export default function Navbar() {
         <NavLink to="/" style={{ textDecoration:'none', fontWeight:700 }}>Kashrus Web</NavLink>
         <nav style={{ display:'flex', gap:12 }}>
           <NavLink to="/" end>Home</NavLink>
-          <NavLink to="/level/FIRST">First</NavLink>
-          <NavLink to="/level/SECOND">Second</NavLink>
-          <NavLink to="/level/THIRD">Third</NavLink>
+          <NavLink to='/about'>About Us</NavLink>
+          <a href="/#contact" onClick={goContact}>Contact</a>
+          <NavLink to="/hechsheirim">Our Hechshirim</NavLink>
+          <NavLink to="/rabanim">Our Rabbanim</NavLink>
+          <NavLink to='/articles'>Articles </NavLink>
         </nav>
       </div>
-      <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-        {user ? (
-          <>
-            <NavLink to="/admin">Admin</NavLink>
-            <button onClick={logout}>Logout</button>
-          </>
-        ) : (
-          <button onClick={() => nav('/login')}>Login</button>
-        )}
-      </div>
+      {isAuthenticated ? (
+        <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+          <NavLink to="/admin">Admin</NavLink>
+          <button onClick={onLogout}>Logout</button>
+        </div>
+      ) : (
+        <button onClick={() => navigate('/login')}>Login</button>
+      )}
     </header>
   );
 }
