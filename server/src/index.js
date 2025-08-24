@@ -12,6 +12,8 @@ import rabanimRoutes from "./routes/rabanim.js";
 import hechsheirimRoutes from "./routes/hechsheirim.js";
 import usersRoute from "./routes/usersRoute.js";
 import contactRoute from "./routes/contactRoute.js";
+import uploadRoutes from "./routes/upload.js";
+
 
 
 import './controllers/googleAuth.js'; 
@@ -35,7 +37,7 @@ app.use("/hechsheirim", hechsheirimRoutes);
 app.use('/restaurants', restaurantsRoute);
 app.use('/users', usersRoute);
 app.use('/contact', contactRoute);
-
+app.use("/upload", uploadRoutes);
 
 // health check
 app.get('/', (_req, res) => res.json({ ok: true }));

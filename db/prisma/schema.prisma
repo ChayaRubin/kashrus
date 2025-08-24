@@ -82,5 +82,5 @@ model Hechsher {
   id        Int      @id @default(autoincrement())
   name      String
   description String?
-  symbolUrl String?   // optional link to logo
+  symbolUrl String?   
 }

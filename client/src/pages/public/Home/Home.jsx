@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slideshow from '../../../components/Slideshow/Slideshow.jsx';
 import CategoryPage from '../CategoryPage/CategoryPage.jsx';
 import ContactSection from '../../../components/ContactSection/ContactSection.jsx';
 import { Restaurants } from '../../../app/api.js';
-import s from '../Home/Home.module.css'; // Assuming you have a CSS module for styles
+import s from '../Home/Home.module.css';
+import AboutUs from '../AboutUs/AboutUs.jsx';
 
 const slides = ['/images/food1.jpg', '/images/food2.jpg', '/images/food3.jpg'];
 
@@ -16,11 +17,21 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const boxRef = useRef(null);
 
+  // scroll to hash target on mount + hash change
   useEffect(() => {
-    if (window.location.hash === '#contact') {
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    const scrollToHash = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.substring(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+    return () => window.removeEventListener('hashchange', scrollToHash);
   }, []);
 
   // Debounced search
@@ -64,37 +75,31 @@ export default function Home() {
 
   return (
     <div className={s.wrap}>
-      <Slideshow images={slides} />
+      {/* Full-width slideshow */}
+      <div className={s.hero}>
+        <Slideshow images={slides} />
+      </div>
 
-      <div style={{ display:'flex', justifyContent:'center', margin:'20px 0', position:'relative' }} ref={boxRef}>
+      {/* Search */}
+      <div className={s.searchBox} ref={boxRef}>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a restaurant..."
-          style={{
-            width:'min(720px, 92%)', padding:'14px 16px', borderRadius:12,
-            border:'1px solid #ddd', boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
-          }}
+          className={s.searchInput}
         />
         {open && results.length > 0 && (
-          <div style={{
-            position:'absolute', top:'100%', marginTop:6, width:'min(720px, 92%)',
-            background:'#fff', border:'1px solid #eee', borderRadius:12,
-            boxShadow:'0 8px 24px rgba(0,0,0,0.08)', zIndex:20, overflow:'hidden'
-          }}>
-            {results.map(r => (
+          <div className={s.results}>
+            {results.map((r) => (
               <button
                 key={r.id}
                 onClick={() => goToRestaurant(r.id)}
-                style={{
-                  display:'flex', width:'100%', textAlign:'left', gap:12,
-                  padding:'10px 12px', border:'none', background:'#fff', cursor:'pointer'
-                }}
+                className={s.resultItem}
               >
-                <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:600 }}>{r.name}</div>
-                  <div style={{ fontSize:12, color:'#666' }}>
+                <div style={{ flex: 1 }}>
+                  <div className={s.resultName}>{r.name}</div>
+                  <div className={s.resultMeta}>
                     {[r.city, r.address, r.hechsher].filter(Boolean).join(' • ')}
                   </div>
                 </div>
@@ -103,19 +108,20 @@ export default function Home() {
           </div>
         )}
         {open && !loading && results.length === 0 && (
-          <div style={{
-            position:'absolute', top:'100%', marginTop:6, width:'min(720px, 92%)',
-            background:'#fff', border:'1px solid #eee', borderRadius:12,
-            boxShadow:'0 8px 24px rgba(0,0,0,0.08)', zIndex:20, overflow:'hidden',
-            padding:'12px 14px', color:'#666'
-          }}>
-            No results found
-          </div>
+          <div className={s.noResults}>No results found</div>
         )}
       </div>
 
-      <CategoryPage /> {/* ← just Meat + Dairy */}
-      <ContactSection />
+      {/* About Us Section */}
+      <CategoryPage />
+      <div className={s.section} id="about">
+        <AboutUs />
+      </div>
+
+      {/* Contact Section */}
+      <div className={s.section} id="contact">
+        <ContactSection />
+      </div>
     </div>
   );
 }

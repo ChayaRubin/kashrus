@@ -94,12 +94,12 @@ export default function ContactPage() {
   return (
     <div id="contact" className={styles.wrapper}>
       <div className={styles.cardContainer}>
-        <div className={styles.infoBox}>
+        {/* <div className={styles.infoBox}>
           <h2 className={styles.infoTitle}>Contact Details</h2>
           <p><strong>Phone:</strong> 0504145381</p>
           <p><strong>Email:</strong> 5321745@gmail.com</p>
           <p><strong>Address:</strong> 10 Example St, Tel Aviv</p>
-        </div>
+        </div> */}
 
         <div className={styles.card}>
           <h1 className={styles.title}>Contact Us</h1>

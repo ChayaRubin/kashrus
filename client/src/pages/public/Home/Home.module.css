@@ -1,4 +1,107 @@
+/* Page wrapper */
 .wrap {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
+}
+
+/* ===== Full‑width sections (no global util needed) ===== */
+.hero,
+.contactFull {
+  /* break out of any centered parent and span the viewport */
+  width: 100%;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  /* height: 100%; */
+}
+
+/* If your slideshow needs some vertical breathing room */
+.hero {
+  /* optional background behind the slider if you want */
+  /* background: #000; */
+}
+
+/* If you want a subtle divider before/after contact */
+.contactFull {
+  /* nothing required here; your ContactSection has its own background */
+}
+
+/* ===== Search ===== */
+.searchBox {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 20px 0;
+}
+
+.searchInput {
+  width: min(720px, 92%);
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.searchInput:focus {
+  border-color: #459BAC;
+  box-shadow: 0 0 0 3px rgba(69,155,172,.12);
+}
+
+.results,
+.noResults {
+  position: absolute;
+  top: 100%;
+  margin-top: 6px;
+  width: min(720px, 92%);
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  z-index: 20;
+  overflow: hidden;
+}
+
+.resultItem {
+  display: flex;
+  width: 100%;
+  text-align: left;
+  gap: 12px;
+  padding: 10px 12px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.resultItem:hover {
+  background: rgba(69,155,172,0.08);
+}
+
+.resultName {
+  font-weight: 600;
+}
+
+.resultMeta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.noResults {
+  padding: 12px 14px;
+  color: #666;
+}
+
+.section {
+  padding: 0px 0px;
+  background: #fff;
+  scroll-margin-top: 80px; /* adjust to navbar height */
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .wrap { gap: 18px; }
 }
