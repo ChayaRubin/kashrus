@@ -1,0 +1,121 @@
+.container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  align-items: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #459BAC;
+  text-align: center;
+}
+
+.textarea {
+  width: 90%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  align-self: center;
+
+}
+
+.button {
+  background-color: #459BAC;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 30%;
+  transition: background 0.2s ease;
+  margin-left: 34%
+}
+
+.button:hover {
+  background-color: #367f86;
+  color: white;
+}
+
+.thankyou {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 20px;
+  text-align: center;
+  color: #459BAC;
+  font-size: 1.2rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.backbutton{
+      align-self: center;
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background-color: #459BAC;
+      transition: background 0.2s ease;
+
+}
+
+.backbutton:hover {
+      background-color: #367f86;
+      color: white;
+}
+
+.backbutton {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: #459BAC;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.backbutton:hover {
+  background: #367f86;
+}
+
+.backbutton {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: #459BAC;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.2s ease;
+  width: fit-content;
+}
+
+.backbutton:hover {
+  background: #367f86;
+}
+
+.error {
+  margin: 10px 0;
+  padding: 10px;
+  /* background-color: #ffe5e5;
+  border: 1px solid #ffaaaa; */
+  border-radius: 6px;
+  color: #a00;
+  font-size: 0.95rem;
+  width: 80%;
+}

@@ -1,0 +1,214 @@
+.wrap {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: system-ui, sans-serif;
+  color: #111;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #459BAC;
+  text-align: center;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 1rem;
+  white-space: pre-wrap; /* keeps line breaks */
+  line-height: 1.6;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 20px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: #459BAC;
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
+  outline: none;
+}
+
+.button,
+.SaveButton {
+  background-color: #459BAC;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 30%;
+}
+
+.button:disabled,
+.SaveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button:hover:not(:disabled),
+.SaveButton:hover:not(:disabled) {
+  background: #367f86;
+}
+
+.SaveButton {
+  display: block;
+  width: 200px;
+  margin: 20px auto 0; /* center button */
+  text-align: center;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.7rem;
+  }
+
+  .textarea {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+.SaveButton {
+    width: 40%; /* wider button */
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .wrap {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .textarea {
+    font-size: 0.85rem;
+    padding: 6px 8px;
+  }
+
+  .SaveButton {
+    width: 40%; /* even wider button */
+    margin: 16px 0 0 0;
+  }
+}
+
+/* keep this for textarea input styling */
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 20px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* preserve line breaks ONLY when displaying the saved text */
+.displayText {
+  white-space: pre-wrap;  /* 👈 shows \n as real line breaks */
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: system-ui, sans-serif;
+  color: #111;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #459BAC;
+  text-align: center;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: #333;
+  color: #459BAC;
+  font-weight: bold;
+}
+
+.textarea {
+  width: 95%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: #459BAC;
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
+  outline: none;
+}
+
+.SaveButton {
+  margin-top: 24px;
+  width: 20%;
+  padding: 12px 16px;
+  background-color: #459BAC;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.SaveButton:hover:not(:disabled) {
+  background-color: #368392;
+}
+
+.SaveButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.SaveButton:disabled {
+  background-color: #9dc7cf;
+  cursor: not-allowed;
+}
+

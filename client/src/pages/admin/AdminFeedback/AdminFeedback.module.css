@@ -1,0 +1,152 @@
+.container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  /* font-size: 1.8rem; */
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #459BAC;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.message {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.meta {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.status {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.button {
+  background-color: #459BAC;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 8px;   /* ✅ moves button below status */
+  transition: background 0.2s ease;
+}
+
+
+.button:hover {
+  background-color: #367f86;
+}
+
+.container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  /* font-size: 1.8rem; */
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #459BAC;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.message {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.meta {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* status always on its own line */
+.status {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* NEW = orange, RESOLVED = green */
+.new {
+  color: #e67e22;
+}
+
+.resolved {
+  color: #27ae60;
+}
+
+.button {
+  background-color: #459BAC;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  transition: background 0.2s ease;
+}
+
+.button:hover {
+  background-color: #367f86;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px; /* spacing between items */
+}
+
+.item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin: 0; /* remove bottom margin since grid handles spacing */
+}

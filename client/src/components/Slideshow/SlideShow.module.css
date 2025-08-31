@@ -1,0 +1,307 @@
+.container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.fullScreen {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Slideshow.module.css */
+.container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.fullScreen {
+  border-radius: 0;
+  box-shadow: none;
+  height: 100vh;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.imageVisible {
+  opacity: 1;
+}
+/* Slideshow.module.css */
+.container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.fullScreen {
+  border-radius: 0;
+  box-shadow: none;
+  height: 100vh;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out; /* slower + smoother */
+}
+
+.imageVisible {
+  opacity: 1;
+}
+
+/* ContactModal.module.css */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease, slideUp 0.3s ease;
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) }
+  to { transform: translateY(0) }
+}
+
+.form h2 {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  color: #222;
+  text-align: center;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border-color: #459BAC;
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
+}
+
+.form button {
+  width: 48%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form button[type="submit"] {
+  background: #459BAC;
+  color: #fff;
+  font-weight: 600;
+}
+
+.form button[type="submit"]:hover {
+  background: #367a87;
+}
+
+.form button[type="button"] {
+  background: #f2f2f2;
+  color: #333;
+}
+
+.form button[type="button"]:hover {
+  background: #e0e0e0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.thankyou {
+  text-align: center;
+  padding: 20px;
+}
+
+.thankyou p {
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+
+
+.form input,
+.form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form button {
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.thankyou {
+  text-align: center;
+}
+
+.thankyou {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.thankyou p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.thankyou p::before {
+  content: "✔";
+  display: inline-block;
+  color: #459BAC;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.thankyou button {
+  background: #459BAC;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.thankyou button:hover {
+  background: #367a87;
+}
+
+.form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #459BAC;
+  text-align: center;
+}
+
+/* --- Responsive Media Queries --- */
+
+/* Small phones */
+@media (max-width: 600px) {
+  .container {
+    height: 200px;     /* smaller slideshow on phones */
+    border-radius: 8px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .container {
+    height: 300px;     /* medium slideshow */
+    border-radius: 12px;
+  }
+}
+
+/* Laptops / small desktops */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .container {
+    height: 400px;     /* bigger slideshow */
+  }
+}
+
+/* Large desktops / wide screens */
+@media (min-width: 1441px) {
+  .container {
+    height: 500px;     /* immersive slideshow */
+  }
+}
+
+.info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  z-index: 10;       
+  text-align: center;
+  pointer-events: none;
+  white-space: pre-wrap;  
+}

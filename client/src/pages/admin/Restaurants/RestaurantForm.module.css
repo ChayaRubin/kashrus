@@ -1,0 +1,139 @@
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  color: #222;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #459BAC;
+  /* text-align: center; */
+}
+
+/* Form */
+.form {
+  display: grid;
+  gap: 14px;
+  max-width: 520px;
+  margin: 0 auto; /* center the form block */
+}
+
+.errorBox {
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff3f3;
+  color: #b30000;
+  font-size: 0.9rem;
+}
+
+.row {
+  display: grid;
+  gap: 8px;
+}
+
+.grid2 {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+  font-size: 0.95rem;
+justify-content: center;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #459BAC;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(69, 155, 172, 0.2);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.imagesPreview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+  justify-content: center; /* center thumbnails grid */
+}
+
+.imagesPreview img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: center; /* center buttons */
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.btnPrimary {
+  background: #459BAC;
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  background: #367f8c;
+}
+
+.btnSecondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btnSecondary:hover {
+  background: #e0e0e0;
+}
+
+@media screen and (max-width: 768px) {
+ .form {
+    margin-right: 10%;
+  }
+}
+
+ @media screen and (max-width: 768px) {
+  .form {
+    margin: 0 auto;     
+    width: 90%;          
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr; /* stack inputs instead of two columns */
+  }
+} 
+
