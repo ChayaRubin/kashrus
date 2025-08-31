@@ -1,4 +1,4 @@
-.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+/* .container { max-width: 1000px; margin: 0 auto; padding: 16px; }
 .title { margin: 0 0 12px; }
 .filters { display: flex; gap: 8px; margin-bottom: 12px; }
 .input { flex: 1; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; }
@@ -10,4 +10,122 @@
 .pager { display:flex; align-items:center; gap: 8px; justify-content:center; margin-top: 12px; }
 .btn { padding: 6px 10px; border: 1px solid #ddd; background: #fafafa; border-radius: 8px; cursor: pointer; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
-.pageInfo { font-size: 14px; }
+.pageInfo { font-size: 14px; } */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  color: #111;
+}
+
+.title {
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #459BAC;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border 0.2s ease;
+}
+
+.input:focus {
+  border-color: #459BAC;
+  outline: none;
+}
+
+/* Grid of rabbanim */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.cardHeader {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(69, 155, 172, 0.1);
+  color: #459BAC;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+
+
+.text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #444;
+}
+
+/* Pager */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: #f0f9fb;
+  border-color: #459BAC;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 0.95rem;
+  font-weight: 500;
+}

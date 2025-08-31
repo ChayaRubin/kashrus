@@ -125,7 +125,7 @@
 }
 
 .authButton {
-  padding: 0.9rem;
+  padding: 0.8rem;
   font-size: 1.1rem;
   background-color: #459BAC;
   color: white;
@@ -134,6 +134,8 @@
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease;
+  align-self: center;
+  margin-top: 1%;
 }
 
 .authButton:hover {

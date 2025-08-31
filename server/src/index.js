@@ -13,6 +13,11 @@ import hechsheirimRoutes from "./routes/hechsheirim.js";
 import usersRoute from "./routes/usersRoute.js";
 import contactRoute from "./routes/contactRoute.js";
 import uploadRoutes from "./routes/upload.js";
+import slideshowRoutes from "./routes/slideshow.js";
+// import ratingsRoutes from "./routes/ratings.js";
+import feedbackRoutes from "./routes/feedback.js";
+import contactRoutes from "./routes/contact.js";
+import homeRoutes from "./routes/homeRoutes.js";
 
 
 
@@ -38,6 +43,11 @@ app.use('/restaurants', restaurantsRoute);
 app.use('/users', usersRoute);
 app.use('/contact', contactRoute);
 app.use("/upload", uploadRoutes);
+app.use("/slideshow", slideshowRoutes);
+// app.use("/ratings", ratingsRoutes);
+app.use("/feedback", feedbackRoutes);
+app.use("/contact", contactRoutes);
+app.use("/home", homeRoutes);
 
 // health check
 app.get('/', (_req, res) => res.json({ ok: true }));

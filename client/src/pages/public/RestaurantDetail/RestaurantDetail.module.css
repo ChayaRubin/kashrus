@@ -1,0 +1,104 @@
+.wrap {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  color: #111;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #459BAC;
+}
+
+.meta {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.description {
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.details {
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.details strong {
+  color: #459BAC;
+}
+
+.details a {
+  color: #459BAC;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.details a:hover {
+  text-decoration: underline;
+  color: #459BAC;
+}
+
+.info {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.feedback {
+  margin-top: 20px;
+}
+
+.feedback a {
+  color: #459BAC;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.feedback a:hover {
+  text-decoration: underline;
+    color: #459BAC;
+
+}
+
+.back {
+  margin-bottom: 15px;
+}
+
+.backbutton {
+  background: #459BAC;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.backbutton:hover {
+  background: #367f86;
+}
+

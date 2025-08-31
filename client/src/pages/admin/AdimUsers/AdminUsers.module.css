@@ -1,273 +1,241 @@
 .container {
   max-width: 1000px;
-  margin: 2rem auto;
-  padding: 1rem;
-  font-family: 'Heebo', sans-serif;
-  direction: ltr;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  color: #111;
 }
 
 .sectionTitle {
-  font-size: 2rem;
-  color: #357d8c; /* teal heading */
-  text-align: center;
-  font-weight: bold;
-  padding-bottom: 0.5rem;
+  font-weight: 700;
+  color: #459BAC;
+  margin-bottom: 20px;
 }
 
+/* --- Form Section --- */
 .formSection {
-  background-color: #ecf6f8; /* light teal */
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  margin: 0 auto;
 }
 
 .input {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #333;
-  min-width: 220px;
-  transition: 0.3s ease;
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
 }
 
 .input:focus {
   border-color: #459BAC;
-  box-shadow: 0 0 6px rgba(69, 155, 172, 0.3);
   outline: none;
 }
 
-/* Save button */
-.saveButton {
-  background: linear-gradient(90deg, #459BAC 0%, #357d8c 100%);
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 10px;
+.selectCompact {
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+/* --- Buttons --- */
+button {
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(69, 155, 172, 0.2);
+  font-family: inherit;
+}
+
+.saveButton {
+  padding: 8px 14px;
+  background: #459BAC;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
 
 .saveButton:hover {
-  background: linear-gradient(90deg, #357d8c 0%, #459BAC 100%);
-  box-shadow: 0 4px 12px rgba(69, 155, 172, 0.25);
+  background: #367f8c;
 }
 
-/* Cancel button */
 .cancelButton {
-  background: linear-gradient(90deg, #d9534f 0%, #b52d2a 100%);
-  color: white;
-  font-weight: bold;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(217, 83, 79, 0.2);
+  padding: 8px 14px;
+  background: #f3f4f6;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
 .cancelButton:hover {
-  background: linear-gradient(90deg, #b52d2a 0%, #d9534f 100%);
-  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
+  background: #e5e7eb;
 }
 
+.deleteButton {
+  padding: 6px 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.deleteButton:hover {
+  background: #fee2e2;
+}
+
+.editButton {
+  padding: 6px 10px;
+  background: #f0f9fb;
+  border: 1px solid #bae6fd;
+  border-radius: 6px;
+  color: #0369a1;
+  font-size: 0.9rem;
+}
+
+.editButton:hover {
+  background: #e0f2fe;
+}
+
+/* --- Table --- */
 .userTable {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
   overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  background-color: #fff;
-}
-
-.userTable thead {
-  background-color: #ecf6f8; /* light teal */
-  color: #357d8c; /* teal text */
-  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .userTable th,
 .userTable td {
-  padding: 1.2rem;
-  text-align: center;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f1f1;
+  text-align: left;
+  font-size: 0.95rem;
 }
 
-.userTable tbody tr:last-child td {
-  border-bottom: none;
+.userTable th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #444;
 }
 
-.userRow:hover {
-  background-color: rgba(69, 155, 172, 0.08); /* soft teal hover */
+.userRow:hover td {
+  background: #f9f9f9;
 }
 
 .actions {
   display: flex;
-  justify-content: center;
-  gap: 0.75rem;
+  gap: 6px;
 }
 
-.editButton,
-.deleteButton {
-  background: none;
-  border: none;
-  font-size: 1.3rem;
-  cursor: pointer;
-  color: #459BAC;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.editButton:hover {
-  color: #357d8c;
-  transform: scale(1.2);
-}
-
-.deleteButton:hover {
-  color: #d9534f;
-  transform: scale(1.2);
-}
-
-/* רספונסיביות למובייל */
-@media (max-width: 600px) {
-  .formSection {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.5rem;
-  }
-
-  .input {
-    width: 100%;
-  }
-
-  .saveButton {
-    width: 100%;
-  }
-
-  .userTable {
-    font-size: 0.9rem;
-  }
-
-  .userTable th,
-  .userTable td {
-    padding: 0.75rem;
-  }
-}
-
-/* Compact edit mode in table */
-.userRow input,
-.userRow select {
-  width: 100%;
-  max-width: 140px;
-  font-size: 0.85rem;
-  padding: 4px 8px;
-  border-radius: 6px;
+.container {
+  min-height: 100vh;          /* take full screen height */
+  display: flex;
+  flex-direction: column;     /* stack children vertically */
+  /* align-items: center;        */
+  justify-content: flex-start;/* start from top, but centered horizontally */
+  padding: 20px;
   box-sizing: border-box;
-  text-align: center;
 }
 
-/* tighter table cells */
-.userTable td {
-  padding: 0.5rem 0.25rem;
-  vertical-align: middle;
-}
-
-/* small action buttons */
-.actions button {
-  font-size: 1rem;
-  padding: 4px 8px;
-}
-
-.selectCompact {
-  max-width: 100px;
-  font-size: 0.85rem;
-  padding: 4px 6px;
-  border-radius: 6px;
-  text-align: center;
-}
-
-select {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #459BAC;
-  background-color: #ecf6f8;
-  color: #333;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-select:focus {
-  border-color: #357d8c;
-  box-shadow: 0 0 6px rgba(69, 155, 172, 0.3);
-  outline: none;
-}
-
-/* options inside dropdown */
-select option {
-  background-color: #fff;
-  color: #333;
-  padding: 10px;
-}
-
-/* hovered/selected option */
-select option:checked,
-select option:hover {
-  background-color: #459BAC;
-  color: #fff;
-}
-
-.customSelect select {
-  appearance: none;       /* remove native styling */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #459BAC;
-  background-color: #ecf6f8;
-  color: #333;
-  cursor: pointer;
-  transition: 0.3s ease;
-  width: 100%;
-}
-
-/* Add custom arrow */
-.customSelect {
-  position: relative;
-  display: inline-block;
-  width: 200px; /* adjust */
-}
-
-.customSelect::after {
-  content: "▼";
-  font-size: 0.8rem;
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 20px;
   color: #459BAC;
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+  /* text-align: center; */
 }
 
-/* Style options (works better on Firefox & Safari, Chrome still limited) */
-.customSelect select option {
-  background: #ecf6f8;
-  color: #333;
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 30px;        /* spacing before table */
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-.customSelect select option:checked,
-.customSelect select option:hover {
-  background: #459BAC;
-  color: white;
+.userTable {
+  width: 100%;
+  max-width: 800px;           /* keeps it centered and not too wide */
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-left: 0;    /* 👈 push table to the left */
+  margin-right: auto; 
 }
+
+
+@media (max-width: 700px) {
+  .userTable thead {
+    display: none; /* hide top headers */
+  }
+
+  .userTable tr {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .userTable td {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .userTable td::before {
+    content: attr(data-label); /* pull from React prop */
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #555;
+  }
+
+  .userTable input,
+  .userTable select {
+    width: 90%;
+    max-width: 300px;
+    margin: 4px 0;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .container {
+    padding: 16px;
+    margin-right: 10%;
+  }
+
+  .formSection{
+    margin-right: 0;
+  }
+}
+

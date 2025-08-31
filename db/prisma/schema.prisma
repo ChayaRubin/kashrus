@@ -9,30 +9,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Level {
   FIRST
   SECOND
   THIRD
 }
 
-enum Category { 
-  MEAT 
-  DAIRY 
+enum Category {
+  MEAT
+  DAIRY
 }
 
-enum RType { 
-  FAST_FOOD 
-  SIT_DOWN 
-  BAGELS 
-  SUSHI 
-  PIZZA 
-  FALAFEL 
-  ICE_CREAM 
-  }
+enum RType {
+  FAST_FOOD
+  SIT_DOWN
+  BAGELS
+  SUSHI
+  PIZZA
+  FALAFEL
+  ICE_CREAM
+}
 
 model Restaurant {
-  id          Int      @id @default(autoincrement())
+  id          Int                @id @default(autoincrement())
   name        String
   city        String?
   address     String?
@@ -43,24 +42,29 @@ model Restaurant {
   level       Level
   category    Category?
   type        RType?
+  ratingCount Int                @default(0)
+  ratingSum   Int                @default(0)
+  ratings     RestaurantRating[]
+  feedbacks   Feedback[]
 
   @@index([category, type, level])
 }
 
-
 model User {
-  id           Int       @id @default(autoincrement())
-  name         String
-  email        String    @unique
-  role         String
-  can_self_book Boolean  @default(false)
-  Password     Password?
+  id            Int                @id @default(autoincrement())
+  name          String
+  email         String             @unique
+  role          String
+  can_self_book Boolean            @default(false)
+  Password      Password?
+  ratings       RestaurantRating[]
+  feedbacks     Feedback[]
 }
 
 model Password {
-  userId       Int    @id
+  userId        Int    @id
   password_hash String
-  User         User   @relation(fields: [userId], references: [id])
+  User          User   @relation(fields: [userId], references: [id])
 }
 
 model Article {
@@ -72,15 +76,56 @@ model Article {
 }
 
 model Rabbi {
-  id        Int      @id @default(autoincrement())
-  name      String
-  bio       String?
-  area      String?
+  id   Int     @id @default(autoincrement())
+  name String
+  bio  String?
+  area String?
 }
 
 model Hechsher {
-  id        Int      @id @default(autoincrement())
-  name      String
+  id          Int     @id @default(autoincrement())
+  name        String
   description String?
-  symbolUrl String?   
+  symbolUrl   String?
+}
+
+model SlideshowImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  title     String? // optional caption
+  order     Int // for sorting
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model RestaurantRating {
+  id           Int      @id @default(autoincrement())
+  restaurantId Int
+  userId       Int
+  rating       Int // 1-5 stars
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, userId])
+}
+
+model Feedback {
+  id           Int      @id @default(autoincrement())
+  userId       Int? // optional, if logged in
+  restaurantId Int? // optional, if related to a restaurant
+  message      String
+  status       String   @default("NEW") // NEW, REVIEWED, RESOLVED
+  createdAt    DateTime @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id])
+  restaurant Restaurant? @relation(fields: [restaurantId], references: [id])
+}
+
+model HomeContent {
+  id            Int    @id @default(1)   // single record
+  slideshowText String
+  aboutUsText   String
+  contactText   String
 }

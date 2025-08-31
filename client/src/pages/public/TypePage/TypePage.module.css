@@ -1,17 +1,132 @@
-.wrap { display: grid; gap: 16px; }
-.title { margin: 0; }
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+  color: #111;
+}
 
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #459BAC;
+}
+
+.section {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.subtitle {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Grid for type selection */
 .grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center; /* center them */
+}
+
+
+/* Type option cards */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+}
+
+.card:hover {
+  border-color: #459BAC;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cardActive {
+  border: 2px solid #459BAC;
+  background: #f0f9fb;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
+}
+
+/* Levels */
+.levels {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.levelLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/* Restaurant results */
+.results {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin: 0;
+  padding: 0;
 }
 
-.card {
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #eee;
+.resultItem {
+  list-style: none;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   background: #fff;
   cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
 }
-.card:hover { border-color: #ddd; }
+
+.resultItem:hover {
+  background: #f9f9f9;
+}
+
+.resultContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #ffd700;
+}
+
+.ratingText {
+  color: #666;
+  font-size: 12px;
+}
+
+.backbutton {
+  background: #459BAC;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.backbutton:hover {
+  background: #367f86;
+}

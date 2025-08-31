@@ -1,24 +1,71 @@
-.wrap { display: grid; gap: 16px; }
-.title { margin: 0; }
-
-.levelGrid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.levelBtn {
+.wrap {
   padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  background: #fff;
-  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  color: #111;
 }
-.levelBtn:hover { border-color: #ddd; }
 
-.cards {
-  list-style: none;
-  padding: 0;
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #459BAC;
+}
+
+.info {
+  font-size: 1rem;
+  color: #666;
+  padding: 20px;
+}
+
+.grid {
   display: grid;
   gap: 12px;
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  background: #f9f9f9;
+  transform: translateY(-2px);
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.details {
+  flex: 1;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 4px;
 }

@@ -28,8 +28,6 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex;
-  place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -58,6 +56,48 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Default: desktop — always show vertical scrollbar */
+html {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* ==== Custom Scrollbar for Desktop ==== */
+body::-webkit-scrollbar {
+  width: 10px;                /* width of vertical scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;        /* track background */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #459BAC;  /* thumb color */
+  border-radius: 6px;         /* rounded edges */
+  border: 2px solid #f1f1f1;  /* space around thumb */
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #459BAC #f1f1f1;
+}
+
+/* Hide scrollbar on small screens (phones) */
+@media screen and (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;         /* allow scroll but no forced bar */
+    scrollbar-width: none;    /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  body::-webkit-scrollbar {
+    display: none;            /* Chrome, Safari */
+  }
+}
+
+/* Light theme overrides */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

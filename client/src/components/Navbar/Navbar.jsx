@@ -1,180 +1,107 @@
-// import React from 'react';
-// import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-// import { useAuth } from '../../contexts/AuthContext.jsx';
-
-// export default function Navbar() {
-//   const { user, isAuthenticated, loading, logout } = useAuth();
-//   const navigate = useNavigate();
-//   const location = useLocation();
-
-//   const onLogout = async () => {
-//     try {
-//       await logout?.();
-//     } finally {
-//       navigate('/login');
-//     }
-//   };
-
-//   const goContact = (e) => {
-//     e.preventDefault();
-//     const doScroll = () => {
-//       const el = document.getElementById('contact');
-//       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//     };
-
-//     if (location.pathname !== '/') {
-//       navigate('/#contact');
-//       setTimeout(doScroll, 0);
-//     } else {
-//       doScroll();
-//     }
-//   };
-
-//   return (
-//     <header style={{
-//       display:'flex', alignItems:'center', justifyContent:'space-between',
-//       padding:'12px 20px', borderBottom:'1px solid #eee', position:'sticky', top:0, background:'#fff', zIndex:10
-//     }}>
-//       <div style={{ display:'flex', gap:16, alignItems:'center' }}>
-//         <NavLink to="/" style={{ textDecoration:'none', fontWeight:700 }}>Kashrus Web</NavLink>
-//         <nav style={{ display:'flex', gap:12 }}>
-//           <NavLink to="/" end>Home</NavLink>
-//           <NavLink to='/about'>About Us</NavLink>
-//           <a href="/#contact" onClick={goContact}>Contact</a>
-//           <NavLink to="/hechsheirim">Our Hechshirim</NavLink>
-//           <NavLink to="/rabanim">Our Rabbanim</NavLink>
-//           <NavLink to='/articles'>Articles </NavLink>
-//         </nav>
-//       </div>
-//       {isAuthenticated ? (
-//         <div style={{ display:'flex', gap:12, alignItems:'center' }}>
-//           <NavLink to="/admin">Admin</NavLink>
-//           <button onClick={onLogout}>Logout</button>
-//         </div>
-//       ) : (
-//         <button onClick={() => navigate('/login')}>Login</button>
-//       )}
-//     </header>
-//   );
-// }
-import React from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+const handleScrollNav = (hash) => (e) => {
+  e.preventDefault();
+  const el = document.getElementById(hash.replace('#', ''));
+  if (el) {
+    const yOffset = -80; // navbar height
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+  setOpen(false);
+};
 
   const onLogout = async () => {
-    try { await logout?.(); } finally { navigate('/login'); }
-  };
-
-  const goContact = (e) => {
-    e.preventDefault();
-    const doScroll = () => {
-      const el = document.getElementById('contact');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    if (location.pathname !== '/') {
-      navigate('/#contact');
-      setTimeout(doScroll, 0);
-    } else {
-      doScroll();
-    }
-  };
-
-  const goAbout = (e) => {
-    e.preventDefault();
-    const doScroll = () => {
-      const el = document.getElementById('about');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
-    if (location.pathname !== '/') {
-      navigate('/#about');
-      setTimeout(doScroll, 0);
-    } else {
-      doScroll();
+    try {
+      await logout?.();
+    } finally {
+      navigate('/login');
     }
   };
 
   return (
     <header className={styles.wrap}>
       <div className={styles.inner}>
+        {/* Left side (brand) */}
         <div className={styles.left}>
-          <NavLink to="/" className={styles.brand}>Kashrus Web</NavLink>
-
-          <nav className={styles.nav}>
-            <NavLink to="/" end className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>Home</NavLink>
-            {/* <NavLink to="/about" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>About Us</NavLink> */}
-            <a
-  href="/#about"
-  onClick={(e) => {
-    e.preventDefault();
-    navigate('/#about', { replace: false });   // updates URL hash
-    const el = document.getElementById('about');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }}
-  className={styles.link}
->
-  About Us
-</a>
-
-
-
-<a
-  href="/#contact"
-  onClick={(e) => {
-    e.preventDefault();
-    navigate('/#contact', { replace: false }); // updates URL hash
-    const el = document.getElementById('contact');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }}
-  className={styles.link}
->
-  Contact
-</a>
-
-            <NavLink to="/hechsheirim" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>Our Hechshirim</NavLink>
-            <NavLink to="/rabanim" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>Our Rabbanim</NavLink>
-            <NavLink to="/articles" className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}>Articles</NavLink>
-          </nav>
+          <NavLink to="/" className={styles.brand}>
+            <img src="https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg" alt="Kashrus Web" width="50" height="50"/>
+           </NavLink>
         </div>
 
-       <div className={styles.right}>
-  {isAuthenticated ? (
-    <>
-      <NavLink 
-        to="/admin" 
-        className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
-      >
-        Admin
-      </NavLink>
+        {/* Burger (mobile only) */}
+        <button
+          className={styles.burger}
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
 
-      {/* Logout styled exactly like Articles */}
-      <a
-        href="#logout"
-        onClick={(e) => {
-          e.preventDefault();
-          onLogout();
-        }}
-        className={`${styles.link}`}
-      >
-        Logout
-      </a>
-    </>
-  ) : (
-    <NavLink 
-      to="/login" 
-      className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
-    >
-      Login
-    </NavLink>
-  )}
-</div>
+        {/* Desktop navigation */}
+        <nav className={`${styles.nav} ${open ? styles.show : ''}`}>
+          <div className={styles.navLeft}>
+            <NavLink to="/" end className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ''}`
+            } onClick={() => setOpen(false)}>
+              Home
+            </NavLink>
+            <a href="/#about" onClick={handleScrollNav('#about')} className={styles.link}>
+              About Us
+            </a>
+            <a href="/#contact" onClick={handleScrollNav('#contact')} className={styles.link}>
+              Contact
+            </a>
+            <NavLink to="/hechsheirim" className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ''}`
+            } onClick={() => setOpen(false)}>
+              Our Hechshirim
+            </NavLink>
+            <NavLink to="/rabanim" className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ''}`
+            } onClick={() => setOpen(false)}>
+              Our Rabbanim
+            </NavLink>
+            <NavLink to="/articles" className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.active : ''}`
+            } onClick={() => setOpen(false)}>
+              Articles
+            </NavLink>
+          </div>
 
+          <div className={styles.navRight}>
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/admin" className={({ isActive }) =>
+                  `${styles.link} ${isActive ? styles.active : ''}`
+                } onClick={() => setOpen(false)}>
+                  Admin
+                </NavLink>
+                <a href="#logout" onClick={(e) => {
+                  e.preventDefault();
+                  onLogout();
+                  setOpen(false);
+                }} className={styles.link}>
+                  Logout
+                </a>
+              </>
+            ) : (
+              <NavLink to="/login" className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.active : ''}`
+              } onClick={() => setOpen(false)}>
+                Login
+              </NavLink>
+            )}
+          </div>
+        </nav>
       </div>
     </header>
   );

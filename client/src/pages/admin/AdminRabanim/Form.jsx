@@ -37,7 +37,7 @@ export default function RabbiForm() {
         Area
         <input className={styles.input} value={f.area || ""} onChange={e => set("area", e.target.value)} />
       </label>
-      <label className={styles.label}>
+      <label className={`${styles.label} ${styles.bio}`}>
         Bio
         <textarea className={styles.textarea} value={f.bio || ""} onChange={e => set("bio", e.target.value)} rows={8} />
       </label>

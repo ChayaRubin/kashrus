@@ -21,11 +21,15 @@ import Articles from '../../pages/public/Articles/Articles.jsx';
 import Hechsheirim from '../../pages/public/Hechsheirim/Hechsheirim.jsx';
 import Rabanim from '../../pages/public/Rabanim/Rabanim.jsx';
 import AboutUs from '../../pages/public/AboutUs/AboutUs.jsx';
+// import MyRatings from '../../components/StarRating/StarRating.jsx';
+import Contact from '../../pages/public/Contact/Contact.jsx';
+
+// inside the public routes:
 
 // admin pages
 import Dashboard from '../../pages/admin/Dashboard/Dashboard.jsx';
-import AdminRestaurants from '../../pages/admin/Restaurants/Restaurants.jsx';
-import RestaurantForm from '../../pages/admin/RestaurantForm/RestaurantForm.jsx';
+import AdminRestaurants from '../../pages/admin/Restaurants/AdminRestaurants.jsx';
+import RestaurantForm from '../../pages/admin/Restaurants/RestaurantForm.jsx';
 import AdminArticles from '../../pages/admin/AdminArticles/List.jsx';
 import AdminRabanim from '../../pages/admin/AdminRabanim/List.jsx';
 import AdminHechsheirim from '../../pages/admin/AdminHechsheirim/List.jsx';
@@ -33,7 +37,9 @@ import AdminUsers from '../../pages/admin/AdimUsers/AdminUsers.jsx';
 import HechsheirimForm from  '../../pages/admin/AdminHechsheirim/Form.jsx';
 import RabanimForm from '../../pages/admin/AdminRabanim/Form.jsx';
 import ArticleForm from '../../pages/admin/AdminArticles/Form.jsx';
-
+import Slideshow from '../../pages/admin/SlideShow/AdminSlideshow.jsx';
+import AdminFeedback from '../../pages/admin/AdminFeedback/List.jsx';
+import AdminHome from '../../pages/admin/AdminHome/AdminHome.jsx';
 export const router = createBrowserRouter([
   // PUBLIC
   {
@@ -50,6 +56,9 @@ export const router = createBrowserRouter([
 
       // details
       { path: 'restaurant/:id', element: <RestaurantDetail /> },
+      { path: 'contact', element: <Contact /> },
+
+      // { path: 'my-ratings', element: <MyRatings /> },
 
       // misc public
       { path: 'about', element: <AboutUs /> },
@@ -81,6 +90,9 @@ export const router = createBrowserRouter([
       // users
       { path: '/admin/users', element: <AdminUsers /> },
 
+      // feedback
+      { path: '/admin/feedback', element: <AdminFeedback /> },
+
       // content management
       { path: '/admin/articles', element: <AdminArticles /> },
       { path: '/admin/rabanim', element: <AdminRabanim /> },
@@ -90,7 +102,9 @@ export const router = createBrowserRouter([
       { path: '/admin/rabanim/new', element: <RabanimForm /> },
       { path: '/admin/rabanim/:id', element: <RabanimForm /> },
       { path: '/admin/articles/new', element: <ArticleForm /> },
-      { path: '/admin/articles/:id', element: <ArticleForm /> }
+      { path: '/admin/articles/:id', element: <ArticleForm /> },
+      { path: '/admin/slideshow', element: <Slideshow /> },
+      { path: "/admin/home", element: <AdminHome /> },
     ],
   },
 ]);

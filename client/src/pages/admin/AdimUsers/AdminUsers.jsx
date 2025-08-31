@@ -9,7 +9,6 @@ export default function AdminUsers() {
     name: '',
     email: '',
     role: 'user',
-    can_self_book: false,   // boolean!
     password: ''
   });
   const [editingId, setEditingId] = useState(null);
@@ -35,7 +34,7 @@ export default function AdminUsers() {
     const payload = { ...form };
     try {
       await axios.post('http://localhost:5000/users', payload, { withCredentials: true });
-      setForm({ id: null, name: '', email: '', role: 'user', can_self_book: false, password: '' });
+      setForm({ id: null, name: '', email: '', role: 'user', password: '' });
       fetchUsers();
     } catch (err) {
       console.error('Error creating user:', err);
@@ -48,7 +47,6 @@ export default function AdminUsers() {
       name: user.name,
       email: user.email,
       role: user.role || 'user',
-      can_self_book: !!user.can_self_book, // ensure boolean
     });
   };
 
@@ -83,32 +81,21 @@ export default function AdminUsers() {
     />
   );
 
-  const renderSelect = (field, options) => (
-    <select
-      value={String(form[field])}
-      onChange={(e) => {
-        const val = e.target.value;
-        // for booleans coming from a <select>
-        const parsed = val === 'true' ? true : val === 'false' ? false : val;
-        setFormField(field, parsed);
-      }}
-      className={`${styles.input} ${styles.selectCompact}`}
-    >
-      {options.map(([val, label]) => (
-        <option key={String(val)} value={String(val)}>{label}</option>
-      ))}
-    </select>
-  );
-
   return (
     <div className={styles.container}>
-      <h2 className={styles.sectionTitle}>User Management</h2>
+      <h1 className={styles.sectionTitle}>User Management</h1>
 
       <form className={styles.formSection} onSubmit={handleSubmit}>
         {renderInput('name', 'text', 'Full Name')}
         {renderInput('email', 'email', 'Email')}
-        {renderSelect('role', [['user', 'User'], ['admin', 'Admin']])}
-        {renderSelect('can_self_book', [['false', 'No'], ['true', 'Yes']])}
+        <select
+          value={form.role}
+          onChange={(e) => setFormField('role', e.target.value)}
+          className={`${styles.input} ${styles.selectCompact}`}
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
         {!form.id && renderInput('password', 'password', 'Password')}
         <button type="submit" className={styles.saveButton}>
           {form.id ? 'Update' : 'Create User'}
@@ -118,7 +105,7 @@ export default function AdminUsers() {
       <table className={styles.userTable}>
         <thead>
           <tr>
-            <th>Name</th><th>Email</th><th>Role</th><th>Can Self Book</th><th>Actions</th>
+            <th>Name</th><th>Email</th><th>Role</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -147,20 +134,6 @@ export default function AdminUsers() {
                     <option value="admin">Admin</option>
                   </select>
                 ) : user.role}
-              </td>
-              <td>
-                {editingId === user.id ? (
-                  <select
-                    value={String(editedUser.can_self_book)}
-                    onChange={(e) =>
-                      setEditedUser({ ...editedUser, can_self_book: e.target.value === 'true' })
-                    }
-                    className={styles.selectCompact}
-                  >
-                    <option value="false">No</option>
-                    <option value="true">Yes</option>
-                  </select>
-                ) : user.can_self_book ? '✔️' : '❌'}
               </td>
               <td>
                 <div className={styles.actions}>

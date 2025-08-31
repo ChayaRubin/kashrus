@@ -1,6 +1,147 @@
-// client/src/pages/public/TypePage/TypePage.jsx
+// import React, { useEffect, useState } from "react";
+// import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+// import { Restaurants } from "../../../app/api.js";
+// import s from "./TypePage.module.css";
+
+// const TYPES_BY_CATEGORY = {
+//   MEAT: ["FAST_FOOD", "SIT_DOWN"],
+//   DAIRY: ["BAGELS", "SUSHI", "PIZZA", "FALAFEL", "ICE_CREAM", "SIT_DOWN"],
+// };
+
+// const LEVELS = ["FIRST", "SECOND", "THIRD"];
+
+// export default function TypePage() {
+//   const { category } = useParams();
+//   const nav = useNavigate();
+//   const [searchParams, setSearchParams] = useSearchParams();
+//   const options = TYPES_BY_CATEGORY[category] || [];
+
+//   const [restaurants, setRestaurants] = useState([]);
+//   const [selectedTypes, setSelectedTypes] = useState([]);
+//   const [selectedLevels, setSelectedLevels] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   function toggle(arr, val) {
+//     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
+//   }
+
+//   const onToggleType = (t) => setSelectedTypes((prev) => toggle(prev, t));
+//   const onToggleLevel = (l) => setSelectedLevels((prev) => toggle(prev, l));
+
+//   // Initialize state from URL
+//   useEffect(() => {
+//     const typesParam = searchParams.get("types");
+//     const levelsParam = searchParams.get("levels");
+//     const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
+//     const initialLevels = levelsParam ? levelsParam.split(",").filter(Boolean) : [];
+//     setSelectedTypes(
+//       initialTypes.filter((t) => (TYPES_BY_CATEGORY[category] || []).includes(t))
+//     );
+//     setSelectedLevels(initialLevels.filter((l) => LEVELS.includes(l)));
+//   }, [category]);
+
+//   // Keep URL in sync
+//   useEffect(() => {
+//     const params = new URLSearchParams(searchParams);
+//     if (selectedTypes.length > 0) params.set("types", selectedTypes.join(","));
+//     else params.delete("types");
+//     if (selectedLevels.length > 0) params.set("levels", selectedLevels.join(","));
+//     else params.delete("levels");
+//     setSearchParams(params, { replace: true });
+//   }, [selectedTypes, selectedLevels, setSearchParams]);
+
+//   useEffect(() => {
+//     if (selectedTypes.length === 0 && selectedLevels.length === 0) {
+//       setRestaurants([]);
+//       return;
+//     }
+//     setLoading(true);
+//     Restaurants.list({ category, types: selectedTypes, levels: selectedLevels })
+//       .then(setRestaurants)
+//       .catch(() => setRestaurants([]))
+//       .finally(() => setLoading(false));
+//   }, [category, selectedTypes, selectedLevels]);
+
+//   return (
+//     <div className={s.wrap}>
+//       <div className={s.back}>
+//         <button onClick={() => nav("/browse")} className={s.backbutton}>
+//           ⬅ Back to Categories
+//         </button>
+//       </div>
+
+//       <h2 className={s.title}>{category} — choose types</h2>
+
+//       {/* TYPES */}
+//       <div className={s.section}>
+//         <h3 className={s.subtitle}>Types</h3>
+//         <div className={s.grid}>
+//           {options.map((t) => {
+//             const active = selectedTypes.includes(t);
+//             return (
+//               <button
+//                 key={t}
+//                 onClick={() => onToggleType(t)}
+//                 className={`${s.card} ${active ? s.cardActive : ""}`}
+//               >
+//                 {t.replaceAll("_", " ")}
+//               </button>
+//             );
+//           })}
+//         </div>
+//       </div>
+
+//       {/* LEVELS */}
+//       <div className={s.section}>
+//         <h3 className={s.subtitle}>Levels</h3>
+//         <div className={s.levels}>
+//           {LEVELS.map((l) => (
+//             <label key={l} className={s.levelLabel}>
+//               <input
+//                 type="checkbox"
+//                 checked={selectedLevels.includes(l)}
+//                 onChange={() => onToggleLevel(l)}
+//               />
+//               {l}
+//             </label>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* RESULTS */}
+//       <div className={s.section}>
+//         {loading ? (
+//           <p>Loading…</p>
+//         ) : restaurants.length > 0 ? (
+//           <ul className={s.results}>
+//             {restaurants.map((r) => (
+//               <li
+//                 key={r.id}
+//                 onClick={() =>
+//                   nav(`/restaurant/${r.id}`, {
+//                     state: {
+//                       from: `/browse/${category}?types=${selectedTypes.join(",")}&levels=${selectedLevels.join(",")}`,
+//                     },
+//                   })
+//                 }
+//                 className={s.resultItem}
+//               >
+//                 <div className={s.resultContent}>
+//                   <strong>{r.name}</strong> — {r.type} ({r.level})
+//                 </div>
+//               </li>
+//             ))}
+//           </ul>
+//         ) : (
+//           <p>No restaurants found.</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+// src/pages/public/TypePage/TypePage.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Restaurants } from "../../../app/api.js";
 import s from "./TypePage.module.css";
 
@@ -14,47 +155,67 @@ const LEVELS = ["FIRST", "SECOND", "THIRD"];
 export default function TypePage() {
   const { category } = useParams();
   const nav = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const options = TYPES_BY_CATEGORY[category] || [];
 
   const [restaurants, setRestaurants] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);   // multi
-  const [selectedLevels, setSelectedLevels] = useState([]); // multi
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([]);
   const [loading, setLoading] = useState(false);
 
   function toggle(arr, val) {
     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
   }
-  const onToggleType  = (t) => setSelectedTypes((prev) => toggle(prev, t));
+
+  const onToggleType = (t) => setSelectedTypes((prev) => toggle(prev, t));
   const onToggleLevel = (l) => setSelectedLevels((prev) => toggle(prev, l));
 
+  // Initialize state from URL
   useEffect(() => {
-    // default: show nothing until at least one filter is selected
+    const typesParam = searchParams.get("types");
+    const levelsParam = searchParams.get("levels");
+    const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
+    const initialLevels = levelsParam ? levelsParam.split(",").filter(Boolean) : [];
+    setSelectedTypes(initialTypes.filter((t) => (TYPES_BY_CATEGORY[category] || []).includes(t)));
+    setSelectedLevels(initialLevels.filter((l) => LEVELS.includes(l)));
+  }, [category]);
+
+  // Sync URL
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (selectedTypes.length > 0) params.set("types", selectedTypes.join(","));
+    else params.delete("types");
+    if (selectedLevels.length > 0) params.set("levels", selectedLevels.join(","));
+    else params.delete("levels");
+    setSearchParams(params, { replace: true });
+  }, [selectedTypes, selectedLevels, setSearchParams]);
+
+  // Fetch restaurants
+  useEffect(() => {
     if (selectedTypes.length === 0 && selectedLevels.length === 0) {
       setRestaurants([]);
       return;
     }
-
     setLoading(true);
-    Restaurants.list({
-      category,
-      types: selectedTypes,
-      levels: selectedLevels,
-    })
+    Restaurants.list({ category, types: selectedTypes, levels: selectedLevels })
       .then(setRestaurants)
-      .catch((e) => {
-        console.error("Failed to load restaurants", e);
-        setRestaurants([]);
-      })
+      .catch(() => setRestaurants([]))
       .finally(() => setLoading(false));
   }, [category, selectedTypes, selectedLevels]);
 
   return (
     <div className={s.wrap}>
+      <div className={s.back}>
+        <button onClick={() => nav("/browse")} className={s.backbutton}>
+          ⬅ Back to Categories
+        </button>
+      </div>
+
       <h2 className={s.title}>{category} — choose types</h2>
 
-      {/* TYPES: cards (multi-select) with visible "pressed" state */}
-      <div style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: "0 0 10px" }}>Types</h3>
+      {/* TYPES */}
+      <div className={s.section}>
+        {/* <h3 className={s.subtitle}>Types</h3> */}
         <div className={s.grid}>
           {options.map((t) => {
             const active = selectedTypes.includes(t);
@@ -62,14 +223,7 @@ export default function TypePage() {
               <button
                 key={t}
                 onClick={() => onToggleType(t)}
-                className={s.card}
-                title={t.replaceAll("_", " ")}
-                style={{
-                  border: active ? "2px solid #0a7cff" : "1px solid #e5e7eb",
-                  background: active ? "#eaf3ff" : "#fff",
-                  boxShadow: active ? "0 0 0 3px rgba(10,124,255,0.15)" : "none",
-                  fontWeight: active ? 600 : 500,
-                }}
+                className={`${s.card} ${active ? s.cardActive : ""}`}
               >
                 {t.replaceAll("_", " ")}
               </button>
@@ -78,12 +232,12 @@ export default function TypePage() {
         </div>
       </div>
 
-      {/* LEVELS: checkboxes */}
-      <div style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: "0 0 10px" }}>Levels</h3>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+      {/* LEVELS */}
+      <div className={s.section}>
+        <h3 className={s.subtitle}>Levels</h3>
+        <div className={s.levels}>
           {LEVELS.map((l) => (
-            <label key={l} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <label key={l} className={s.levelLabel}>
               <input
                 type="checkbox"
                 checked={selectedLevels.includes(l)}
@@ -96,25 +250,26 @@ export default function TypePage() {
       </div>
 
       {/* RESULTS */}
-      <div style={{ marginTop: 10 }}>
+      <div className={s.section}>
         {loading ? (
           <p>Loading…</p>
         ) : restaurants.length > 0 ? (
-          <ul style={{ display: "grid", gap: 12, paddingLeft: 0, margin: 0 }}>
+          <ul className={s.results}>
             {restaurants.map((r) => (
               <li
                 key={r.id}
-                onDoubleClick={() => nav(`/restaurant/${r.id}`)}
-                style={{
-                  listStyle: "none",
-                  padding: 10,
-                  border: "1px solid #ddd",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  userSelect: "none",
-                }}
+                onClick={() =>
+                  nav(`/restaurant/${r.id}`, {
+                    state: {
+                      from: `/browse/${category}?types=${selectedTypes.join(",")}&levels=${selectedLevels.join(",")}`,
+                    },
+                  })
+                }
+                className={s.resultItem}
               >
-                <strong>{r.name}</strong> — {r.type} ({r.level})
+                <div className={s.resultContent}>
+                  <strong>{r.name}</strong> — {r.type} ({r.level})
+                </div>
               </li>
             ))}
           </ul>

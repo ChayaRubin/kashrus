@@ -8,6 +8,7 @@ export default function ContactPage() {
     // common
     name: '',
     email: '',
+    phone: '',
     // question-specific
     subject: '',
     message: '',
@@ -17,7 +18,6 @@ export default function ContactPage() {
     restaurantName: '',
     city: '',
     address: '',
-    phone: '',
     website: '',
     kashrus: '',
     details: '',
@@ -28,13 +28,14 @@ export default function ContactPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const resetForm = () => {
     setFormData({
       name: '',
       email: '',
+      phone: '',
       subject: '',
       message: '',
       requesterName: '',
@@ -42,7 +43,6 @@ export default function ContactPage() {
       restaurantName: '',
       city: '',
       address: '',
-      phone: '',
       website: '',
       kashrus: '',
       details: '',
@@ -56,8 +56,9 @@ export default function ContactPage() {
     setError('');
 
     try {
+      let payload;
       if (mode === 'add_restaurant') {
-        const payload = {
+        payload = {
           type: 'add_restaurant',
           requesterName: formData.requesterName || formData.name,
           requesterEmail: formData.requesterEmail || formData.email,
@@ -70,22 +71,23 @@ export default function ContactPage() {
           details: formData.details,
         };
         await api.post('/contact', payload);
-        setSuccess('Your restaurant request was sent successfully.');
-        resetForm();
+        setSuccess('✅ Your restaurant request was sent successfully.');
       } else {
-        const payload = {
+        payload = {
           type: 'question',
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
           subject: formData.subject,
           message: formData.message,
         };
         await api.post('/contact', payload);
-        setSuccess('Your question was sent successfully.');
-        resetForm();
+        setSuccess('✅ Your question was sent successfully.');
       }
+      resetForm();
     } catch (err) {
-      setError('There was a server connection error.');
+      console.error('Contact submit error:', err);
+      setError(err?.response?.data?.error || '❌ There was a server connection error.');
     } finally {
       setLoading(false);
     }
@@ -94,16 +96,11 @@ export default function ContactPage() {
   return (
     <div id="contact" className={styles.wrapper}>
       <div className={styles.cardContainer}>
-        {/* <div className={styles.infoBox}>
-          <h2 className={styles.infoTitle}>Contact Details</h2>
-          <p><strong>Phone:</strong> 0504145381</p>
-          <p><strong>Email:</strong> 5321745@gmail.com</p>
-          <p><strong>Address:</strong> 10 Example St, Tel Aviv</p>
-        </div> */}
-
         <div className={styles.card}>
           <h1 className={styles.title}>Contact Us</h1>
-          <p className={styles.subtitle}>Choose between sending a question or a restaurant addition request.</p>
+          <p className={styles.subtitle}>
+            Choose between sending a question or a restaurant addition request.
+          </p>
 
           <div className={styles.row} style={{ marginBottom: 16 }}>
             <button
@@ -112,7 +109,7 @@ export default function ContactPage() {
               style={{ opacity: mode === 'question' ? 1 : 0.6 }}
               onClick={() => setMode('question')}
             >
-              ❓ Ask a Question
+              Ask a Question
             </button>
             <button
               type="button"
@@ -120,7 +117,7 @@ export default function ContactPage() {
               style={{ opacity: mode === 'add_restaurant' ? 1 : 0.6 }}
               onClick={() => setMode('add_restaurant')}
             >
-              📝 Request Restaurant Addition
+              Request Restaurant Addition
             </button>
           </div>
 
@@ -132,11 +129,15 @@ export default function ContactPage() {
                     <label htmlFor="name" className={styles.label}>Full Name</label>
                     <input name="name" id="name" type="text" value={formData.name} onChange={handleChange} required className={styles.input} />
                   </div>
-
                   <div className={styles.field}>
                     <label htmlFor="email" className={styles.label}>Email</label>
                     <input name="email" id="email" type="email" value={formData.email} onChange={handleChange} required className={styles.input} />
                   </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="phone" className={styles.label}>Phone</label>
+                  <input name="phone" id="phone" type="text" value={formData.phone} onChange={handleChange} className={styles.input} />
                 </div>
 
                 <div className={styles.field}>
@@ -202,12 +203,12 @@ export default function ContactPage() {
             )}
 
             <div className={styles.actions}>
-              <button type="submit" disabled={loading} className={styles.button}>
+              <button type="submit" disabled={loading} className={styles.sendButton}>
                 {loading ? 'Sending…' : 'Send'}
               </button>
             </div>
-            {success && <p className={styles.success}>✅ {success}</p>}
-            {error && <p className={styles.error}>❌ {error}</p>}
+            {success && <p className={styles.success}>{success}</p>}
+            {error && <p className={styles.error}>{error}</p>}
           </form>
         </div>
       </div>

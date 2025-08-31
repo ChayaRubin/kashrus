@@ -55,37 +55,54 @@ export const addRestaurantRequestTemplate = ({
   kashrus,
   details,
 }) => `
-  <div style="direction: rtl; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
+  <div style="direction: ltr; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
     <div style="max-width: 700px; margin: auto; background-color: #fff; border-radius: 10px; padding: 30px;">
-      <h2 style="color: #2e7d32; text-align: center;">📝 בקשה להוספת מסעדה</h2>
+      <h2 style="color: #2e7d32; text-align: center;">📝 Request to Add a Restaurant</h2>
       <hr />
-      <h3 style="margin-top: 0;">פרטי המסעדה</h3>
-      <p><strong>שם מסעדה:</strong> ${restaurantName}</p>
-      ${city ? `<p><strong>עיר:</strong> ${city}</p>` : ''}
-      ${address ? `<p><strong>כתובת:</strong> ${address}</p>` : ''}
-      ${phone ? `<p><strong>טלפון:</strong> ${phone}</p>` : ''}
-      ${website ? `<p><strong>אתר:</strong> <a href="${website}">${website}</a></p>` : ''}
-      ${kashrus ? `<p><strong>כשרות:</strong> ${kashrus}</p>` : ''}
-      ${details ? `<div><strong>פרטים נוספים:</strong><div style="background:#f1f1f1; padding:12px; border-radius:8px;">${details.replace(/\n/g, '<br>')}</div></div>` : ''}
+      <h3 style="margin-top: 0;">Restaurant Details</h3>
+      <p><strong>Restaurant Name:</strong> ${restaurantName}</p>
+      ${city ? `<p><strong>City:</strong> ${city}</p>` : ''}
+      ${address ? `<p><strong>Address:</strong> ${address}</p>` : ''}
+      ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+      ${website ? `<p><strong>Website:</strong> <a href="${website}">${website}</a></p>` : ''}
+      ${kashrus ? `<p><strong>Kashrus:</strong> ${kashrus}</p>` : ''}
+      ${details ? `<div><strong>Additional Details:</strong><div style="background:#f1f1f1; padding:12px; border-radius:8px;">${details.replace(/\n/g, '<br>')}</div></div>` : ''}
       <hr />
-      <h3 style="margin-top: 0;">פרטי הפונה</h3>
-      <p><strong>שם הפונה:</strong> ${requesterName}</p>
-      <p><strong>אימייל הפונה:</strong> <a href="mailto:${requesterEmail}">${requesterEmail}</a></p>
+      <h3 style="margin-top: 0;">Requester Details</h3>
+      <p><strong>Name:</strong> ${requesterName}</p>
+      <p><strong>Email:</strong> <a href="mailto:${requesterEmail}">${requesterEmail}</a></p>
     </div>
   </div>
 `;
 
 export const questionTemplate = ({ name, email, subject, message }) => `
-  <div style="direction: rtl; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
+  <div style="direction: ltr; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
     <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 10px; padding: 30px;">
-      <h2 style="color: #1565c0; text-align: center;">❓ שאלה חדשה מהאתר</h2>
+      <h2 style="color: #1565c0; text-align: center;">❓ New Question from the Website</h2>
       <hr />
-      <p><strong>שם:</strong> ${name}</p>
-      <p><strong>אימייל:</strong> <a href="mailto:${email}">${email}</a></p>
-      <p><strong>נושא:</strong> ${subject || 'לא צוין'}</p>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+      <p><strong>Subject:</strong> ${subject || 'Not specified'}</p>
       <div style="background-color: #f1f1f1; padding: 15px; border-radius:8px;">${message.replace(/\n/g, '<br>')}</div>
     </div>
   </div>
 `;
 
-
+export const feedbackTemplate = ({ userName, restaurantId, message }) => `
+  <div style="direction: ltr; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
+    <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 10px; padding: 30px;">
+      <h2 style="color: #2e7d32; text-align: center;">💬 New Feedback Received</h2>
+      <hr />
+      <p><strong>User:</strong> ${userName || "Guest"}</p>
+      ${restaurantId ? `<p><strong>Restaurant ID:</strong> ${restaurantId}</p>` : ""}
+      <p><strong>Message:</strong></p>
+      <div style="background-color: #f1f1f1; padding: 15px; border-radius:8px;">
+        ${message.replace(/\n/g, "<br>")}
+      </div>
+      <hr />
+      <p style="text-align: center; font-size: 13px; color: #888;">
+        Sent automatically from the website
+      </p>
+    </div>
+  </div>
+`;
