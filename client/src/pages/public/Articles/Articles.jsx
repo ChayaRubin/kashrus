@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Articles } from "../../../app/api";
 import styles from "./Articles.module.css";
 
 export default function ArticlesPage(){
+  const navigate = useNavigate();
   const [q,setQ]=useState(""); const [page,setPage]=useState(1);
   const [data,setData]=useState({items:[],total:0});
 
@@ -16,7 +18,11 @@ export default function ArticlesPage(){
 
       <ul className={styles.grid}>
         {data.items.map(a => (
-          <li key={a.id} className={styles.card}>
+          <li 
+            key={a.id} 
+            className={styles.card}
+            onClick={() => navigate(`/articles/${a.id}`)}
+          >
             <div className={styles.cardHeader}>{a.title}</div>
             <small className={styles.muted}>{new Date(a.createdAt).toLocaleDateString()}</small>
             <p className={styles.text}>{a.content.slice(0,160)}{a.content.length>160 && "…"}</p>

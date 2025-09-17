@@ -12,6 +12,7 @@ const VALID_TYPES = [
   "PIZZA",
   "FALAFEL",
   "ICE_CREAM",
+  "OTHER",
 ];
 
 // Helper: normalize images array -> string
@@ -54,7 +55,7 @@ export async function listWithImages({ where = {}, orderBy = { name: "asc" } }) 
 
 
 export async function create(data) {
-  const { name, city, address, phone, hechsher, website, level, category, type, images } = data;
+  const { name, city, neighborhood, address, phone, hechsher, website, level, category, type, images } = data;
   const lvl = String(level || "").toUpperCase();
   const cat = String(category || "").toUpperCase();
   const typ = String(type || "").toUpperCase();
@@ -68,6 +69,7 @@ export async function create(data) {
     data: {
       name,
       city,
+      neighborhood,
       address,
       phone,
       hechsher,

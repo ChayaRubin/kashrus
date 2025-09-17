@@ -5,10 +5,22 @@ import styles from './RestaurantForm.module.css';
 
 const CATEGORIES = ['MEAT', 'DAIRY'];
 const TYPES_BY_CATEGORY = {
-  MEAT: ['FAST_FOOD', 'SIT_DOWN'],
-  DAIRY: ['BAGELS', 'SUSHI', 'PIZZA', 'FALAFEL', 'ICE_CREAM', 'SIT_DOWN'],
+  MEAT: ['FAST_FOOD', 'SIT_DOWN', 'OTHER'],
+  DAIRY: ['BAGELS', 'SUSHI', 'PIZZA', 'FALAFEL', 'ICE_CREAM', 'SIT_DOWN', 'OTHER'],
 };
 const LEVELS = ['FIRST', 'SECOND', 'THIRD'];
+
+const NEIGHBORHOODS = [
+  "Har Nof / Bayit Vegan",
+  "Talpiyot",
+  "Ramot / Ramat Shlomo",
+  "Romeima / Shamgar",
+  "Old City / Mamilla",
+  "Pisgat zeev / Neve Yaakov",
+  "Ramat Eshkol / French Hill / Shmuel HaNavi",
+  "Beis Yisrael / Geula",
+  "Other",
+];
 
 export default function RestaurantForm() {
   const { id } = useParams();
@@ -21,6 +33,7 @@ export default function RestaurantForm() {
     type: 'FAST_FOOD',
     level: 'FIRST',
     city: '',
+    neighborhood: '',
     address: '',
     phone: '',
     hechsher: '',
@@ -50,6 +63,7 @@ export default function RestaurantForm() {
           type: r.type || 'FAST_FOOD',
           level: r.level || 'FIRST',
           city: r.city || '',
+          neighborhood: r.neighborhood || '',
           address: r.address || '',
           phone: r.phone || '',
           hechsher: r.hechsher || '',
@@ -84,6 +98,7 @@ export default function RestaurantForm() {
       type: f.type,
       level: f.level,
       city: f.city || null,
+      neighborhood: f.neighborhood || null,
       address: f.address || null,
       phone: f.phone || null,
       hechsher: f.hechsher || null,
@@ -154,8 +169,21 @@ export default function RestaurantForm() {
             <input className={styles.input} value={f.city} onChange={(e) => setField('city', e.target.value)} />
           </div>
           <div className={styles.row}>
+            <label className={styles.label}>Neighborhood</label>
+            <select className={styles.select} value={f.neighborhood} onChange={(e) => setField('neighborhood', e.target.value)}>
+              <option value="">Select neighborhood</option>
+              {NEIGHBORHOODS.map((n) => <option key={n} value={n}>{n}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.grid2}>
+          <div className={styles.row}>
             <label className={styles.label}>Phone</label>
             <input className={styles.input} value={f.phone} onChange={(e) => setField('phone', e.target.value)} />
+          </div>
+          <div className={styles.row}>
+            {/* Empty div for grid alignment */}
           </div>
         </div>
 

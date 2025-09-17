@@ -9,9 +9,21 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const sendEmail = async ({ from, to, subject, html }) => {
+export const sendEmail = async ({ from, to, subject, html, attachments }) => {
   try {
-    await transporter.sendMail({ from, to, subject, html });
+    const mailOptions = {
+      from,
+      to,
+      subject,
+      html
+    };
+
+    // Add attachments if provided
+    if (attachments && attachments.length > 0) {
+      mailOptions.attachments = attachments;
+    }
+
+    await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error('error in sending email', error);
     throw error;

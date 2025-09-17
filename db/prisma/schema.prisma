@@ -1,13 +1,13 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../../node_modules/.prisma/client"
-  envFiles = ["../db/prisma/.env"]
 }
 
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
 
 enum Level {
   FIRST
@@ -34,6 +34,7 @@ model Restaurant {
   id          Int                @id @default(autoincrement())
   name        String
   city        String?
+  neighborhood String?
   address     String?
   phone       String?
   hechsher    String?
