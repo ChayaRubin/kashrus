@@ -8,16 +8,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-const handleScrollNav = (hash) => (e) => {
-  e.preventDefault();
-  const el = document.getElementById(hash.replace('#', ''));
-  if (el) {
-    const yOffset = -80; // navbar height
-    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({ top: y, behavior: 'smooth' });
-  }
-  setOpen(false);
-};
 
   const onLogout = async () => {
     try {
@@ -54,10 +44,46 @@ const handleScrollNav = (hash) => (e) => {
             } onClick={() => setOpen(false)}>
               Home
             </NavLink>
-            <a href="/#about" onClick={handleScrollNav('#about')} className={styles.link}>
+            <a href="/#about" className={styles.link} onClick={(e) => {
+              e.preventDefault();
+              setOpen(false);
+              const hash = '#about';
+              if (window.location.pathname === '/' || window.location.pathname === '/home') {
+                // Already on home page, just scroll
+                const element = document.getElementById(hash.replace('#', ''));
+                if (element) {
+                  const yOffset = -80;
+                  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  window.scrollTo({ top: y, behavior: 'smooth' });
+                  // Update the URL hash without triggering a reload
+                  window.history.pushState(null, '', hash);
+                }
+              } else {
+                // On different page, navigate to home with hash
+                navigate(`/${hash}`);
+              }
+            }}>
               About Us
             </a>
-            <a href="/#contact" onClick={handleScrollNav('#contact')} className={styles.link}>
+            <a href="/#contact" className={styles.link} onClick={(e) => {
+              e.preventDefault();
+              setOpen(false);
+              const hash = '#contact';
+              if (window.location.pathname === '/' || window.location.pathname === '/home') {
+                // Already on home page, just scroll
+                const element = document.getElementById(hash.replace('#', ''));
+                if (element) {
+                  const yOffset = -80;
+                  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  window.scrollTo({ top: y, behavior: 'smooth' });
+                  // Update the URL hash without triggering a reload
+                  window.history.pushState(null, '', hash);
+                }
+              } else {
+                // On different page, navigate to home with hash
+                navigate(`/${hash}`);
+              }
+            }}>
               Contact
             </a>
             <NavLink to="/hechsheirim" className={({ isActive }) =>

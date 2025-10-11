@@ -7,11 +7,11 @@
 }
 
 .title {
-  /* font-size: 1.8rem; */
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 20px;
   color: #459BAC;
-  /* text-align: center; */
+  text-align: center;
 }
 
 .form {
@@ -39,20 +39,23 @@
 }
 
 .addButton {
-  padding: 10px 18px;
+  padding: 12px 24px;
   background: #459BAC;
   color: #fff;
   border: none;
   border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
-      width: 100%;
-    margin-right: 20%;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  white-space: nowrap;
 }
 
 .addButton:hover {
-  background: #367f8c;
+  background: #459BAC;
+  transform: translateY(-1px);
+  border: none;
 }
 
 .list {
@@ -172,15 +175,15 @@
   color: #111;
   display: flex;
   flex-direction: column;
-  /* align-items: center;  */
+  align-items: center; /* center whole page content */
 }
 
 .title {
-  /* font-size: 1.8rem; */
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 20px;
   color: #459BAC;
-  /* text-align: center; */
+  text-align: center;
 }
 
 .form {
@@ -208,20 +211,22 @@
 }
 
 .addButton {
-  padding: 10px 18px;
+  padding: 12px 24px;
   background: #459BAC;
   color: #fff;
   border: none;
   border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
-  width: 20%;
-  margin: 0 auto;
-  }
+  transition: all 0.2s ease;
+  min-width: 100px;
+  white-space: nowrap;
+}
 
 .addButton:hover {
   background: #367f8c;
+  transform: translateY(-1px);
 }
 
 /* Cards grid */
@@ -294,96 +299,14 @@
 .cardActions {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 0;
-  margin: 0 auto;
-  list-style: none;
-  max-width: 1000px; /* keep it centered */
-}
-
-/* Each card */
-.item {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.item img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-/* Title/details */
-.details {
-  flex: 1;
-  /* text-align: center; */
-  margin-bottom: 10px;
-}
-
-.details span {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #222;
-}
-
-/* Buttons row inside card */
-.cardActions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.item {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.item img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 700px) {
   .container {
     padding: 16px;
-    margin-right: 10%;
-
   }
   .list {
     grid-template-columns: 1fr;
@@ -393,45 +316,171 @@
     width: 100%;
     height: 180px;
   }
+
 }
 
 .btn {
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: #f0f9fb;
   color: #459BAC;
   border: 1px solid #459BAC;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;       
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease;
-  border: none;  
-  width: 100%;
+  transition: all 0.2s ease;
+  min-width: 60px;
+  white-space: nowrap;
 }
 
 .btn:hover {
   background: #dff2f4;
+  transform: translateY(-1px);
 }
 
 .btnDanger {
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: #459BAC;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-  width: 100%;
+  transition: all 0.2s ease;
+  min-width: 70px;
+  white-space: nowrap;
 }
 
 .btnDanger:hover {
   background: #367f8c;
-  transform: scale(1.05);
-  border: none;
+  transform: translateY(-1px);
 }
 
+/* Upload Mode Toggle */
+.modeToggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
 
+.modeButton {
+  padding: 8px 16px;
+  border: none;
+  background: #fff;
+  color: #459BAC;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modeButton:hover {
+  background: #f0f9fb;
+}
+
+.modeButton.active {
+  background: #459BAC;
+  color: #fff;
+}
+
+/* Error Message */
+.errorMessage {
+  background: #fee;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #fecaca;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Upload Area */
+.uploadArea {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.dropZone {
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  position: relative;
+}
+
+.dropZone:hover {
+  border-color: #459BAC;
+  background: #f0f9fb;
+}
+
+.dropZone.dragOver {
+  border-color: #459BAC;
+  background: #e6f7fa;
+}
+
+.dropText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+}
+
+.dropIcon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.dropHint {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* File Preview */
+.filePreview {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.removeFile {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.removeFile:hover {
+  background: #c53030;
+}
+
+.addButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 
