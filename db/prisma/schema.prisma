@@ -1,11 +1,20 @@
-generator client {
-  provider = "prisma-client-js"
-  output   = "../../node_modules/.prisma/client"
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "../../node_modules/.prisma/client"
+// }
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  //directUrl = env("DIRECT_URL")
 }
 
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
 }
 
 
@@ -72,6 +81,7 @@ model Article {
   id        Int      @id @default(autoincrement())
   title     String
   content   String
+  author    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

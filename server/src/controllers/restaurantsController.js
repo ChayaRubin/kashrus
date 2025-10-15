@@ -155,10 +155,11 @@ export async function list(req, res) {
       // Known neighborhoods (split versions used for "Other" NOT-contains)
       const KNOWN_PARTS = [
         "Har Nof", "Bayit Vegan",
-        "Talpiyot",
+        "Talpiyot", "Emek",
         "Ramot", "Ramat Shlomo",
         "Romeima", "Shamgar",
-        "Old City", "Mamilla",
+        "Givat Shaul", "Har Nof",
+        "Old City", "Mamilla", "Yaffo",
         "Pisgat zeev", "Neve Yaakov",
         "Ramat Eshkol", "French Hill", "Shmuel HaNavi",
         "Beis Yisrael", "Geula",

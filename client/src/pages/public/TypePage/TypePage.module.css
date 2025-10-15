@@ -219,10 +219,10 @@ h2{
 
 .dropdownBtn {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 1rem;
-  border: 1px solid #459BAC;
-  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
   background: #fff;
   color: #333;
   display: flex;
@@ -231,18 +231,17 @@ h2{
   cursor: pointer;
 }
 .dropdownBtn:hover {
-  border-color: #2f6e7d;
-  box-shadow: 0 0 6px rgba(69, 155, 172, 0.3);
+  border-color: #d1d5db;
 }
 
 .dropdownBtn:focus {
   border-color: #459BAC;
-  box-shadow: 0 0 8px rgba(69, 155, 172, 0.4);
+  outline: none;
 }
 .arrow {
   margin-left: 8px;
-  font-size: 0.9rem;
-  color: #459BAC;
+  font-size: 0.8rem;
+  color: #6b7280;
 }
 
 .dropdownList {
@@ -251,11 +250,11 @@ h2{
   left: 0;
   width: 100%;
   background: #fff;
-  border: 1px solid #459BAC;
+  border: 1px solid #e5e7eb;
   border-radius: 6px;
   margin-top: 4px;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .dropdownList li {
@@ -287,9 +286,9 @@ h2{
 }
 
 .dropdownList li {
-  padding: 10px 14px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
   user-select: none;   /* prevent blue text selection */
 }
 

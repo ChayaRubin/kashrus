@@ -12,10 +12,11 @@ const LEVELS = ["FIRST", "SECOND", "THIRD"];
 
 const NEIGHBORHOODS = [
   "Har Nof / Bayit Vegan",
-  "Talpiyot",
+  "Talpiyot / Emek",
   "Ramot / Ramat Shlomo",
   "Romeima / Shamgar",
-  "Old City / Mamilla",
+  "Givat Shaul / Har Nof",
+  "Old City / Mamilla / Yaffo",
   "Pisgat zeev / Neve Yaakov",
   "Ramat Eshkol / French Hill / Shmuel HaNavi",
   "Beis Yisrael / Geula",

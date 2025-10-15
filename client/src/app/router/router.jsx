@@ -182,7 +182,7 @@ export const router = createBrowserRouter([
 
       // about + contact - redirect to home page with hash
       { path: '/about', element: <AboutRoute /> },
-      { path: '/contact', element: <ContactRoute /> },         // ← this makes /contact?restaurantId=30 work
+      { path: '/contact', element: <Contact /> },         // ← this makes /contact?restaurantId=30 work
 
       // public content
       { path: '/articles', element: <Articles /> },

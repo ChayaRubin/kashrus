@@ -14,8 +14,8 @@ export default function RabanimPage(){
     <div className={styles.container}>
       <h1 className={styles.title}>Rabbanim</h1>
       <div className={styles.filters}>
-        <input className={styles.input} placeholder="Search name/bio…" value={q} onChange={e=>setQ(e.target.value)} />
-        <input className={styles.input} placeholder="Area…" value={area} onChange={e=>setArea(e.target.value)} />
+        {/* <input className={styles.input} placeholder="Search name/bio…" value={q} onChange={e=>setQ(e.target.value)} /> */}
+        {/* <input className={styles.input} placeholder="Area…" value={area} onChange={e=>setArea(e.target.value)} /> */}
       </div>
 
       <ul className={styles.grid}>
@@ -28,11 +28,11 @@ export default function RabanimPage(){
         ))}
       </ul>
 
-      <div className={styles.pager}>
+      {/* <div className={styles.pager}>
         <button className={styles.btn} disabled={page<=1} onClick={()=>setPage(p=>p-1)}>Prev</button>
         <span className={styles.pageInfo}>{page}/{pages}</span>
         <button className={styles.btn} disabled={page>=pages} onClick={()=>setPage(p=>p+1)}>Next</button>
-      </div>
+      </div> */}
     </div>
   );
 }

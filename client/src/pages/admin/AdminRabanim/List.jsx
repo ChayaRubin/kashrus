@@ -101,7 +101,7 @@ export default function RabanimAdminList() {
         </Link>
       </div>
 
-      <div className={styles.filters}>
+      {/* <div className={styles.filters}>
         <input
           className={styles.input}
           placeholder="Search…"
@@ -114,7 +114,7 @@ export default function RabanimAdminList() {
           value={area}
           onChange={(e) => setArea(e.target.value)}
         />
-      </div>
+      </div> */}
 
       <div className={styles.cards}>
         {data.items.map((r) => (

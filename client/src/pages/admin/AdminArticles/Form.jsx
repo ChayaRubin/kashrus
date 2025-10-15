@@ -7,7 +7,7 @@ export default function ArticleForm() {
   const { id } = useParams();
   const editing = !!id && id !== "new"; // guard
   const nav = useNavigate();
-  const [f, setF] = useState({ title: "", content: "" });
+  const [f, setF] = useState({ title: "", content: "", author: "" });
 
   useEffect(() => {
     if (editing) Articles.get(id).then(setF).catch(console.error);
@@ -32,6 +32,10 @@ export default function ArticleForm() {
       <label className={styles.label}>
         Title
         <input className={styles.input} value={f.title} onChange={e => set("title", e.target.value)} required />
+      </label>
+      <label className={styles.label}>
+        Author
+        <input className={styles.input} value={f.author || ""} onChange={e => set("author", e.target.value)}  />
       </label>
       <label className={styles.label}>
         Content

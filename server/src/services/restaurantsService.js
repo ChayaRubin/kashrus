@@ -36,11 +36,14 @@ function parseImages(images) {
 
 
 export async function list({ where = {}, skip = 0, take = 100, orderBy = { id: "asc" } }) {
-  return prisma.restaurant.findMany({ where, skip, take, orderBy });
+  const rows = await prisma.restaurant.findMany({ where, skip, take, orderBy });
+  return rows.map((r) => ({ ...r, images: parseImages(r.images) }));
 }
 
 export async function getById(id) {
-  return prisma.restaurant.findUnique({ where: { id } });
+  const row = await prisma.restaurant.findUnique({ where: { id } });
+  if (!row) return null;
+  return { ...row, images: parseImages(row.images) };
 }
 
 // keep create/update/remove as you have, or strip logic if you want the controller to validate
