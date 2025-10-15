@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { SlideshowAPI } from "../../../app/api";
 import { uploadImage, createImagePreview, revokeImagePreview, validateImageFiles } from "../../../utils/imageUpload";
-import styles from "./AdminSlideshow.module.css";
+import styles from "./AdminSlideshow_temp.module.css";
 
 export default function AdminSlideshow() {
   const [slides, setSlides] = useState([]);
