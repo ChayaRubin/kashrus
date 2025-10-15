@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
-import styles from './Navbar.module.css';
+import styles from './NavBar.module.css';
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
