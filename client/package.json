@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -39,11 +39,7 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.2"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "React + Vite setup for client",
   "prisma": {
     "seed": "node ./db/seed.js"
   }

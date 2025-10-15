@@ -1,23 +1,21 @@
 {
   "name": "client-site",
   "private": true,
+  "version": "1.0.0",
   "workspaces": [
-    "web",
-    "api"
+    "client",
+    "server"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev-api\" \"npm run dev-web\"",
-    "dev-api": "npm --workspace api run dev",
-    "dev-web": "npm --workspace web run dev",
-    "build": "npm --workspace api run build && npm --workspace web run build",
-    "start": "npm --workspace api run start & npm --workspace web run preview"
+    "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
+    "dev-server": "npm --workspace server run dev",
+    "dev-client": "npm --workspace client run dev",
+    "build": "npm --workspace client run build && npm --workspace server run build",
+    "start": "npm --workspace server run start & npm --workspace client run preview"
   },
   "devDependencies": {
     "concurrently": "^9.0.0",
     "prisma": "^6.15.0"
-  },
-  "prisma": {
-    "seed": "node seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
