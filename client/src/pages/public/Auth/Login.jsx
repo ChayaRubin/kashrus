@@ -1,10 +1,113 @@
+// // import { useState } from 'react';
+// // import { Link, useNavigate } from 'react-router-dom';
+// // import styles from './AuthForm.module.css';
+// // import { useUser } from '../../../contexts/AuthContext.jsx';
+// // import { Auth } from '../../../app/api.js';   // ✅ use the Auth service we defined in api.js
+
+// // export default function Login() {
+// //   const [form, setForm] = useState({ email: '', password: '' });
+// //   const [errors, setErrors] = useState({});
+// //   const [generalError, setGeneralError] = useState('');
+// //   const navigate = useNavigate();
+// //   const { login } = useUser();
+
+// //   const validateForm = () => {
+// //     const errs = {};
+// //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// //     if (!form.email || !emailRegex.test(form.email)) {
+// //       errs.email = 'Please enter a valid email';
+// //     }
+// //     if (!form.password) {
+// //       errs.password = 'Please enter a password';
+// //     }
+
+// //     setErrors(errs);
+// //     return Object.keys(errs).length === 0;
+// //   };
+
+// //   const handleSubmit = async (e) => {
+// //     e.preventDefault();
+// //     setGeneralError('');
+
+// //     if (!validateForm()) return;
+
+// //     try {
+// //       await Auth.login(form.email, form.password);   // ✅ use shared api
+// //       await login(form.email, form.password);
+// //       alert("Logged in successfully");
+// //       navigate("/home");
+// //     } catch (err) {
+// //       if (err.message.includes("401")) {
+// //         setGeneralError('Email or Password is incorrect');
+// //       } else {
+// //         setGeneralError("System error, please try again later");
+// //         console.error(err);
+// //       }
+// //     }
+// //   };
+
+// //   const handleChange = (field) => (e) => {
+// //     setForm({ ...form, [field]: e.target.value });
+// //     if (errors[field]) {
+// //       setErrors((prev) => {
+// //         const newErrors = { ...prev };
+// //         delete newErrors[field];
+// //         return newErrors;
+// //       });
+// //     }
+// //   };
+
+// //   return (
+// //     <div className={styles.authWrapper}>
+// //       <form onSubmit={handleSubmit} className={styles.authForm}>
+// //         {generalError && <p className={styles.error}>{generalError}</p>}
+
+// //         <input
+// //           name="email"
+// //           placeholder="Email"
+// //           value={form.email}
+// //           onChange={handleChange("email")}
+// //           className={`${styles.authInput} ${errors.email ? styles.invalid : ''}`}
+// //         />
+// //         {errors.email && <p className={styles.error}>{errors.email}</p>}
+
+// //         <input
+// //           name="password"
+// //           type="password"
+// //           placeholder="Password"
+// //           value={form.password}
+// //           onChange={handleChange("password")}
+// //           className={`${styles.authInput} ${errors.password ? styles.invalid : ''}`}
+// //         />
+// //         {errors.password && <p className={styles.error}>{errors.password}</p>}
+
+// //         <button className={styles.authButton}>Log In</button>
+
+// //         <a href="http://localhost:5000/auth/google" className={styles.socialButton}>
+// //           <img
+// //             src="https://www.svgrepo.com/show/475656/google-color.svg"
+// //             alt="Google"
+// //             className={styles.socialIcon}
+// //           />
+// //           Continue with Google
+// //         </a>
+
+// //         <Link to="/signup" className={styles.authLink}>
+// //           Don’t have an account? Sign up
+// //         </Link>
+// //       </form>
+// //     </div>
+// //   );
+// // }
 // import { useState } from 'react';
 // import { Link, useNavigate } from 'react-router-dom';
 // import styles from './AuthForm.module.css';
 // import { useUser } from '../../../contexts/AuthContext.jsx';
-// import { Auth } from '../../../app/api.js';   // ✅ use the Auth service we defined in api.js
+// import { Auth } from '../../../app/api.js';   // ✅ use the Auth service
 
 // export default function Login() {
+  
 //   const [form, setForm] = useState({ email: '', password: '' });
 //   const [errors, setErrors] = useState({});
 //   const [generalError, setGeneralError] = useState('');
@@ -33,16 +136,18 @@
 //     if (!validateForm()) return;
 
 //     try {
-//       await Auth.login(form.email, form.password);   // ✅ use shared api
+//       // authenticate via backend
+//       await Auth.login(form.email, form.password);
+//       // update global auth context
 //       await login(form.email, form.password);
-//       alert("Logged in successfully");
+
 //       navigate("/home");
 //     } catch (err) {
-//       if (err.message.includes("401")) {
-//         setGeneralError('Email or Password is incorrect');
+//       console.error(err);
+//       if (err.status === 401) {
+//         setGeneralError('Email or password is incorrect');
 //       } else {
-//         setGeneralError("System error, please try again later");
-//         console.error(err);
+//         setGeneralError(err.message || "System error, please try again later");
 //       }
 //     }
 //   };
@@ -104,7 +209,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './AuthForm.module.css';
 import { useUser } from '../../../contexts/AuthContext.jsx';
-import { Auth } from '../../../app/api.js';   // ✅ use the Auth service
+import { Auth } from '../../../app/api.js';   // use your Auth service
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -113,6 +218,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useUser();
 
+  // --- Form validation ---
   const validateForm = () => {
     const errs = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -128,21 +234,27 @@ export default function Login() {
     return Object.keys(errs).length === 0;
   };
 
+  // --- Handle form submission ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setGeneralError('');
 
     if (!validateForm()) return;
 
+    console.log("Submitting login form...");
+    console.log("Email entered:", form.email);
+    console.log("Password entered:", form.password); // ⚠️ Only for debug
+
     try {
-      // authenticate via backend
+      // Authenticate via backend
       await Auth.login(form.email, form.password);
-      // update global auth context
+      // Update global auth context
       await login(form.email, form.password);
 
+      console.log("Login successful");
       navigate("/home");
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err);
       if (err.status === 401) {
         setGeneralError('Email or password is incorrect');
       } else {
@@ -151,6 +263,28 @@ export default function Login() {
     }
   };
 
+  // --- Handle admin login ---
+  const handleAdminLogin = async (e) => {
+    e.preventDefault();
+    setGeneralError('');
+
+    if (!validateForm()) return;
+
+    try {
+      await Auth.login(form.email, form.password);
+      await login(form.email, form.password);
+      navigate("/admin");
+    } catch (err) {
+      console.error("Admin login error:", err);
+      if (err.status === 401) {
+        setGeneralError('Email or password is incorrect');
+      } else {
+        setGeneralError(err.message || "System error, please try again later");
+      }
+    }
+  };
+
+  // --- Handle input changes ---
   const handleChange = (field) => (e) => {
     setForm({ ...form, [field]: e.target.value });
     if (errors[field]) {
@@ -186,7 +320,8 @@ export default function Login() {
         />
         {errors.password && <p className={styles.error}>{errors.password}</p>}
 
-        <button className={styles.authButton}>Log In</button>
+        <button type="submit" className={styles.authButton}>Log In</button>
+        <button type="button" onClick={handleAdminLogin} className={`${styles.authButton} ${styles.adminButton}`}>Admin Login</button>
 
         <a href="http://localhost:5000/auth/google" className={styles.socialButton}>
           <img
@@ -204,3 +339,4 @@ export default function Login() {
     </div>
   );
 }
+

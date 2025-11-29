@@ -1,11 +1,17 @@
+/* body {
+  padding-top: 70px; /* prevents content from being hidden under navbar */
+/* } */ 
+
 .wrap {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  z-index: 1000;
   width: 100%;
   background: #ecf6f8;
   border-bottom: 1px solid #d6e8eb;
 }
+
 
 .inner {
   display: flex;
@@ -19,6 +25,7 @@
   font-size: 1.1rem;
   text-decoration: none;
   color: #0f2f36;
+  padding: 30px 30px;
 }
 
 .nav {
@@ -61,6 +68,10 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.brand img {
+  margin-top: 15px; /* adjust this number to move more or less */
 }
 
 /* Mobile layout */

@@ -1,56 +1,90 @@
-import { PrismaClient, Level } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
+// -- Restaurants
+// INSERT INTO "public"."Restaurant" ("id","name","city","neighborhood","address","phone","hechsher","website","images","level","category","type","ratingCount","ratingSum") VALUES
+// (1,'Entrecote','Jerusalem','Har Chotzvim','22 Kiryat Hamada St, Har Chotzvim',NULL,'Eida Chareidis','https://entrecote-jerusalem.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756211144/Screenshot_2025-08-26_152524_yojxmv.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (2,'Grill Bar','Jerusalem','Old City / Mamilla','1 Hasoreg St. ','050-5299312','Rav Machpud - Yorah Deah','https://grill-bar.rol.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760472763/restaurants/oynih6nbkzieaq29s1vt.png"]','THIRD','MEAT','SIT_DOWN',0,0),
+// (3,'Lechem Basar','Jerusalem','Talpiyot','David Remez 4, The First Station, David Remez Square','02-6244808','Rav Machpud - Yorah Deah','https://lehembasar-jerusalem.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756211546/Screenshot_2025-08-26_153206_rfrtfr.png"]','THIRD','MEAT','SIT_DOWN',0,0),
+// (4,'Thailandi Sushi','Jerusalem','Talpiyot / Emek','42 Emek Refaim St.','026748886','Rav Machpud - Yorah Deah','https://thailandi.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760473704/restaurants/sm0alid56atriuqykrxw.png"]','THIRD','MEAT','FAST_FOOD',0,0),
+// (5,'Tzion Hagadol','Jerusalem ','Ramot / Ramat Shlomo','255 Golda Meir Blvd, Ramot Mall','073-7578851','Rav Machpud - Yorah Deah','https://zionhagadol.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760473902/restaurants/rassln9ex4bbdh0hifn6.png"]','THIRD','MEAT','FAST_FOOD',0,0),
+// (6,'Ruben','Jerusalem ','Givat Shaul / Har Nof','24 Kanfei Nesharim St.','02-647-5500','Rav Machpud - Yorah Deah','https://rubenisrael.co.il/branches/jerus/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760474154/restaurants/ncchsf0lfdcxzice6c3j.png","https://res.cloudinary.com/djgdnsyyf/image/upload/v1760474154/restaurants/ceqobayfu3ruy6elwxbp.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (7,'Hallo Teiman','Jerusalem ','Givat Shaul / Har Nof','13 Weizmann Boulevard','02-6522525','Rav Machpud - Yorah Deah','https://halloteiman.orderss.co.il/',NULL,'THIRD','MEAT','FAST_FOOD',0,0),
+// (8,'Babba Grill','Jerusalem ','Old City / Mamilla / Yaffo','30 Jaffa Street','058-3206921','Rav Machpud - Yorah Deah',NULL,'["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760474842/restaurants/waflr7oyg3cl3zjy2wi7.png"]','THIRD','MEAT','FAST_FOOD',0,0),
+// (9,'Atza Sushi Bar','Jerusalem ','Romeima / Shamgar','9 Yirmiyahu St.','02-5026232','Rav Rubin','https://atza.co.il/romema/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756209700/Screenshot_2025-08-26_145250_ovhumg.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (10,'Chalav U''Dvash','Jerusalem ','Ramat Eshkol / French Hill / Shmuel HaNavi','21 Hahagana St.','02-9999606','Rav Rubin','https://easy.co.il/en/page/10136427','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755994617/ChalavUdvashLogo_qu8ted.png"]','FIRST','DAIRY','SIT_DOWN',0,0),
+// (11,'Waffle Bar','Jerusalem ','Ramat Eshkol / French Hill / Shmuel HaNavi','7 Paran St.','02-5815434','Rav Rubin','https://www.wafflebar-re.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755994847/waffleBarLogo_xbnezy.png"]','FIRST','DAIRY','SIT_DOWN',0,0),
+// (12,'Waffle Bar','Jerusalem ','Ramot / Ramat Shlomo','255 Golda Meir Blvd, Ramot Mall','02-5702525','Rav Rubin','https://ramot-mall.co.il/shops/%d7%95%d7%95%d7%a4%d7%9c-%d7%91%d7%a8/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755994847/waffleBarLogo_xbnezy.png","https://res.cloudinary.com/djgdnsyyf/image/upload/v1760476125/restaurants/oyqexceddq6git9irzdm.png"]','FIRST','DAIRY','SIT_DOWN',0,0),
+// (13,'Big Bite','Jerusalem ','Romeima / Shamgar','16 Shamgar St.','02-5382660','Bedatz Eida Charadis',NULL,'["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756210745/Screenshot_2025-08-26_151838_uzjrxb.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (14,'Goldy''s','Jerusalem ','Romeima / Shamgar','18 Ezras Torah St.','02-6200100','Bedatz Eida Charedis','https://www.goldys.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756403105/Screenshot_2025-08-28_204448_suhtzs.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (15,'Bush Bagels','Jerusalem ','Beis Yisrael / Geula','61 Tsfanya St. ','02-6514123','Bedatz Eida Chareidis','https://bushbagel.click-eat.co.il/he','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756402233/Screenshot_2025-08-28_202804_wfu7zb.png"]','FIRST','DAIRY','FAST_FOOD',0,0),
+// (16,'Ice Story','Jerusalem ','Romeima / Shamgar','14 Shamgar','02-997260','Bedatz Eida Chareidis','https://www.1cestory.com/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756211246/Screenshot_2025-08-26_152706_ayftj5.png"]','FIRST','DAIRY','SIT_DOWN',0,0),
+// (17,'Ricotta','Jerusalem ','Har Chotzvim','3 Kiryat HaMada St.','02-587-0222','Kehilos','https://ricotta.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756210440/Screenshot_2025-08-26_151328_ovkosw.png"]','SECOND','DAIRY','SIT_DOWN',0,0),
+// (18,'Zalmens','Jerusalem ','Romeima / Shamgar','5 Louis Brandeis St.','077-7715550','Bedatz Eida Chareidis','https://zalmans.co.il/%d7%a1%d7%a0%d7%99%d7%a4%d7%99%d7%9d/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756210303/Screenshot_2025-08-26_150857_u2rhpy.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (19,'Zalmens','Jerusalem ','','225 Golda Meir Boulevard, Ramot Mall','077-7715550','Bedatz Eida Chareidis','https://zalmans.co.il/%d7%a1%d7%a0%d7%99%d7%a4%d7%99%d7%9d/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756210303/Screenshot_2025-08-26_150857_u2rhpy.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (20,'Sushi N Bagels','Jerusalem ','Romeima / Shamgar','Yirmiyahu 68, Jerusalem','02-544-3111','Bedatz Eida Chareidis','https://sushinbagels.com/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756209700/Screenshot_2025-08-26_145048_cz9qxa.png"]','FIRST','DAIRY','FAST_FOOD',0,0),
+// (21,'katsefet','Jerusalem ','Talpiyot / Emek','Hadar Mall','02-6566656','Chatam Sofer Bnei Brak','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','THIRD','DAIRY','ICE_CREAM',0,0),
+// (22,'katsefet','Jerusalem ','Har Nof / Bayit Vegan','1 Israel Zangwill St.','02-5822269','Rav Rubin','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (23,'katsefet','Jerusalem ','Old City / Mamilla / Yaffo','127 HaYehudim St.','02-5441411','Rav Rubin','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (24,'katsefet','Jerusalem ','Romeima / Shamgar','15 Sarei Yisrael St.','02-6206668','Rav Rubin','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (25,'katsefet','Jerusalem ','Ramot / Ramat Shlomo','225 Golda Meir Boulevard, Ramot Mall','02-6277350','Rav Rubin','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (26,'katsefet','Jerusalem ','Old City / Mamilla / Yaffo','2 Ben Yehuda St.','02-6253727','Chatam Sofer Bnei Brak','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','THIRD','DAIRY','ICE_CREAM',0,0),
+// (27,'katsefet','Jerusalem ','Old City / Mamilla / Yaffo','34 Yaffo St.','02-5444058','Chatam Sofer Bnei Brak','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','THIRD','DAIRY','ICE_CREAM',0,0),
+// (28,'katsefet','Jerusalem ','Ramat Eshkol / French Hill / Shmuel HaNavi','9 Paran St.','02-5722755','Rav Rubin','https://katsefet.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (29,'Gvina V''Agvania','Jerusalem ','Old City / Mamilla / Yaffo','52 King George Street, Jerusalem','053-8093422','Rav Rubin','https://www.mishlohim.co.il/menu/5387/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756287910/Screenshot_2025-08-27_124337_uioecb.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (30,'papagaio','Jerusalem ','Talpiyot / Emek','3 Yad Harutsim St.','02-6745745','OU','https://papagaiojerusalem.rest.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760561964/restaurants/vn2u12zekyjx6m94ni1l.png"]','THIRD','MEAT','SIT_DOWN',0,0),
+// (31,'Lacassa','Jerusalem ','Beis Yisrael / Geula','12 Ya''akov Meir St.','058-5023807','Bedatz Eida Chareidis',NULL,NULL,'FIRST','MEAT','FAST_FOOD',0,0),
+// (32,'Benni’s poppers','Jerusalem ','','9 Adoniyahu Hacohen St.','054-2601444',NULL,NULL,'["https://res.cloudinary.com/djgdnsyyf/image/upload/v1756403662/469304374_614150621043875_7977287674872800340_n_ms4alx.jpg"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (33,'InBurger','Jerusalem ','Ramat Eshkol / French Hill / Shmuel HaNavi','9 Paran St.','02-5363777','Rav Rubin','https://easy.co.il/en/page/26866639','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1757065217/Screenshot_2025-09-05_120106_v0wckk.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (34,'Greg’s','Jerusalem ','Ramot / Ramat Shlomo','255 Golda Meir Blvd, Ramot Mall','077-4447517','Kehillos','https://kitchen-ramot.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760563041/restaurants/wiom3ugoas3gkjotfxc2.png"]','SECOND','MEAT','FAST_FOOD',0,0),
+// (35,'Roost','Jerusalem ','Ramat Eshkol / French Hill / Shmuel HaNavi','7 Paran St.','058-746-2589','Rav Rubin','https://www.roostjerusalem.com/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760563249/restaurants/lvnkilnvvuv1xtbaiutn.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (36,'Noya','Jerusalem ','Old City / Mamilla / Yaffo','3 Shlomzion Hamalka St.','077-2307590','Kehilos','https://noya-jerusalem.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760565254/restaurants/bsftnzqhj6yscix1x9pg.png"]','SECOND','MEAT','SIT_DOWN',0,0),
+// (37,'Sushi Tokyo','Jerusalem ','Beis Yisrael / Geula','12 Rabbi Sonnenfeld St.','076-5403667','Rav Rubin','https://www.sushitokyo.co.il/%D7%AA%D7%A4%D7%A8%D7%99%D7%98','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760565917/restaurants/zrda5pbohzie8lmekhsl.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (38,'Sushi Tokyo','Jerusalem ','Old City / Mamilla / Yaffo','111 Agrippas St','076-5403667','Rav Rubin','https://www.sushitokyo.co.il/%D7%AA%D7%A4%D7%A8%D7%99%D7%98','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760565833/restaurants/s4txsecdo54u1ubm5nfr.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (39,'SkyLine','Jerusalem ','','4 Zeev Vilnai St.','072-397-5890','Rav Efrati','https://www.skylinejerusalem.com/he/%D7%A8%D7%90%D7%A9%D7%99/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1757065217/Screenshot_2025-09-05_115554_kx0zvz.png"]','FIRST','MEAT','SIT_DOWN',0,0),
+// (40,'Denver Steak House','Jerusalem','Talpiyot / Emek','101 Derech Hebron St.','072-397-5890','Rav Rubin','https://www.facebook.com/DenverSteakHouseJerusalem','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760566823/restaurants/denver_steakhouse.png"]','FIRST','MEAT','SIT_DOWN',0,0),
+// (41,'Meat & Eat','Jerusalem','Har Nof / Bayit Vegan','3 Israel Zangwill St.','02-5823344','Rav Rubin','https://www.meateat.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567054/restaurants/meateat.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (42,'Cafe Cafe','Jerusalem','Talpiyot / Emek','15 Yad Harutsim St.','02-6745777','Kehilos','https://www.cafecafe.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567241/restaurants/cafecafe.png"]','FIRST','DAIRY','SIT_DOWN',0,0),
+// (43,'Pizza & Pasta','Jerusalem','Ramat Eshkol / French Hill / Shmuel HaNavi','12 Paran St.','02-5363999','Rav Rubin','https://pizzaandpasta.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567432/restaurants/pizzaandpasta.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (44,'Falafel Hakosem','Jerusalem','Old City / Mamilla / Yaffo','20 King George St.','02-6233444','Bedatz Eida Chareidis','https://falafelhakosem.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567618/restaurants/falafelhakosem.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (45,'Bagel Bar','Jerusalem','Beis Yisrael / Geula','5 Tsfanya St.','02-6514124','Bedatz Eida Chareidis','https://bagelbar.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567803/restaurants/bagelbar.png"]','FIRST','DAIRY','FAST_FOOD',0,0),
+// (46,'Rooftop Sushi','Jerusalem','Talpiyot / Emek','8 Yad Harutsim St.','02-6745788','Rav Rubin','https://rooftopsushi.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760567987/restaurants/rooftopsushi.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (47,'Meat Lovers','Jerusalem','Ramot / Ramat Shlomo','230 Golda Meir Blvd','02-6277500','Kehilos','https://meatlovers.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760568164/restaurants/meatlovers.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (48,'Sushi Bar','Jerusalem','Old City / Mamilla / Yaffo','50 Agrippas St.','02-6255000','Rav Rubin','https://sushibar.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760568341/restaurants/sushibar.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (49,'Ice Cream World','Jerusalem','Ramat Eshkol / French Hill / Shmuel HaNavi','10 Paran St.','02-5363770','Rav Rubin','https://icecreamworld.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760568525/restaurants/icecreamworld.png"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (50,'Grill House','Jerusalem','Har Chotzvim','5 Kiryat Hamada St.','02-5870333','Rav Machpud - Yorah Deah','https://grillhouse.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760568709/restaurants/grillhouse.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (51,'Pasta King','Jerusalem','Talpiyot / Emek','18 Yad Harutsim St.','02-6745800','Rav Rubin','https://pastaking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760568887/restaurants/pastaking.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (52,'Burger House','Jerusalem','Beis Yisrael / Geula','14 Tsfanya St.','02-6514120','Bedatz Eida Chareidis','https://burgerhouse.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569063/restaurants/burgerhouse.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (53,'Sushi King','Jerusalem','Ramat Eshkol / French Hill / Shmuel HaNavi','11 Paran St.','02-5363788','Rav Rubin','https://sushiking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569241/restaurants/sushiking.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (54,'Pizza Town','Jerusalem','Ramot / Ramat Shlomo','225 Golda Meir Blvd, Ramot Mall','02-6277555','Bedatz Eida Chareidis','https://pizzatown.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569425/restaurants/pizzatown.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (55,'Falafel King','Jerusalem','Old City / Mamilla / Yaffo','40 King George St.','02-6233440','Bedatz Eida Chareidis','https://falafelking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569607/restaurants/falafelking.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (56,'Bagel King','Jerusalem','Beis Yisrael / Geula','7 Tsfanya St.','02-6514125','Bedatz Eida Chareidis','https://bagelking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569791/restaurants/bagelking.png"]','FIRST','DAIRY','FAST_FOOD',0,0),
+// (57,'Sushi World','Jerusalem','Talpiyot / Emek','12 Yad Harutsim St.','02-6745822','Rav Rubin','https://sushiworld.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760569974/restaurants/sushiworld.png"]','FIRST','DAIRY','SUSHI',0,0),
+// (58,'Grill Master','Jerusalem','Har Chotzvim','10 Kiryat Hamada St.','02-5870335','Rav Machpud - Yorah Deah','https://grillmaster.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760570156/restaurants/grillmaster.png"]','FIRST','MEAT','FAST_FOOD',0,0),
+// (59,'Ice Cream King','Jerusalem','Ramat Eshkol / French Hill / Shmuel HaNavi','12 Paran St.','02-5363799','Rav Rubin','https://icecreamking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760570342/restaurants/icecreamking.png"]','FIRST','DAIRY','ICE_CREAM',0,0),
+// (60,'Pizza Palace','Jerusalem','Ramot / Ramat Shlomo','225 Golda Meir Blvd, Ramot Mall','02-6277566','Bedatz Eida Chareidis','https://pizzapalace.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760570528/restaurants/pizzapalace.png"]','FIRST','DAIRY','PIZZA',0,0),
+// (61,'Burger King','Jerusalem','Beis Yisrael / Geula','9 Tsfanya St.','02-6514130','Bedatz Eida Chareidis','https://burgerking.co.il/','["https://res.cloudinary.com/djgdnsyyf/image/upload/v1760570712/restaurants/burgerking.png"]','FIRST','MEAT','FAST_FOOD',0,0);
 
-const prisma = new PrismaClient().$extends(withAccelerate())
+// -- Feedback
+// INSERT INTO "public"."Feedback" ("id", "userId", "restaurantId", "message", "status", "createdAt") VALUES
+// (1, 1, 1, 'vvv', 'RESOLVED', '2025-10-14 20:02:14.791'),
+// (2, 1, 10, 'rtyuiop', 'NEW', '2025-10-18 19:40:11.253'),
+// (3, 1, 10, 'm', 'NEW', '2025-10-18 19:41:40.936'),
+// (4, 1, 46, 'gggggg', 'RESOLVED', '2025-10-20 09:01:25.469');
 
-async function main() {
-  await prisma.restaurant.createMany({
-    data: [
-      {
-        name: "Shalom Grill",
-        level: "FIRST",
-        category: "MEAT",
-        type: "SIT_DOWN",
-        city: "Jerusalem",
-        hechsher: "Badatz",
-        images: "/images/shalom1.jpg"
-      },
-      {
-        name: "Burger Express",
-        level: "SECOND",
-        category: "MEAT",
-        type: "FAST_FOOD",
-        city: "Tel Aviv",
-        hechsher: "Rabbanut Mehadrin",
-        images: "/images/burger.jpg"
-      },
-      {
-        name: "Pizza Bella",
-        level: "FIRST",
-        category: "DAIRY",
-        type: "PIZZA",
-        city: "Bnei Brak",
-        hechsher: "Rabbanut",
-        images: "/images/pizza.jpg"
-      },
-      {
-        name: "Ice Dream",
-        level: "THIRD",
-        category: "DAIRY",
-        type: "ICE_CREAM",
-        city: "Haifa",
-        hechsher: "Badatz",
-        images: "/images/icecream.jpg"
-      }
-    ]
-  })
-}
+// -- Slideshow Images
+// INSERT INTO "public"."SlideshowImage" ("id", "url", "title", "order", "active", "createdAt") VALUES
+// (1, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1756046334/Screenshot_2025-08-24_173834_uus15d.png', 'Chalav U''Dvash French Fries', 0, true, '2025-10-14 19:15:24.056'),
+// (2, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1756672996/Screenshot_2025-08-31_234235_p70ylu.png', 'Chalav U''Dvash Salad ', 1, true, '2025-10-14 19:18:09.972'),
+// (3, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1756045631/Screenshot_2025-08-24_172613_vw4bti.png', 'Chalav U''Dvash Shakshuka', 2, true, '2025-10-14 19:19:08.404'),
+// (4, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995701/SlideShowEntricote_vqt0jl.png', 'Entrecote ', 3, true, '2025-10-14 19:19:49.972'),
+// (8, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1760622378/restaurants/lm3t5ln9i7lqmczc48to.png', '', 5, true, '2025-10-16 13:46:19.942'),
+// (9, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1760622386/restaurants/r4y8ob8xwlhq8hirmmg9.png', '', 6, true, '2025-10-16 13:46:26.525'),
+// (11, 'https://res.cloudinary.com/djgdnsyyf/image/upload/v1760622909/restaurants/i8nciijy1idgq6qpz1ph.png', 'clear', 8, true, '2025-10-16 13:55:10.674');
 
-main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+// -- Users
+// INSERT INTO "public"."User" ("id", "name", "email", "role", "can_self_book") VALUES
+// (1, 'chaya', 'ct3227200@gmail.com', 'admin', false),
+// (2, 'Admin', 'admin@test.com', 'admin', false);
+
+// -- Passwords
+// INSERT INTO "public"."Password" ("userId", "password_hash") VALUES
+// (1, '$2a$10$nQLfRMACvPYmNs.hw7dxv.js8riOX3um9w.lqre1Iw1wcyydiasF6'),
+// (2, '$2a$10$Z8G47RAJjhWteEzLsxbxWeZoTiFoAG/kP/1rKPxZ2pYvfTujXA2bK');

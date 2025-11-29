@@ -89,7 +89,9 @@ function HomeCategoryPage() {
 export default function Home() {
   const nav = useNavigate();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([]); // currently visible
+  const [allResults, setAllResults] = useState([]); // full list from API
+  const [visibleCount, setVisibleCount] = useState(8);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [slides, setSlides] = useState([]);
@@ -179,6 +181,8 @@ export default function Home() {
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setAllResults([]);
+      setVisibleCount(8);
       setOpen(false);
       return;
     }
@@ -190,10 +194,13 @@ export default function Home() {
           types: ["FAST_FOOD", "SIT_DOWN", "PIZZA", "SUSHI", "BAGELS", "FALAFEL", "ICE_CREAM"],
           levels: ["FIRST", "SECOND", "THIRD"],
         });
+        setAllResults(data);
+        setVisibleCount(8);
         setResults(data.slice(0, 8));
         setOpen(true);
       } catch {
         setResults([]);
+        setAllResults([]);
         setOpen(false);
       } finally {
         setLoading(false);
@@ -201,6 +208,20 @@ export default function Home() {
     }, 250);
     return () => clearTimeout(t);
   }, [query]);
+
+  // load more when scrolled to bottom of results box
+  const onResultsScroll = (e) => {
+    const el = e.currentTarget;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4; // small threshold
+    if (!atBottom) return;
+
+    // if more items available, reveal next chunk
+    if (visibleCount < allResults.length) {
+      const next = Math.min(visibleCount + 8, allResults.length);
+      setVisibleCount(next);
+      setResults(allResults.slice(0, next));
+    }
+  };
 
   useEffect(() => {
     const onDocClick = (e) => {
@@ -236,7 +257,7 @@ export default function Home() {
             className={s.searchInput}
           />
           {open && results.length > 0 && (
-            <div className={s.results}>
+            <div className={s.results} onScroll={onResultsScroll}>
               {results.map((r) => (
                 <button
                   key={r.id}
@@ -246,11 +267,14 @@ export default function Home() {
                   <div className={s.resultText}>
                     <div className={s.resultName}>{r.name}</div>
                     <div className={s.resultMeta}>
-                      {[r.city, r.address, r.hechsher].filter(Boolean).join(" • ")}
+                      {[ r.address, r.hechsher, r.neighborhood].filter(Boolean).join(" • ")}
                     </div>
                   </div>
                 </button>
               ))}
+              {visibleCount < allResults.length && (
+                <div className={s.noResults}>Scroll for more…</div>
+              )}
             </div>
           )}
           {open && !loading && results.length === 0 && (

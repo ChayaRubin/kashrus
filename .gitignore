@@ -5,3 +5,4 @@ node_modules
 client/.env
 db/.env
 server/.env
+.vercel

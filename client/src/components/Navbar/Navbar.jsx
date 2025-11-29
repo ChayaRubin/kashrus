@@ -23,7 +23,7 @@ export default function Navbar() {
         {/* Left side (brand) */}
         <div className={styles.left}>
           <NavLink to="/" className={styles.brand}>
-            <img src="https://res.cloudinary.com/djgdnsyyf/image/upload/v1755995375/KatsefetLogo_mlxooj.jpg" alt="Kashrus Web" width="50" height="50"/>
+            <img src="https://res.cloudinary.com/djgdnsyyf/image/upload/v1760655805/logoIsrael_zb6ci0.png" alt="Kashrus Web" width="50" height="50"/>
            </NavLink>
         </div>
 

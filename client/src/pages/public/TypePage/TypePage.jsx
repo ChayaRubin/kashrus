@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Restaurants } from "../../../app/api.js";
 import s from "./TypePage.module.css";
@@ -11,7 +11,7 @@ const TYPES_BY_CATEGORY = {
 const LEVELS = ["FIRST", "SECOND", "THIRD"];
 
 const NEIGHBORHOODS = [
-  "Har Nof / Bayit Vegan",
+  "Bayit Vegan / Kriyat Yovel",
   "Talpiyot / Emek",
   "Ramot / Ramat Shlomo",
   "Romeima / Shamgar",
@@ -30,12 +30,15 @@ export default function TypePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const options = TYPES_BY_CATEGORY[category] || [];
 
+  const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedLevels, setSelectedLevels] = useState([]);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
   const [openDropdown, setOpenDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [hasMore, setHasMore] = useState(true);
 
   function toggle(arr, val) {
     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
@@ -56,6 +59,12 @@ export default function TypePage() {
     setSelectedTypes(initialTypes.filter((t) => (TYPES_BY_CATEGORY[category] || []).includes(t)));
     setSelectedLevels(initialLevels.filter((l) => LEVELS.includes(l)));
     setSelectedNeighborhood(neighborhoodParam || "");
+    
+    // Reset pagination when filters change
+    setVisibleCount(10);
+    setAllRestaurants([]);
+    setRestaurants([]);
+    setHasMore(true);
   }, [category]);
 
   // Sync URL
@@ -73,23 +82,51 @@ export default function TypePage() {
     setSearchParams(params, { replace: true });
   }, [selectedTypes, selectedLevels, selectedNeighborhood, setSearchParams]);
 
-  // Fetch restaurants
+  // Fetch all restaurants when filters change
   useEffect(() => {
     if (selectedTypes.length === 0 && selectedLevels.length === 0) {
+      setAllRestaurants([]);
       setRestaurants([]);
+      setHasMore(false);
       return;
     }
+    
     setLoading(true);
     Restaurants.list({
       category,
       types: selectedTypes,
       levels: selectedLevels,
       neighborhood: selectedNeighborhood || undefined,
+      // Load all results at once (like Home page search)
     })
-      .then(setRestaurants)
-      .catch(() => setRestaurants([]))
+      .then((data) => {
+        // Sort by level priority: FIRST, then SECOND, then THIRD
+        const sortedData = data.sort((a, b) => {
+          const levelOrder = { 'FIRST': 1, 'SECOND': 2, 'THIRD': 3 };
+          return levelOrder[a.level] - levelOrder[b.level];
+        });
+        
+        setAllRestaurants(sortedData);
+        setRestaurants(sortedData.slice(0, 10)); // Show first 10
+        setVisibleCount(10);
+        setHasMore(sortedData.length > 10);
+      })
+      .catch(() => {
+        setAllRestaurants([]);
+        setRestaurants([]);
+        setHasMore(false);
+      })
       .finally(() => setLoading(false));
   }, [category, selectedTypes, selectedLevels, selectedNeighborhood]);
+
+  const loadMore = () => {
+    if (!hasMore) return;
+    
+    const nextCount = Math.min(visibleCount + 10, allRestaurants.length);
+    setVisibleCount(nextCount);
+    setRestaurants(allRestaurants.slice(0, nextCount));
+    setHasMore(nextCount < allRestaurants.length);
+  };
 
   return (
     <div className={s.wrap}>
@@ -116,17 +153,10 @@ export default function TypePage() {
     />
   </label>
 ))}
-
-
-
   </div>
 </div>
-
 </div>
-
-
-
-      <h2 className={s.title}>{category}</h2>
+      <h4 className={s.title}>{category}</h4>
 
       {/* TYPES */}
       <div className={s.section}>
@@ -188,36 +218,69 @@ export default function TypePage() {
         {loading ? (
           <p>Loading…</p>
         ) : restaurants.length > 0 ? (
-          <ul className={s.results}>
-            {restaurants.map((r) => (
-              <li
-                key={r.id}
-                onClick={() =>
-                  nav(`/restaurant/${r.id}`, {
-                    state: {
-                      from: `/browse/${category}?types=${selectedTypes.join(",")}&levels=${selectedLevels.join(",")}&neighborhood=${selectedNeighborhood}`,
-                    },
-                  })
-                }
-                className={s.resultItem}
-              >
-                <div className={s.resultContent}>
-                  <strong>{r.name}</strong> — {r.type} ({r.level})
-                  <div className={s.meta}>
-                    <p>
-                       {r.hechsher || "N/A"}
-                    </p>
-                    <p>
-                       {r.address || "N/A"}
-                    </p>
-                    <p>
-                       {r.neighborhood || "N/A"}
-                    </p>
+          <>
+            <ul className={s.results}>
+              {restaurants.map((r) => (
+                <li
+                  key={r.id}
+                  onClick={() =>
+                    nav(`/restaurant/${r.id}`, {
+                      state: {
+                        from: `/browse/${category}?types=${selectedTypes.join(",")}&levels=${selectedLevels.join(",")}&neighborhood=${selectedNeighborhood}`,
+                      },
+                    })
+                  }
+                  className={s.resultItem}
+                >
+                  <div className={s.resultContent}>
+                    <div className={s.cardHeader}>
+                      <strong>{r.name}</strong>
+                      <span className={`${s.levelBadge} ${s[`level${r.level}`]}`}>
+                        {r.level}
+                      </span>
+                    </div>
+                    
+                    <div className={s.typeInfo}>
+                      <span className={s.typeLabel}>{r.type.replace(/_/g, ' ')}</span>
+                    </div>
+                    
+                    <div className={s.meta}>
+                      <div className={s.metaItem}>
+                        <span className={s.metaLabel}>Hechsher:</span>
+                        <span className={s.metaText}>{r.hechsher || "N/A"}</span>
+                      </div>
+                      <div className={s.metaItem}>
+                        <span className={s.metaLabel}>Address:</span>
+                        <span className={s.metaText}>{r.address || "N/A"}</span>
+                      </div>
+                      <div className={s.metaItem}>
+                        <span className={s.metaLabel}>Area:</span>
+                        <span className={s.metaText}>{r.neighborhood || "N/A"}</span>
+                      </div>
+                      {r.city && (
+                        <div className={s.metaItem}>
+                          <span className={s.metaLabel}>City:</span>
+                          <span className={s.metaText}>{r.city}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+
+            {/* Load more */}
+            {restaurants.length > 0 && hasMore && (
+              <div className={s.loadMoreWrap}>
+                <button
+                  className={s.loadMoreBtn}
+                  onClick={loadMore}
+                >
+                  Load more
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <p>No restaurants found.</p>
         )}

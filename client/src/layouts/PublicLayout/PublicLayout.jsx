@@ -14,6 +14,13 @@ export default function PublicLayout() {
 
       <footer className={styles.footer}>
         <a 
+          href="mailto:ct3227200@gmail.com?subject=Hello&body=Hi%20there!" 
+          className={styles.footerLink}
+        >
+          Contact Me - ct3227200@gmail.com
+        </a>
+        <br />
+        <a 
           href="https://pixel-perfect-2b1f2fe2.base44.app/" 
           target="_blank" 
           rel="noopener noreferrer"

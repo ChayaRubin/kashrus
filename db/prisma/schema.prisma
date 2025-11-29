@@ -8,15 +8,13 @@
 //   url      = env("DATABASE_URL")
 // }
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  //directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db" // <-- this is required
 }
 
 generator client {
   provider = "prisma-client-js"
 }
-
 
 enum Level {
   FIRST

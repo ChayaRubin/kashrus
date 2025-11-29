@@ -26,3 +26,4 @@ dist-ssr
 git rm --cached db/.env
 git rm --cached server/.env
 git commit -m "Remove .env files from repository"
+.vercel

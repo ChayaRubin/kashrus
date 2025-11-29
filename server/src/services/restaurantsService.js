@@ -12,7 +12,6 @@ const VALID_TYPES = [
   "PIZZA",
   "FALAFEL",
   "ICE_CREAM",
-  "OTHER",
 ];
 
 // Helper: normalize images array -> string
@@ -36,7 +35,11 @@ function parseImages(images) {
 
 
 export async function list({ where = {}, skip = 0, take = 100, orderBy = { id: "asc" } }) {
-  const rows = await prisma.restaurant.findMany({ where, skip, take, orderBy });
+  const options = { where, orderBy };
+  if (skip) options.skip = skip;
+  if (take !== undefined) options.take = take;
+  
+  const rows = await prisma.restaurant.findMany(options);
   return rows.map((r) => ({ ...r, images: parseImages(r.images) }));
 }
 

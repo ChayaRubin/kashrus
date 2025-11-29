@@ -129,6 +129,12 @@ export default function RestaurantDetail() {
     Restaurants.get(id).then(setR).catch(console.error);
   }, [id]);
 
+  useEffect(() => {
+  window.scrollTo(0, 0); // 👈 scrolls to the top
+  Restaurants.get(id).then(setR).catch(console.error);
+}, [id]);
+
+
   if (!r) return <p className={s.info}>Loading…</p>;
 
   const images = Array.isArray(r.images)
@@ -147,11 +153,12 @@ export default function RestaurantDetail() {
       </div>
 
       {/* Title + meta */}
-      <h2 className={s.title}>{r.name}</h2>
-      <div className={s.meta}>
-        Level: {r.level} {r.hechsher ? `• ${r.hechsher}` : ""}{" "}
-        {r.city ? `• ${r.city}` : ""} {r.category ? ` • ${r.category}` : ""}
-      </div>
+<div className={s.metaLine}>
+  <span className={s.label}>Level</span> {r.level}
+  {r.hechsher && <> <span className={s.divider}>|</span> {r.hechsher}</>}
+  {r.city && <> <span className={s.divider}>|</span> {r.city}</>}
+  {r.category && <> <span className={s.divider}>|</span> {r.category}</>}
+</div>
 
       {/* Gallery */}
       {images.length > 0 && (

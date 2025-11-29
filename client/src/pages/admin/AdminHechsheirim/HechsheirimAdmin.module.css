@@ -13,6 +13,7 @@
 .label { display:flex; flex-direction:column; gap:4px; font-weight:500; }
 .textarea { padding:10px; border:1px solid #ddd; border-radius:8px; min-height:140px; }
 .formActions { display:flex; justify-content:flex-end; gap:8px; } */
+
 .container {
   max-width: 1000px;
   margin: 0 auto;

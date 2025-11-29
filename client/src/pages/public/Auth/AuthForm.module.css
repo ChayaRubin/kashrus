@@ -186,3 +186,12 @@
 .invalid {
   border: 1px solid #d9534f;
 }
+
+.adminButton {
+  background-color: #dc3545;
+  margin-top: 0.5rem;
+}
+
+.adminButton:hover {
+  background-color: #c82333;
+}

@@ -28,7 +28,7 @@ async function signup(req, res) {
 
 // --- Login ---
 async function login(req, res) {
-  console.log("Login body:", req.body); // 👈 debug log
+  console.log("Login body:", req.body); 
 
   const { email, password } = req.body || {};
   if (!email || !password) {
