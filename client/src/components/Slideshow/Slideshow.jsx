@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './Slideshow.module.css';
 
 export default function Slideshow({
+  
   images,
   height = '360px',
   interval = 3000,
