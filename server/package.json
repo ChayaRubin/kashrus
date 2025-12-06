@@ -7,6 +7,7 @@
     "dev": "nodemon --watch src --ext js,mjs --exec node src/index.js",
     "start": "node src/index.js",
     "build": "echo 'No server build needed for pure Node.js project'",
+    "postinstall": "prisma generate --schema=../db/prisma/schema.prisma",
     "db:generate": "prisma generate --schema=../db/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema=../db/prisma/schema.prisma",
     "db:studio": "prisma studio --schema=../db/prisma/schema.prisma"
