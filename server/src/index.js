@@ -27,8 +27,22 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
+// CORS: production = FRONTEND_URL only; local = any localhost/127.0.0.1
+const isProduction = process.env.FRONTEND_URL && !/localhost|127\.0\.0\.1/.test(process.env.FRONTEND_URL);
+const normalizeOrigin = (url) => (url || "").replace(/\/$/, ""); // no trailing slash
+const allowedFrontend = normalizeOrigin(process.env.FRONTEND_URL);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (isProduction && allowedFrontend) {
+      if (normalizeOrigin(origin) === allowedFrontend) return cb(null, origin);
+      return cb(null, false);
+    }
+    // Local dev: allow any localhost or 127.0.0.1
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return cb(null, origin);
+    return cb(null, false);
+  },
   credentials: true,
 }));
 app.use(passport.initialize());

@@ -12,6 +12,18 @@
   margin-bottom: 20px;
 }
 
+.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.loading {
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
 /* --- Form Section --- */
 .formSection {
   display: flex;

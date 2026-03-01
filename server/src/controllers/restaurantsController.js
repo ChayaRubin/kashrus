@@ -127,20 +127,14 @@ export async function list(req, res) {
     const legacyOne  = type ? [String(type).toUpperCase()] : [];
     const finalTypes = typesArr.length ? typesArr : legacyOne;
 
-    // levels (required)
     const rawLevels = toArrayUpper(levels);
-    if (finalTypes.length === 0 || rawLevels.length === 0) {
-      return res.json([]);
-    }
+    const expandedLevels = rawLevels.length > 0 ? expandLevels(rawLevels) : [];
 
-    const expandedLevels = expandLevels(rawLevels);
-
-    // Build filters with AND composition (much simpler/safer)
+    // Build filters: when no types/levels provided, show all for category
     const AND = [];
 
     if (categoryUp) AND.push({ category: categoryUp });
 
-    // ✅ Only valid Prisma enum values (no "OTHER")
     const validTypes = finalTypes.filter(t =>
       ["FAST_FOOD","SIT_DOWN","BAGELS","SUSHI","PIZZA","FALAFEL","ICE_CREAM"].includes(t)
     );
@@ -170,8 +164,8 @@ export async function list(req, res) {
         // Return rows where NEITHER neighborhood nor address contains ANY known part
         // i.e. NOT ( neighborhood contains any OR address contains any )
         const anyKnownInEitherField = [
-          ...KNOWN_PARTS.map(p => ({ neighborhood: { contains: p, mode: "insensitive" } })),
-          ...KNOWN_PARTS.map(p => ({ address: { contains: p, mode: "insensitive" } })),
+          ...KNOWN_PARTS.map(p => ({ neighborhood: { contains: p } })),
+          ...KNOWN_PARTS.map(p => ({ address: { contains: p } })),
         ];
         AND.push({ NOT: { OR: anyKnownInEitherField } });
       } else {
@@ -179,8 +173,8 @@ export async function list(req, res) {
         const parts = value.split("/").map(p => p.trim()).filter(Boolean);
         AND.push({
           OR: [
-            ...parts.map(p => ({ neighborhood: { contains: p, mode: "insensitive" } })),
-            ...parts.map(p => ({ address: { contains: p, mode: "insensitive" } })),
+            ...parts.map(p => ({ neighborhood: { contains: p } })),
+            ...parts.map(p => ({ address: { contains: p } })),
           ],
         });
       }
@@ -190,15 +184,17 @@ export async function list(req, res) {
     if (q && q.trim()) {
       AND.push({
         OR: [
-          { name:     { contains: q, mode: "insensitive" } },
-          { city:     { contains: q, mode: "insensitive" } },
-          { address:  { contains: q, mode: "insensitive" } },
-          { hechsher: { contains: q, mode: "insensitive" } },
+          { name:     { contains: q } },
+          { city:     { contains: q } },
+          { address:  { contains: q } },
+          { hechsher: { contains: q } },
         ],
       });
     }
 
     const where = AND.length ? { AND } : {};
+
+    console.log("Search where clause:", JSON.stringify(where, null, 2));
 
     const rows = await restaurantsService.list({
       where,
@@ -207,6 +203,7 @@ export async function list(req, res) {
       orderBy: { name: "asc" },
     });
 
+    console.log(`Search returned ${rows.length} results`);
     res.json(rows);
   } catch (err) {
     console.error("restaurantsController.list error:", err);

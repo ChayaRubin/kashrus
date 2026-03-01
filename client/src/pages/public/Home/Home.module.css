@@ -1,6 +1,8 @@
 .wrap {
   font-family: system-ui, sans-serif;
   color: #111;
+  margin-top: -80px; /* Compensate for layout padding */
+  margin-bottom: -80px; /* Compensate for layout padding */
 }
 
 /* Fullscreen hero */
@@ -18,7 +20,7 @@
 /* Search overlay top-right */
 .searchBox {
   position: absolute;
-  top: 10%;
+  top: 100px; /* Position below the fixed navbar */
   right: 15%;
   width: 25%;
   z-index: 20;

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import styles from './AdminUsers.module.css';
+import { UsersAPI } from '../../../app/api.js';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({
     id: null,
     name: '',
@@ -17,11 +19,17 @@ export default function AdminUsers() {
   useEffect(() => { fetchUsers(); }, []);
 
   async function fetchUsers() {
+    setLoading(true);
+    setError(null);
     try {
-      const { data } = await axios.get('http://localhost:5000/users', { withCredentials: true });
+      const data = await UsersAPI.list();
       setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching users:', err);
+      setError(err?.message || 'Failed to load users. If you see "too many connections", close Prisma Studio and try again.');
+      setUsers([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -33,7 +41,7 @@ export default function AdminUsers() {
     e.preventDefault();
     const payload = { ...form };
     try {
-      await axios.post('http://localhost:5000/users', payload, { withCredentials: true });
+      await UsersAPI.create(payload);
       setForm({ id: null, name: '', email: '', role: 'user', password: '' });
       fetchUsers();
     } catch (err) {
@@ -52,7 +60,7 @@ export default function AdminUsers() {
 
   const handleSave = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/users/${id}`, editedUser, { withCredentials: true });
+      await UsersAPI.update(id, editedUser);
       setEditingId(null);
       setEditedUser({});
       fetchUsers();
@@ -63,7 +71,7 @@ export default function AdminUsers() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/users/${id}`, { withCredentials: true });
+      await UsersAPI.remove(id);
       fetchUsers();
     } catch (err) {
       console.error('Error deleting user:', err);
@@ -102,6 +110,8 @@ export default function AdminUsers() {
         </button>
       </form>
 
+      {error && <p className={styles.error} style={{ marginBottom: '1rem' }}>{error}</p>}
+      {loading && <p className={styles.loading}>Loading users…</p>}
       <table className={styles.userTable}>
         <thead>
           <tr>
@@ -109,7 +119,7 @@ export default function AdminUsers() {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {!loading && users.map((user) => (
             <tr key={user.id} className={styles.userRow}>
               {['name', 'email'].map((field) => (
                 <td key={field}>

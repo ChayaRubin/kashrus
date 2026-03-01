@@ -189,19 +189,23 @@ export default function Home() {
     setLoading(true);
     const t = setTimeout(async () => {
       try {
+        console.log("Searching for:", query.trim());
         const data = await Restaurants.list({
           q: query.trim(),
           types: ["FAST_FOOD", "SIT_DOWN", "PIZZA", "SUSHI", "BAGELS", "FALAFEL", "ICE_CREAM"],
           levels: ["FIRST", "SECOND", "THIRD"],
         });
-        setAllResults(data);
+        console.log("Search results:", data);
+        const resultsArray = data || [];
+        setAllResults(resultsArray);
         setVisibleCount(8);
-        setResults(data.slice(0, 8));
-        setOpen(true);
-      } catch {
+        setResults(resultsArray.slice(0, 8));
+        setOpen(true); // Always open dropdown to show results or "no results" message
+      } catch (error) {
+        console.error("Search error:", error);
         setResults([]);
         setAllResults([]);
-        setOpen(false);
+        setOpen(true); // Open to show error state
       } finally {
         setLoading(false);
       }
@@ -253,10 +257,16 @@ export default function Home() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
             placeholder="Search for a restaurant..."
             className={s.searchInput}
           />
-          {open && results.length > 0 && (
+          {(loading || open) && query.trim() && (
+            <>
+              {loading && (
+                <div className={s.noResults}>Loading...</div>
+              )}
+              {!loading && results.length > 0 && (
             <div className={s.results} onScroll={onResultsScroll}>
               {results.map((r) => (
                 <button
@@ -277,8 +287,10 @@ export default function Home() {
               )}
             </div>
           )}
-          {open && !loading && results.length === 0 && (
+              {!loading && results.length === 0 && (
             <div className={s.noResults}>No results found</div>
+              )}
+            </>
           )}
         </div>
 

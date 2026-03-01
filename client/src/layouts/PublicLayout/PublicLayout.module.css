@@ -36,8 +36,9 @@
 
 .main {
   flex: 1;
-    /* background-color: #f5f5f5; */
-
+  padding-top: 80px; /* Account for fixed navbar */
+  padding-bottom: 80px; /* Account for fixed footer */
+  /* background-color: #f5f5f5; */
 }
 
 .footer {

@@ -269,7 +269,7 @@ h1 {
   }
 
   .cards {
-    grid-template-columns: 1fr; /* כרטיס אחד בכל שורה במסכים צרים */
+    grid-template-columns: 1fr; 
     margin-top: 20px;
   }
 

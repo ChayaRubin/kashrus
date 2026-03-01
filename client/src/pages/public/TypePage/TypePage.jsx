@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Restaurants } from "../../../app/api.js";
+import { Restaurants, Hechsheirim } from "../../../app/api.js";
 import s from "./TypePage.module.css";
 
 const TYPES_BY_CATEGORY = {
@@ -39,6 +39,8 @@ export default function TypePage() {
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10);
   const [hasMore, setHasMore] = useState(true);
+  const [hechsheirim, setHechsheirim] = useState([]);
+  const [showHechsheirimPopup, setShowHechsheirimPopup] = useState(false);
 
   function toggle(arr, val) {
     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
@@ -82,22 +84,28 @@ export default function TypePage() {
     setSearchParams(params, { replace: true });
   }, [selectedTypes, selectedLevels, selectedNeighborhood, setSearchParams]);
 
-  // Fetch all restaurants when filters change
+  // Fetch hechsheirim
   useEffect(() => {
-    if (selectedTypes.length === 0 && selectedLevels.length === 0) {
-      setAllRestaurants([]);
-      setRestaurants([]);
-      setHasMore(false);
-      return;
-    }
-    
+    Hechsheirim.list({ page: 1, pageSize: 100 })
+      .then((res) => {
+        // Normalize description → level
+        const items = (res.items || []).map((h) => ({
+          ...h,
+          level: h.description ? h.description.toUpperCase() : "OTHER",
+        }));
+        setHechsheirim(items);
+      })
+      .catch(console.error);
+  }, []);
+
+  // Fetch restaurants: when no filters, show all for category; otherwise filter by selected tier/type/neighborhood
+  useEffect(() => {
     setLoading(true);
     Restaurants.list({
       category,
-      types: selectedTypes,
-      levels: selectedLevels,
+      types: selectedTypes.length > 0 ? selectedTypes : undefined,
+      levels: selectedLevels.length > 0 ? selectedLevels : undefined,
       neighborhood: selectedNeighborhood || undefined,
-      // Load all results at once (like Home page search)
     })
       .then((data) => {
         // Sort by level priority: FIRST, then SECOND, then THIRD
@@ -128,6 +136,13 @@ export default function TypePage() {
     setHasMore(nextCount < allRestaurants.length);
   };
 
+  // Group hechsheirim by tier (in order: FIRST, SECOND, THIRD)
+  const groupedHechsheirim = LEVELS.map((lvl) => ({
+    level: lvl,
+    items: hechsheirim.filter((h) => h.level === lvl),
+  }));
+  const otherHechsheirim = hechsheirim.filter((h) => !LEVELS.includes(h.level));
+
   return (
     <div className={s.wrap}>
       <div className={s.back}>
@@ -136,15 +151,137 @@ export default function TypePage() {
         </button>
       </div>
 
+      <div className={s.categoryTitleContainer}>
+        <h4 className={s.categoryTitle}>{category}</h4>
+      </div>
+      
+      <div className={s.hechsheirimButtonContainer}>
+        <button 
+          onClick={() => setShowHechsheirimPopup(true)} 
+          className={s.hechsheirimButton}
+        >
+          Hechsheirim symbols...
+        </button>
+      </div>
+      
+      {/* Mobile Popup Overlay */}
+      {showHechsheirimPopup && (
+        <div 
+          className={s.popupOverlay}
+          onClick={() => setShowHechsheirimPopup(false)}
+        >
+          <div 
+            className={s.hechsheirimPopup}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={s.popupHeader}>
+              <h3 className={s.sidebarTitle}>Hechsheirim</h3>
+              <button 
+                onClick={() => setShowHechsheirimPopup(false)}
+                className={s.closeButton}
+              >
+                ×
+              </button>
+            </div>
+            <div className={s.hechsheirimList}>
+              {groupedHechsheirim.map(({ level, items }) =>
+                items.length > 0 ? (
+                  <div key={level} className={s.tierSection}>
+                    <h4 className={s.tierTitle}>{level}</h4>
+                    {items.map((h) => (
+                      <div key={h.id} className={s.hechsherItem}>
+                        {h.symbolUrl && (
+                          <img
+                            src={h.symbolUrl}
+                            alt={h.name}
+                            className={s.hechsherLogo}
+                          />
+                        )}
+                        <span className={s.hechsherName}>{h.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null
+              )}
+              {otherHechsheirim.length > 0 && (
+                <div className={s.tierSection}>
+                  <h4 className={s.tierTitle}>Other</h4>
+                  {otherHechsheirim.map((h) => (
+                    <div key={h.id} className={s.hechsherItem}>
+                      {h.symbolUrl && (
+                        <img
+                          src={h.symbolUrl}
+                          alt={h.name}
+                          className={s.hechsherLogo}
+                        />
+                      )}
+                      <span className={s.hechsherName}>{h.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className={s.mainLayout}>
+        {/* Hechsheirim Sidebar */}
+        <div className={s.hechsheirimSidebar}>
+          <h3 className={s.sidebarTitle}>Hechsheirim</h3>
+          <div className={s.hechsheirimList}>
+            {groupedHechsheirim.map(({ level, items }) =>
+              items.length > 0 ? (
+                <div key={level} className={s.tierSection}>
+                  <h4 className={s.tierTitle}>{level}</h4>
+                  {items.map((h) => (
+                    <div key={h.id} className={s.hechsherItem}>
+                      {h.symbolUrl && (
+                        <img
+                          src={h.symbolUrl}
+                          alt={h.name}
+                          className={s.hechsherLogo}
+                        />
+                      )}
+                      <span className={s.hechsherName}>{h.name}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null
+            )}
+            {otherHechsheirim.length > 0 && (
+              <div className={s.tierSection}>
+                <h4 className={s.tierTitle}>Other</h4>
+                {otherHechsheirim.map((h) => (
+                  <div key={h.id} className={s.hechsherItem}>
+                    {h.symbolUrl && (
+                      <img
+                        src={h.symbolUrl}
+                        alt={h.name}
+                        className={s.hechsherLogo}
+                      />
+                    )}
+                    <span className={s.hechsherName}>{h.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className={s.mainContent}>
+          <div className={s.categoryTitleDesktop}>
+            <h4 className={s.categoryTitle}>{category}</h4>
+          </div>
+
+          {/* Filters Row - All three filters side by side on large screens */}
+          <div className={s.filtersRow}>
 <div className={s.section}>
-    <div className={s.levelNote}>
-    We recommend choosing <strong>FIRST</strong> level for the best results!
-  </div>
-  <div className={s.levelsRow}>
-  {/* <h2 className={s.levelsTitle}>Levels</h2> */}
+              <p className={s.filterHint}>Select one or more tiers</p>
   <div className={s.levels}>
     {LEVELS.map((l) => (
-  <label key={l} className={s.levelLabel}>
+                  <label key={l} className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}>
     {l} TIER
     <input
       type="checkbox"
@@ -155,11 +292,9 @@ export default function TypePage() {
 ))}
   </div>
 </div>
-</div>
-      <h4 className={s.title}>{category}</h4>
-
       {/* TYPES */}
       <div className={s.section}>
+              <p className={s.filterHint}>Select one or more types</p>
         <div className={s.grid}>
           {options.map((t) => {
             const active = selectedTypes.includes(t);
@@ -175,10 +310,9 @@ export default function TypePage() {
           })}
         </div>
       </div>
-
       {/* CUSTOM NEIGHBORHOOD DROPDOWN */}
       <div className={s.section}>
-        <h3 className={s.subtitle}>Neighborhood</h3>
+              <p className={s.filterHint}>Filter restaurants by neighborhood</p>
         <div className={s.dropdownWrap}>
           <button
             className={s.dropdownBtn}
@@ -210,6 +344,7 @@ export default function TypePage() {
               ))}
             </ul>
           )}
+              </div>
         </div>
       </div>
 
@@ -282,8 +417,27 @@ export default function TypePage() {
             )}
           </>
         ) : (
-          <p>No restaurants found.</p>
+          <div className={s.emptyState}>
+            <p className={s.emptyMessage}>No restaurants found.</p>
+            <p className={s.emptyHint}>
+              Try adjusting your filters or selecting different options to see more results.
+            </p>
+            {(selectedTypes.length > 0 || selectedLevels.length > 0 || selectedNeighborhood) && (
+              <button
+                className={s.clearFiltersBtn}
+                onClick={() => {
+                  setSelectedTypes([]);
+                  setSelectedLevels([]);
+                  setSelectedNeighborhood("");
+                }}
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
         )}
+      </div>
+        </div>
       </div>
     </div>
   );

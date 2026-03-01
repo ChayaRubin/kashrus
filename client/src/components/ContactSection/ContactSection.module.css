@@ -212,31 +212,31 @@ body {
 .wrapper {
   background-color: #459BAC; /* main accent */
   display: flex;
-  justify-content: center;   /* מרכז אופקית */
-  align-items: center;       /* מרכז אנכית */
+  justify-content: center;   
+  align-items: center;       
   width: 100%;
-  min-height: 100vh;         /* מסך מלא */
+  min-height: 100vh;         
   padding: 20px;
   box-sizing: border-box;
 }
 
 .cardContainer {
   display: flex;
-  justify-content: center;   /* יישר גם את הכרטיסים עצמם */
+  justify-content: center;   
   align-items: center;
   width: 100%;
-  max-width: 800px;          /* כדי שלא יתפרש על כל המסך */
+  max-width: 800px;          
 }
 
 .card {
   flex: 1;
-  max-width: 600px;          /* שליטה על רוחב מקסימלי */
+  max-width: 600px;          
   width: 100%;
   background: #fff;
   padding: 2rem;
   box-shadow: 0 0 12px rgba(0,0,0,0.2);
   border-radius: 10px;
-  margin: auto;              /* חשוב מאוד: יישר את הכרטיס */
+  margin: auto;              
 }
 
 .sendButton{

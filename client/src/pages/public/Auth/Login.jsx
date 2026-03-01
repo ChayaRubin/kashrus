@@ -222,8 +222,9 @@ export default function Login() {
   const validateForm = () => {
     const errs = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const email = (form.email || '').trim();
 
-    if (!form.email || !emailRegex.test(form.email)) {
+    if (!email || !emailRegex.test(email)) {
       errs.email = 'Please enter a valid email';
     }
     if (!form.password) {
@@ -241,15 +242,14 @@ export default function Login() {
 
     if (!validateForm()) return;
 
-    console.log("Submitting login form...");
-    console.log("Email entered:", form.email);
-    console.log("Password entered:", form.password); // ⚠️ Only for debug
+    const email = (form.email || '').trim();
+    const password = form.password;
 
     try {
       // Authenticate via backend
-      await Auth.login(form.email, form.password);
+      await Auth.login(email, password);
       // Update global auth context
-      await login(form.email, form.password);
+      await login(email, password);
 
       console.log("Login successful");
       navigate("/home");
@@ -270,9 +270,10 @@ export default function Login() {
 
     if (!validateForm()) return;
 
+    const email = (form.email || '').trim();
     try {
-      await Auth.login(form.email, form.password);
-      await login(form.email, form.password);
+      await Auth.login(email, form.password);
+      await login(email, form.password);
       navigate("/admin");
     } catch (err) {
       console.error("Admin login error:", err);

@@ -1,5 +1,13 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../server/.env') });
+
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+// Use a single connection to avoid "too many connections" on free-tier DBs
+const url = process.env.DATABASE_URL || '';
+const sep = url.includes('?') ? '&' : '?';
+const prisma = new PrismaClient({
+  datasources: { db: { url: url + sep + 'connection_limit=1' } }
+});
 
 const restaurants = [
   {
@@ -786,21 +794,25 @@ const restaurants = [
   }
 ];
 
+function key(r) {
+  return `${r.name}|${r.address ?? ''}`;
+}
+
 async function main() {
-  console.log('Clearing existing restaurants...');
-  await prisma.restaurant.deleteMany({});
-  
-  console.log('Seeding all 61 restaurants with images...');
-  
-  for (const restaurant of restaurants) {
-    await prisma.restaurant.create({
-      data: restaurant
-    });
-    console.log(`Created restaurant: ${restaurant.name}`);
+  console.log('Seeding restaurants (skipping duplicates)...');
+  const existing = await prisma.restaurant.findMany({
+    select: { name: true, address: true }
+  });
+  const existingKeys = new Set(existing.map((r) => `${r.name}|${r.address ?? ''}`));
+  const toCreate = restaurants.filter((r) => !existingKeys.has(key(r)));
+  let created = 0;
+  for (const r of toCreate) {
+    await prisma.restaurant.create({ data: r });
+    created++;
+    console.log(`Created: ${r.name}`);
   }
-  
   const count = await prisma.restaurant.count();
-  console.log(`Seeding completed! Total restaurants: ${count}`);
+  console.log(`Done. Created: ${created}, skipped (already exist): ${restaurants.length - toCreate.length}, total in DB: ${count}`);
 }
 
 main()

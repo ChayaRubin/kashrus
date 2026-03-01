@@ -138,14 +138,21 @@
 // client/src/app/api.js
 import axios from "axios";
 
-// You have axios available if you want to migrate later
+// API base: env at build time, or runtime fallback when frontend is on Render
+function getApiBase() {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== "undefined" && window.location?.hostname?.includes("onrender.com")) {
+    return "https://kashrus-back.onrender.com";
+  }
+  return "http://localhost:5000";
+}
+const BASE = getApiBase();
+const API_BASE = BASE;
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  baseURL: BASE,
   withCredentials: true,
 });
-
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // ---------- Generic helper ----------
 async function http(path, { method = "GET", params, body } = {}) {
@@ -258,6 +265,15 @@ export const Ratings = {
   remove: (restaurantId) =>
     http(`/ratings/${restaurantId}/rating`, { method: "DELETE" }),
   listMine: () => http("/ratings/mine"),
+};
+
+// ---------- Users (admin) ----------
+export const UsersAPI = {
+  list: () => http("/users"),
+  get: (id) => http(`/users/${id}`),
+  create: (d) => http("/users", { method: "POST", body: d }),
+  update: (id, d) => http(`/users/${id}`, { method: "PUT", body: d }),
+  remove: (id) => http(`/users/${id}`, { method: "DELETE" }),
 };
 
 // ---------- Feedback ----------

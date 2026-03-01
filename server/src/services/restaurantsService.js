@@ -1,6 +1,5 @@
 // server/src/services/restaurantsService.js
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma.js";
 
 const VALID_LEVELS = ["FIRST", "SECOND", "THIRD"];
 const VALID_CATEGORIES = ["MEAT", "DAIRY"];

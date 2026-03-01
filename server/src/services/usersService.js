@@ -1,6 +1,5 @@
 // src/services/usersService.js
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma.js";
 import bcrypt from "bcryptjs";
 
 export async function listUsers() {
@@ -11,6 +10,10 @@ export async function listUsers() {
 
 export async function getUser(id) {
   return prisma.user.findUnique({ where: { id: Number(id) } });
+}
+
+export async function getUserById(id) {
+  return getUser(id);
 }
 
 
