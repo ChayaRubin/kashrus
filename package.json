@@ -10,8 +10,8 @@
     "dev": "concurrently \"npm run dev-server\" \"npm run dev-client\"",
     "dev-server": "npm --workspace server run dev",
     "dev-client": "npm --workspace client run dev",
-    "build": "npm --workspace client run build && npm --workspace server run build",
-    "build:render": "npm install --include=dev && npm run build",
+    "build": "npm install --include=dev && npm --workspace client run build && npm --workspace server run build",
+    "build:render": "npm run build",
     "start": "npm --workspace server run start & npm --workspace client run preview"
   },
   "devDependencies": {
