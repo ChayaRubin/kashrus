@@ -1,6 +1,7 @@
 import express from "express";
 import * as ratingsController from "../controllers/ratingsController.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { prisma } from "../lib/prisma.js";
 
 const router = express.Router();
 

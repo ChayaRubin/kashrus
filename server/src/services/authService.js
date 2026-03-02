@@ -35,8 +35,7 @@
 // src/services/authService.js
 // src/services/authService.js
 
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 const authService = {
   emailExists: async (email) => {

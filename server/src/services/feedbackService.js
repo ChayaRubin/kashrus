@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 export async function createFeedback({ userId, restaurantId, message }) {
   return prisma.feedback.create({

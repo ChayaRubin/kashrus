@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 export async function getHomeContent() {
   // one row with id=1
