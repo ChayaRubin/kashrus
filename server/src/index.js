@@ -17,8 +17,7 @@ import slideshowRoutes from "./routes/slideshow.js";
 import feedbackRoutes from "./routes/feedback.js";
 import contactRoutes from "./routes/contact.js";
 import homeRoutes from "./routes/homeRoutes.js";
-
-
+import { errorHandler } from "./middleware/error.js";
 
 import './controllers/googleAuth.js'; 
 
@@ -63,6 +62,8 @@ app.use("/home", homeRoutes);
 
 // health check
 app.get('/', (_req, res) => res.json({ ok: true }));
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));

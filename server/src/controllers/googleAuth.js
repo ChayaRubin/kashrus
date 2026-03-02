@@ -1,38 +1,43 @@
-// // src/controllers/googleAuth.js
-// import 'dotenv/config';
-// import passport from 'passport';
-// import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-// import { PrismaClient } from '@prisma/client';
+// src/controllers/googleAuth.js
+// Registers the Google OAuth strategy with passport using the shared Prisma client.
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { prisma } from "../lib/prisma.js";
 
-// const prisma = new PrismaClient();
+const backendBase =
+  (process.env.BACKEND_URL && process.env.BACKEND_URL.replace(/\/$/, "")) ||
+  "http://localhost:5000";
 
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: 'http://localhost:5000/auth/google/callback'
-//     },
-//     async (_accessToken, _refreshToken, profile, done) => {
-//       try {
-//         const email = profile.emails?.[0]?.value;
-//         if (!email) return done(null, false);
+const callbackURL = `${backendBase}/auth/google/callback`;
 
-//         let user = await prisma.user.findUnique({ where: { email } });
-//         if (!user) {
-//           user = await prisma.user.create({
-//             data: {
-//               name: profile.displayName || 'User',
-//               email,
-//               role: 'user',
-//             },
-//           });
-//         }
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL,
+    },
+    async (_accessToken, _refreshToken, profile, done) => {
+      try {
+        const email = profile.emails?.[0]?.value;
+        if (!email) return done(null, false);
 
-//         done(null, { id: user.id, email: user.email, role: user.role });
-//       } catch (err) {
-//         done(err);
-//       }
-//     }
-//   )
-// );
+        let user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              name: profile.displayName || "User",
+              email,
+              role: "user",
+            },
+          });
+        }
+
+        done(null, { id: user.id, email: user.email, role: user.role });
+      } catch (err) {
+        done(err);
+      }
+    }
+  )
+);
+

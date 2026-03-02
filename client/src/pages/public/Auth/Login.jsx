@@ -209,7 +209,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './AuthForm.module.css';
 import { useUser } from '../../../contexts/AuthContext.jsx';
-import { Auth } from '../../../app/api.js';   // use your Auth service
+import { Auth, API_BASE } from '../../../app/api.js';   // use your Auth service
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -322,9 +322,9 @@ export default function Login() {
         {errors.password && <p className={styles.error}>{errors.password}</p>}
 
         <button type="submit" className={styles.authButton}>Log In</button>
-        <button type="button" onClick={handleAdminLogin} className={`${styles.authButton} ${styles.adminButton}`}>Admin Login</button>
+        {/* <button type="button" onClick={handleAdminLogin} className={`${styles.authButton} ${styles.adminButton}`}>Admin Login</button> */}
 
-        <a href="http://localhost:5000/auth/google" className={styles.socialButton}>
+        <a href={`${API_BASE}/auth/google`} className={styles.socialButton}>
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="Google"

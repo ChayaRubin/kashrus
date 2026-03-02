@@ -147,7 +147,7 @@ function getApiBase() {
   return "http://localhost:5000";
 }
 const BASE = getApiBase();
-const API_BASE = BASE;
+export const API_BASE = BASE;
 
 export const api = axios.create({
   baseURL: BASE,
