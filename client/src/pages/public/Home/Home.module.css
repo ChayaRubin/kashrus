@@ -20,33 +20,35 @@
 /* Search overlay top-right */
 .searchBox {
   position: absolute;
-  top: 100px; /* Position below the fixed navbar */
-  right: 15%;
-  width: 25%;
+  top: 110px; /* Position below the fixed navbar */
+  right: 10%;
+  width: 28%;
   z-index: 20;
-  opacity: 0.7;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 12px;
+  padding: 0.9rem 1.1rem;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(163, 207, 215, 0.85);
+  background: rgba(255, 255, 255, 0.85); /* a little more clear */
+  box-shadow: 0 4px 14px rgba(15, 47, 54, 0.12);
+  font-size: 0.98rem;
 }
 .searchInput:focus {
   outline: none;
   border-color: #459BAC;
+  box-shadow: 0 0 0 2px rgba(69, 155, 172, 0.18);
 }
 .results,
 .noResults {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   left: 0;
   width: 100%;
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  border-radius: 18px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   max-height: 260px;
   overflow-y: auto;
@@ -110,9 +112,8 @@
 
 @media screen and (max-width: 768px)  {
   .searchBox {
-  position: absolute;
-
-  width: 75%;
-
-}
+    top: 90px;
+    right: 5%;
+    width: 70%;
+  }
 }

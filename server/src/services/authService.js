@@ -1,6 +1,3 @@
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
-
 // const authService = {
 //   emailExists: async (email) => {
 //     const user = await prisma.user.findUnique({ where: { email } });
@@ -35,7 +32,7 @@
 // src/services/authService.js
 // src/services/authService.js
 
-import { prisma } from '../lib/prisma.js';
+import prisma from '../lib/prisma.js';
 
 const authService = {
   emailExists: async (email) => {

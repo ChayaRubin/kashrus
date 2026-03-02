@@ -2,7 +2,7 @@
 // Registers the Google OAuth strategy with passport using the shared Prisma client.
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { prisma } from "../lib/prisma.js";
+import prisma from "../lib/prisma.js";
 
 const backendBase =
   (process.env.BACKEND_URL && process.env.BACKEND_URL.replace(/\/$/, "")) ||

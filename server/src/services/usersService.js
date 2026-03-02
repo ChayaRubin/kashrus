@@ -1,5 +1,5 @@
 // src/services/usersService.js
-import { prisma } from '../lib/prisma.js';
+import prisma from '../lib/prisma.js';
 import bcrypt from "bcryptjs";
 
 export async function listUsers() {

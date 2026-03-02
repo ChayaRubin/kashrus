@@ -1,5 +1,5 @@
 // server/src/services/ratingsService.js
-import { prisma } from '../lib/prisma.js';
+import prisma from '../lib/prisma.js';
 
 export async function getUserRating(restaurantId, userId) {
   const rating = await prisma.restaurantRating.findUnique({

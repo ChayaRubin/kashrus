@@ -1,14 +1,6 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../server/.env') });
 
-const { PrismaClient } = require('@prisma/client');
-// Use a single connection to avoid "too many connections" on free-tier DBs
-const url = process.env.DATABASE_URL || '';
-const sep = url.includes('?') ? '&' : '?';
-const prisma = new PrismaClient({
-  datasources: { db: { url: url + sep + 'connection_limit=1' } }
-});
-
 const restaurants = [
   {
     name: 'Entrecote',
@@ -798,7 +790,7 @@ function key(r) {
   return `${r.name}|${r.address ?? ''}`;
 }
 
-async function main() {
+async function main(prisma) {
   console.log('Seeding restaurants (skipping duplicates)...');
   const existing = await prisma.restaurant.findMany({
     select: { name: true, address: true }
@@ -815,11 +807,10 @@ async function main() {
   console.log(`Done. Created: ${created}, skipped (already exist): ${restaurants.length - toCreate.length}, total in DB: ${count}`);
 }
 
-main()
+import('../server/src/lib/prisma.js')
+  .then((m) => m.default)
+  .then((prisma) => main(prisma).finally(() => prisma.$disconnect()))
   .catch((e) => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });

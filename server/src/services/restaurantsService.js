@@ -1,5 +1,5 @@
 // server/src/services/restaurantsService.js
-import { prisma } from '../lib/prisma.js';
+import prisma from '../lib/prisma.js';
 
 const VALID_LEVELS = ["FIRST", "SECOND", "THIRD"];
 const VALID_CATEGORIES = ["MEAT", "DAIRY"];
@@ -37,8 +37,14 @@ export async function list({ where = {}, skip = 0, take = 100, orderBy = { id: "
   const options = { where, orderBy };
   if (skip) options.skip = skip;
   if (take !== undefined) options.take = take;
-  
+
   const rows = await prisma.restaurant.findMany(options);
+  return rows.map((r) => ({ ...r, images: parseImages(r.images) }));
+}
+
+/** Return all restaurants (no limit) for admin list. */
+export async function listAll(orderBy = { name: "asc" }) {
+  const rows = await prisma.restaurant.findMany({ orderBy });
   return rows.map((r) => ({ ...r, images: parseImages(r.images) }));
 }
 
@@ -89,7 +95,7 @@ export async function create(data) {
 }
 
 export async function update(id, data) {
-  const { level, images, ...rest } = data;
+  const { id: _ignore, level, images, ...rest } = data;
   const updateData = { ...rest };
 
   if (level !== undefined) {

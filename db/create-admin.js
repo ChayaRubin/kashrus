@@ -1,17 +1,11 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../server/src/lib/prisma.js';
 import bcrypt from 'bcryptjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '../server/.env') });
-
-const url = process.env.DATABASE_URL || '';
-const sep = url.includes('?') ? '&' : '?';
-const prisma = new PrismaClient({
-  datasources: { db: { url: url + sep + 'connection_limit=1' } }
-});
 
 async function createAdmin() {
   const email = 'admin@example.com';

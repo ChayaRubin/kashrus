@@ -1,8 +1,4 @@
-// src/services/rabanimService.js
-// import { PrismaClient } from "@prisma/client";
-import { prisma } from '../lib/prisma.js';
-// const prisma = new PrismaClient();
-
+import prisma from '../lib/prisma.js';
 
 export async function list({ q, area, skip, take }) {
   const where = {

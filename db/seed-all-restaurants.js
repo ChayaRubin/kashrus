@@ -1,6 +1,3 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-
 const restaurants = [
   {
     name: 'Entrecote',
@@ -204,28 +201,27 @@ const restaurants = [
   }
 ];
 
-async function main() {
+async function main(prisma) {
   console.log('Clearing existing restaurants...');
   await prisma.restaurant.deleteMany({});
-  
+
   console.log('Seeding restaurants...');
-  
+
   for (const restaurant of restaurants) {
     await prisma.restaurant.create({
       data: restaurant
     });
     console.log(`Created restaurant: ${restaurant.name}`);
   }
-  
+
   const count = await prisma.restaurant.count();
   console.log(`Seeding completed! Total restaurants: ${count}`);
 }
 
-main()
+import('../server/src/lib/prisma.js')
+  .then((m) => m.default)
+  .then((prisma) => main(prisma).finally(() => prisma.$disconnect()))
   .catch((e) => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });

@@ -228,10 +228,7 @@ export async function getById(req, res) {
 // in restaurantsController.js
 export async function listAll(req, res) {
   try {
-    const rows = await restaurantsService.list({
-      orderBy: { name: 'asc' },
-      take: undefined, // Remove the default limit to get all restaurants
-    });
+    const rows = await restaurantsService.listAll({ name: "asc" });
     res.json(rows);
   } catch (err) {
     console.error("restaurantsController.listAll error:", err);

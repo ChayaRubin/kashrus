@@ -176,21 +176,39 @@ async function http(path, { method = "GET", params, body } = {}) {
     credentials: "include", // 👈 ensures cookie (token) is always sent
   });
 
+  // Read response text once so we can safely handle empty bodies (e.g. 204 No Content)
+  const rawText = await res.text();
+
   if (!res.ok) {
-    let errorBody;
+    let errorBody = rawText;
     try {
-      errorBody = await res.json();
+      // Try to parse JSON error if present
+      const parsed = rawText ? JSON.parse(rawText) : null;
+      errorBody = parsed || rawText;
     } catch {
-      errorBody = await res.text();
+      // keep rawText
     }
 
     throw {
       status: res.status,
-      message: errorBody?.error || errorBody || "Request failed",
+      message:
+        (typeof errorBody === "object" && errorBody?.error) ||
+        errorBody ||
+        "Request failed",
     };
   }
 
-  return res.json();
+  // Successful but no content (e.g. 204) → return null
+  if (!rawText) {
+    return null;
+  }
+
+  // Try to parse JSON; if it fails, fall back to plain text
+  try {
+    return JSON.parse(rawText);
+  } catch {
+    return rawText;
+  }
 }
 
 // ---------- Restaurants ----------

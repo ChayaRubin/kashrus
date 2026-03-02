@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma.js';
+import prisma from '../lib/prisma.js';
 
 export async function createFeedback({ userId, restaurantId, message }) {
   return prisma.feedback.create({
