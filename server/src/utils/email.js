@@ -9,13 +9,15 @@ if (!resendApiKey) {
 
 const resend = new Resend(resendApiKey);
 
-export const sendEmail = async ({ from, to, subject, html, attachments }) => {
+export const sendEmail = async ({ from, to, subject, html, text, attachments, reply_to }) => {
   try {
     const emailPayload = {
       from,
       to,
       subject,
-      html,
+      ...(html && { html }),
+      ...(text && { text }),
+      ...(reply_to && { reply_to }),
     };
 
     // Add attachments if provided (Resend supports filename/content/path/contentType/cid)

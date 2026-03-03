@@ -39,8 +39,9 @@ const contactController = {
 
         // Prepare email with attachments if images exist
         const emailOptions = {
-          from: `"Add Restaurant Request" <${process.env.EMAIL_USER}>`,
-          to: process.env.EMAIL_USER,
+          from: process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL,
+          to: process.env.CONTACT_TO_EMAIL || process.env.EMAIL_REPLY_TO || process.env.RESEND_FROM_EMAIL,
+          reply_to: requesterEmail,
           subject: `New restaurant addition request: ${restaurantName}`,
           html: addRestaurantRequestTemplate({
             requesterName,
@@ -87,8 +88,9 @@ const contactController = {
 
       // Prepare email with attachments if images exist
       const emailOptions = {
-        from: `"Contact Form" <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
+        from: process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL,
+        to: process.env.CONTACT_TO_EMAIL || process.env.EMAIL_REPLY_TO || process.env.RESEND_FROM_EMAIL,
+        reply_to: email,
         subject: subject ? `New Question: ${subject}` : `New Question from Website by ${name}`,
         html: questionTemplate({ 
           name, 
