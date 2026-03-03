@@ -436,6 +436,7 @@ export default function RestaurantForm() {
     level: "FIRST",
     neighborhood: "",
     description: "",
+    images: [],
     logoUrl: ""
   });
 
@@ -452,10 +453,14 @@ export default function RestaurantForm() {
     if (editing) {
       Restaurants.get(id).then((data) => {
         const typesForCat = TYPES_BY_CATEGORY[data?.category] || TYPES_BY_CATEGORY.MEAT;
+        const imagesArray = Array.isArray(data?.images) ? data.images : (data?.images ? [data.images] : []);
+        const firstImage = imagesArray.length ? imagesArray[0] : "";
         setF({
           ...data,
           level: LEVELS.includes(data?.level) ? data.level : "FIRST",
           type: typesForCat.includes(data?.type) ? data.type : typesForCat[0],
+          images: imagesArray,
+          logoUrl: firstImage,
         });
       }).catch(console.error);
     }
@@ -499,11 +504,32 @@ export default function RestaurantForm() {
     setSaving(true);
     try {
       const typesForCat = TYPES_BY_CATEGORY[f.category] || TYPES_BY_CATEGORY.MEAT;
+      const normalizedLevel = LEVELS.includes(f.level) ? f.level : "FIRST";
+      const normalizedType =
+        f.type && typesForCat.includes(f.type) ? f.type : typesForCat[0];
+
+      // Build images array from logoUrl or existing images
+      let images = [];
+      if (f.logoUrl && f.logoUrl.trim()) {
+        images = [f.logoUrl.trim()];
+      } else if (Array.isArray(f.images) && f.images.length) {
+        images = f.images;
+      }
+
       const payload = {
-        ...f,
-        level: LEVELS.includes(f.level) ? f.level : "FIRST",
-        type: (f.type && typesForCat.includes(f.type)) ? f.type : typesForCat[0],
+        name: f.name.trim(),
+        category: f.category,
+        type: normalizedType,
+        level: normalizedLevel,
+        city: f.city || null,
+        neighborhood: f.neighborhood || null,
+        address: f.address || null,
+        phone: f.phone || null,
+        hechsher: f.hechsher || null,
+        website: f.website || null,
+        images,
       };
+
       if (editing) await Restaurants.update(id, payload);
       else await Restaurants.create(payload);
       nav("/admin/restaurants");

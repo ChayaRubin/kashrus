@@ -114,8 +114,9 @@ const contactController = {
 
       res.sendStatus(200);
     } catch (err) {
+      const message = err?.message || 'there was an error sending the email';
       console.error('contactController error', err);
-      res.status(500).json({ error: 'there was an error sending the email' });
+      res.status(500).json({ error: message });
     }
   },
 };
