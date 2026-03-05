@@ -59,9 +59,11 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { Feedback } from "../../../app/api.js";
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 import styles from "./Contact.module.css";
 
 export default function Contact() {
+  const { isAuthenticated } = useAuth();
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [searchParams] = useSearchParams();
@@ -74,11 +76,15 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      alert("Please log in to send feedback.");
+      return;
+    }
     try {
       await Feedback.submit({ message, restaurantId });
       setSubmitted(true);
     } catch (err) {
-      alert("Failed to send feedback");
+      alert(err?.message === "Missing token" || err?.status === 401 ? "Please log in to send feedback." : "Failed to send feedback");
       console.error(err);
     }
   };
@@ -87,7 +93,8 @@ export default function Contact() {
     <div className={styles.container}>
       {!submitted ? (
         <form onSubmit={handleSubmit}>
-          <h2 className={styles.title}>Contact / Feedback</h2>
+          <h2 className={styles.title}>Feedback</h2>
+          <h4>Please describe the issue:</h4>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -95,6 +102,11 @@ export default function Contact() {
             rows={4}
             className={styles.textarea}
           />
+          {!isAuthenticated && message.trim().length > 0 && (
+            <div className={styles.loginNotice}>
+              You must be logged in to send feedback. Please log in!
+            </div>
+          )}
           <button type="submit" className={styles.button}>
             Send
           </button>

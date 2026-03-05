@@ -9,7 +9,7 @@
 
 .main {
   flex: 1;
-  padding-top: 80px;     /* Account for fixed navbar */
+  padding-top: 120px;     /* Account for fixed navbar + add breathing room */
   padding-bottom: 40px;  /* Comfortable space above footer */
 }
 

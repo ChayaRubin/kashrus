@@ -118,6 +118,17 @@
   margin-top: 1rem;
 }
 
+.loginNotice {
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fff5f5;
+  border: 1px solid #f5b5b5;
+  color: #a40000;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
 /* Info box */
 .infoBox {
   flex: 1 1 300px;
@@ -207,6 +218,16 @@ body {
   border-color: #459BAC;        /* main accent color */
   box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.25); /* soft glow */
   outline: none;                /* remove default browser outline */
+}
+
+/* Hechsher select – turquoise highlight in dropdown */
+.selectHechsher {
+  accent-color: #459BAC;
+  border-color: #459BAC;
+}
+.selectHechsher:focus {
+  border-color: #459BAC;
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.35);
 }
 
 .wrapper {

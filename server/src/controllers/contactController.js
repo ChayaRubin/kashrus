@@ -36,6 +36,9 @@ const contactController = {
           console.log('Validation failed - missing required fields');
           return res.status(400).json({ error: 'Missing required fields' });
         }
+        if (!kashrus || !String(kashrus).trim()) {
+          return res.status(400).json({ error: 'Hechsher is required. Please select one from the list.' });
+        }
 
         // Prepare email with attachments if images exist
         const emailOptions = {
