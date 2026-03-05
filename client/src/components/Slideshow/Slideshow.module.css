@@ -291,6 +291,11 @@
   }
 }
 
+/* Ensure fullscreen variant never has rounded corners, even in responsive modes */
+.fullScreen {
+  border-radius: 0 !important;
+}
+
 .info {
   position: absolute;
   top: 50%;

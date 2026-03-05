@@ -33,13 +33,14 @@ export default function TypePage() {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedLevels, setSelectedLevels] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState([]); // stores EXTRA levels beyond FIRST
   const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
   const [openDropdown, setOpenDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10);
   const [hasMore, setHasMore] = useState(true);
   const [hechsheirim, setHechsheirim] = useState([]);
+  const [query, setQuery] = useState("");
   const [showHechsheirimPopup, setShowHechsheirimPopup] = useState(false);
 
   function toggle(arr, val) {
@@ -47,19 +48,29 @@ export default function TypePage() {
   }
 
   const onToggleType = (t) => setSelectedTypes((prev) => toggle(prev, t));
-  const onToggleLevel = (l) => setSelectedLevels((prev) => toggle(prev, l));
+  const onToggleLevel = (l) =>
+    setSelectedLevels((prev) => {
+      if (l === "FIRST") {
+        // FIRST is always included; clicking it does nothing
+        return prev;
+      }
+      return toggle(prev, l);
+    });
 
   // Initialize state from URL
   useEffect(() => {
     const typesParam = searchParams.get("types");
-    const levelsParam = searchParams.get("levels");
+    // Ignore any existing levels in the URL so default is always FIRST tier
     const neighborhoodParam = searchParams.get("neighborhood");
 
     const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
-    const initialLevels = levelsParam ? levelsParam.split(",").filter(Boolean) : [];
+    const initialTypesFiltered = initialTypes.filter((t) =>
+      (TYPES_BY_CATEGORY[category] || []).includes(t)
+    );
 
-    setSelectedTypes(initialTypes.filter((t) => (TYPES_BY_CATEGORY[category] || []).includes(t)));
-    setSelectedLevels(initialLevels.filter((l) => LEVELS.includes(l)));
+    setSelectedTypes(initialTypesFiltered);
+    // Start with no extra levels selected – FIRST is implicit
+    setSelectedLevels([]);
     setSelectedNeighborhood(neighborhoodParam || "");
     
     // Reset pagination when filters change
@@ -101,15 +112,23 @@ export default function TypePage() {
   // Fetch restaurants: when no filters, show all for category; otherwise filter by selected tier/type/neighborhood
   useEffect(() => {
     setLoading(true);
+    // FIRST tier is always included; user can add SECOND/THIRD via checkboxes
+    const extraLevels = selectedLevels.filter((l) => l !== "FIRST");
+    const effectiveLevels = ["FIRST", ...extraLevels];
+
     Restaurants.list({
       category,
       types: selectedTypes.length > 0 ? selectedTypes : undefined,
-      levels: selectedLevels.length > 0 ? selectedLevels : undefined,
+      // send effective levels to backend too
+      levels: effectiveLevels,
       neighborhood: selectedNeighborhood || undefined,
     })
       .then((data) => {
+        // Keep only effective levels on the client as well
+        const filtered = data.filter((r) => effectiveLevels.includes(r.level));
+
         // Sort by level priority: FIRST, then SECOND, then THIRD
-        const sortedData = data.sort((a, b) => {
+        const sortedData = filtered.sort((a, b) => {
           const levelOrder = { 'FIRST': 1, 'SECOND': 2, 'THIRD': 3 };
           return levelOrder[a.level] - levelOrder[b.level];
         });
@@ -143,11 +162,30 @@ export default function TypePage() {
   }));
   const otherHechsheirim = hechsheirim.filter((h) => !LEVELS.includes(h.level));
 
+  // Filter restaurants by search query (name + address + hechsher)
+  const lowerQuery = query.trim().toLowerCase();
+  const visibleRestaurants = lowerQuery
+    ? restaurants.filter((r) =>
+        [
+          r.name,
+          r.address,
+          r.hechsher,
+          r.neighborhood,
+          r.city,
+          r.type,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(lowerQuery)
+      )
+    : restaurants;
+
   return (
     <div className={s.wrap}>
       <div className={s.back}>
-        <button onClick={() => nav("/browse")} className={s.backbutton}>
-          Back
+        <button onClick={() => nav("/")} className={s.backbutton}>
+          ⬅ Back to Home
         </button>
       </div>
 
@@ -280,16 +318,23 @@ export default function TypePage() {
 <div className={s.section}>
               <p className={s.filterHint}>Select one or more tiers</p>
   <div className={s.levels}>
-    {LEVELS.map((l) => (
-                  <label key={l} className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}>
-    {l} TIER
-    <input
-      type="checkbox"
-      checked={selectedLevels.includes(l)}
-      onChange={() => onToggleLevel(l)}
-    />
-  </label>
-))}
+    {LEVELS.map((l) => {
+      const checked =
+        l === "FIRST" ? true : selectedLevels.includes(l);
+      return (
+        <label
+          key={l}
+          className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}
+        >
+          {l} TIER
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={() => onToggleLevel(l)}
+          />
+        </label>
+      );
+    })}
   </div>
 </div>
       {/* TYPES */}
@@ -350,12 +395,21 @@ export default function TypePage() {
 
       {/* RESULTS */}
       <div className={s.section}>
+        <div className={s.searchRow}>
+          <input
+            className={s.searchInput}
+            type="text"
+            placeholder="Search by name, area, or hechsher..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
         {loading ? (
           <p>Loading…</p>
-        ) : restaurants.length > 0 ? (
+        ) : visibleRestaurants.length > 0 ? (
           <>
             <ul className={s.results}>
-              {restaurants.map((r) => (
+              {visibleRestaurants.map((r) => (
                 <li
                   key={r.id}
                   onClick={() =>
@@ -439,6 +493,16 @@ export default function TypePage() {
       </div>
         </div>
       </div>
+
+      {/* Back-to-top arrow */}
+      <button
+        className={s.scrollTopButton}
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Back to top"
+      >
+        ^
+      </button>
     </div>
   );
 }

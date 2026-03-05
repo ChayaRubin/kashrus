@@ -14,6 +14,10 @@
   width: 100%;
   background: #ecf6f8; /* light teal background */
   border-bottom: 1px solid #d6e8eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px; /* extra right padding so User Site / Logout are fully visible */
 }
 
 /* nav container */
@@ -21,7 +25,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
+  flex: 1;
+  margin-left: 20px;
 }
 
 /* links */
@@ -52,10 +57,31 @@
   padding: 20px;
 }
 
-.right {
+/* brand logo */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.brand img {
+  width: 50px;
+  height: 50px;
+  margin-top: 15px; /* align visually like public navbar */
+}
+
+.navLeft,
+.navRight {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* push User Site + Logout group to the far right, like public navbar */
+.navRight {
+  margin-left: auto;
+  margin-right: 32px; /* pull 'User Site' / 'Logout' farther from scrollbar */
 }
 
 /* responsive */
@@ -68,19 +94,7 @@
     padding: 6px 8px;
   }
 }
-/* desktop nav */
-.header {
-  background: #ecf6f8;
-  border-bottom: 1px solid #d6e8eb;
-  padding: 10px 20px;
-}
-
-.nav {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
+/* desktop nav override fine-tuning */
 .item {
   text-decoration: none;
   padding: 8px 12px;
@@ -118,6 +132,7 @@
   .nav {
     display: none;
     flex-direction: column;
+    align-items: stretch;
     gap: 10px;
     padding: 12px;
     background: #fff;
@@ -132,5 +147,12 @@
 
   .nav.show {
     display: flex;
+  }
+
+  /* make menu items use full width on mobile */
+  .item {
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 }

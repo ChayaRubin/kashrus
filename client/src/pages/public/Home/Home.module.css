@@ -20,9 +20,9 @@
 /* Search overlay top-right */
 .searchBox {
   position: absolute;
-  top: 110px; /* Position below the fixed navbar */
-  right: 10%;
-  width: 28%;
+  top: 10%; /* Position below the fixed navbar */
+  right: 50px; /* small margin so the bar doesn't hide under scrollbar */
+  width: 15%;
   z-index: 20;
 }
 
@@ -110,10 +110,13 @@
   opacity: 0.7;
 }
 
-@media screen and (max-width: 768px)  {
+/* Tablets & phones: pin search with equal side margins, no overflow */
+@media screen and (max-width: 1024px)  {
   .searchBox {
     top: 90px;
-    right: 5%;
-    width: 70%;
+    left: 4%;
+    right: 4%;
+    width: 35%;
+    transform: none;
   }
 }

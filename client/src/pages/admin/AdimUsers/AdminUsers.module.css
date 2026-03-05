@@ -36,24 +36,19 @@
   margin: 0 auto 24px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
   border: 1px solid #e2e8f0;
 }
 
 .formCard {
   overflow: visible;
-}
-
-.tableCard {
-  overflow: hidden;
-}
-
-.formCard {
+  margin-bottom: 16px; /* slightly closer to Users card so borders feel natural */
   padding: 24px 28px 28px;
 }
 
 .tableCard {
-  padding: 0 0 4px 0;
+  overflow: hidden; /* let rounded corners clip the table */
+  padding: 20px 28px 24px; /* back to original width */
 }
 
 .cardTitle {
@@ -62,6 +57,12 @@
   color: #334155;
   margin: 0 0 20px 0;
   padding: 0;
+}
+
+/* "Users" title spacing within table card */
+.tableCard .cardTitle {
+  padding: 0;
+  margin-bottom: 16px;
 }
 
 /* ----- Form ----- */
@@ -113,8 +114,8 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+  border-color: #459BAC; /* match global teal focus */
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
 }
 
 .input::placeholder {
@@ -215,6 +216,7 @@
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border-bottom: none;
 }
 
 .userTable th:first-child {
@@ -223,7 +225,13 @@
 
 .thActions {
   width: 120px;
-  text-align: right;
+  text-align: right !important; /* ensure "Actions" text sits at end of header cell */
+  padding-right: 20px;
+}
+
+/* tighten padding on last column so header and icons sit at the very end */
+.userTable th:last-child,
+.userTable td:last-child {
   padding-right: 20px;
 }
 

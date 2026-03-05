@@ -1,7 +1,7 @@
 .wrap {
   max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px 20px 20px 0;
+  margin: -40px auto 0; /* pull page up to reduce empty space under navbar */
+  padding: 12px 20px 12px 20px; /* smaller vertical padding to raise content */
   font-family: system-ui, sans-serif;
   color: #111;
 }
@@ -10,7 +10,7 @@
   display: flex;
   gap: 30px;
   align-items: flex-start;
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 @media (min-width: 1025px) {
@@ -61,6 +61,7 @@
   color: #459BAC;
   margin: 0 0 8px 0;
   letter-spacing: 0.5px;
+  text-align: left; /* align FIRST/SECOND/THIRD labels to the left */
 }
 
 .hechsherItem {
@@ -604,9 +605,42 @@ h4{
   font-size: 12px;
 }
 
+.scrollTopButton {
+  position: fixed;
+  right: 90px;        /* move further left from the scrollbar */
+  bottom: 28px;
+  width: 44px;
+  height: 32px;
+  border-radius: 10px;  /* less rounded */
+  border: 1px solid transparent; /* no visible border */
+  outline: none;                  /* remove default focus border */
+  background: #459BAC;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.scrollTopButton:hover {
+  background: #367f86;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+}
+
+.scrollTopButton:focus,
+.scrollTopButton:focus-visible {
+  outline: none;
+  border-color: transparent;
+}
+
 .back {
-  margin-bottom: 8px;
-  margin-top: 12px;
+  margin-bottom: 4px;
+  margin-top: 4px;
 }
 
 .backbutton {
@@ -616,19 +650,20 @@ h4{
   padding: 8px 20px;
   border-radius: 6px;
   font-weight: 600;
+  margin-left: 5%;
+  margin-top: 2%;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .categoryTitleContainer {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .categoryTitleDesktop {
   display: block;
   text-align: center;
-  margin-bottom: 20px;
   margin-top: 0;
 }
 
@@ -644,10 +679,10 @@ h4{
     font-size: 3rem;
   }
   
-  .categoryTitleDesktop {
+  /* .categoryTitleDesktop {
     margin-bottom: 32px;
     padding-bottom: 24px;
-  }
+  } */
 }
 
 .backbutton:hover {
@@ -717,12 +752,13 @@ h4{
 /* ///////////// */
 .dropdownWrap {
   position: relative;
-  max-width: 320px;
+  min-width: 260px;
+  max-width: 420px;
 }
 
 .dropdownBtn {
-  /* width: 100%; */
-  padding: 8px 100px;
+  width: 100%;
+  padding: 8px 14px;          /* normal horizontal padding so it doesn’t look huge */
   font-size: 0.9rem;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -751,7 +787,7 @@ h4{
   position: absolute;
   top: 100%;
   left: 0;
-  /* width: 100%; */
+  width: 100%;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -772,11 +808,9 @@ h4{
 }
 .dropdownList {
   position: absolute;
-  /* top: 100%; */
+  top: 100%;
   left: 0;
-  /* width: 100%; */
-  /* width: 2000px; */
-  padding: 8px 100px;
+  width: 100%;
   background: #fff;
   border: 1px solid #459BAC;
   border-radius: 6px;
@@ -849,94 +883,36 @@ h4{
   margin: 1rem auto 0.5rem;
 }
 
+.searchRow {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 16px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #459BAC;
+  box-shadow: 0 0 0 2px rgba(69,155,172,0.18);
+}
+
 /* Wrapper for filters row on large screens */
 .filtersRow {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;           /* space between each filter block */
+  margin-bottom: 24px;
 }
 
-@media (min-width: 1025px) {
-  .filtersRow {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 20px;
-    align-items: flex-start;
-    margin-bottom: 24px;
-    width: 100%;
-  }
-  
-  .filtersRow .section {
-    flex: 1 1 0;
-    min-width: 0;
-    margin: 0;
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-  }
-  
-  .filtersRow .section:first-child {
-    flex: 1 1 auto;
-    min-width: 280px;
-  }
-  
-  .filtersRow .section:nth-child(2) {
-    flex: 1 1 auto;
-    min-width: 200px;
-  }
-  
-  .filtersRow .section:nth-child(3) {
-    flex: 0 1 auto;
-    min-width: 240px;
-    max-width: none;
-  }
-  
-  .filtersRow .filterHint {
-    text-align: left;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 12px;
-    font-style: normal;
-    white-space: nowrap;
-    overflow: visible;
-  }
-  
-  .filtersRow .levels {
-    justify-content: flex-start;
-    width: 100%;
-    flex-wrap: nowrap !important;
-    display: flex !important;
-    gap: 8px;
-  }
-  
-  .filtersRow .levelLabel {
-    white-space: nowrap;
-    flex-shrink: 1;
-    min-width: fit-content;
-    padding: 0.7rem 1rem !important;
-    font-size: 0.9rem !important;
-  }
-  
-  .filtersRow .grid {
-    justify-content: flex-start;
-    width: 100%;
-    flex-wrap: nowrap !important;
-  }
-  
-  .filtersRow .card {
-    white-space: nowrap;
-    flex-shrink: 1;
-    min-width: fit-content;
-  }
-  
-  .filtersRow .dropdownWrap {
-    max-width: 100%;
-    width: 100%;
-  }
-}
+/* keep stacked layout even on large screens so filters appear in separate rows */
 
 /* ✨ Level note (tip box) */
 .levelNote {

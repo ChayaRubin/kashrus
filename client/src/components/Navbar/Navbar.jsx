@@ -39,9 +39,17 @@ export default function Navbar() {
         {/* Desktop navigation */}
         <nav className={`${styles.nav} ${open ? styles.show : ''}`}>
           <div className={styles.navLeft}>
-            <NavLink to="/" end className={({ isActive }) =>
-              `${styles.link} ${isActive ? styles.active : ''}`
-            } onClick={() => setOpen(false)}>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `${styles.link} ${isActive ? styles.active : ''}`
+              }
+              onClick={() => {
+                setOpen(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
               Home
             </NavLink>
             <a href="/#about" className={styles.link} onClick={(e) => {
