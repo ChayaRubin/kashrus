@@ -62,7 +62,9 @@ export default function LevelPage() {
             {r.images?.[0] && <img src={r.images[0]} alt={r.name} className={s.thumb} />}
             <div className={s.details}>
               <span className={s.name}>{r.name}</span>
-              <div className={s.meta}>{r.city} • {r.hechsher}</div>
+              <div className={s.meta}>
+                {[r.address, r.city, r.hechsher].filter(Boolean).join(" • ")}
+              </div>
             </div>
           </div>
         ))}

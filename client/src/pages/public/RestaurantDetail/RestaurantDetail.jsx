@@ -181,7 +181,7 @@ export default function RestaurantDetail() {
           {r.address && (
             <div className={s.detailRow}>
               <span className={s.detailLabel}>Address</span>
-              <span>{r.address}</span>
+              <span className={s.detailValue}>{r.address}</span>
             </div>
           )}
           {r.phone && (

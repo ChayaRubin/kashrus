@@ -154,12 +154,21 @@
 }
 
 .container {
-  padding: 40px 56px;
+  padding: 40px 24px 48px;
   margin: 0 auto;
-  max-width: 1680px;
+  max-width: 900px;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 520px;
+    padding: 28px 1.5rem 40px;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+  }
 }
 
 .title {
@@ -169,11 +178,11 @@
   color: #459BAC;
 }
 
-/* 4 in a row, wider cards */
+/* cards in responsive grid */
 .list {
   display: grid;
-  grid-template-columns: repeat(4, minmax(340px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
   width: 100%;
   margin: 0 auto;
   padding: 0;
@@ -231,21 +240,52 @@
   background-color: #367f86;
 }
 
+.empty {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+}
+
 @media (max-width: 1400px) {
   .list {
     grid-template-columns: repeat(2, minmax(280px, 1fr));
   }
 }
 
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .title {
+    width: 100%;
+    text-align: center;
+  }
+  .list {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 600px) {
   .container {
-    padding: 20px 10px;
+    padding: 20px 16px;
   }
   .list {
     grid-template-columns: 1fr;
+    max-width: 100%;
   }
   .title {
     font-size: 1.8rem;
+  }
+  .item {
+    margin-right: 0;
   }
 }
 

@@ -90,6 +90,7 @@ export default function AdminRestaurants() {
                 <p><strong>Level:</strong> {r.level ?? '—'}</p>
                 <p><strong>City:</strong> {r.city || '—'}</p>
                 <p><strong>Hechsher:</strong> {r.hechsher || '—'}</p>
+                <p><strong>Address:</strong> {r.address || '—'}</p>
               </div>
               <div className={styles.cardActions}>
                 <button

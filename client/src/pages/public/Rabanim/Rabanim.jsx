@@ -13,9 +13,15 @@ export default function RabanimPage(){
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Rabbanim</h1>
-      <div className={styles.filters}>
-        {/* <input className={styles.input} placeholder="Search name/bio…" value={q} onChange={e=>setQ(e.target.value)} /> */}
-        {/* <input className={styles.input} placeholder="Area…" value={area} onChange={e=>setArea(e.target.value)} /> */}
+      <div className={styles.searchBarWrap}>
+        <input
+          className={styles.searchInput}
+          type="search"
+          placeholder="Search name or bio…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          aria-label="Search rabbanim"
+        />
       </div>
 
       <ul className={styles.grid}>

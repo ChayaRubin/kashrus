@@ -4,10 +4,21 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;
+  box-sizing: border-box;
   font-family: system-ui, -apple-system, sans-serif;
   color: #1a1a1a;
   background: linear-gradient(180deg, #f8fafb 0%, #ffffff 12rem);
   min-height: 60vh;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    max-width: 640px;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
 .back {
@@ -162,15 +173,19 @@
   font-size: 0.9rem;
 }
 
+.detailValue,
 .details a {
-  color: #459BAC;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.details a {
   text-decoration: none;
-  font-weight: 500;
 }
 
 .details a:hover {
   text-decoration: underline;
-  color: #367f86;
+  color: #459BAC;
 }
 
 /* Report issue link — button style */
@@ -204,3 +219,7 @@
   color: #666;
   font-size: 1rem;
 }
+
+/* .website{
+  color: #1a1a1a;
+} */

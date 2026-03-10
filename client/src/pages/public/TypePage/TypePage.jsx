@@ -57,20 +57,31 @@ export default function TypePage() {
       return toggle(prev, l);
     });
 
-  // Initialize state from URL
+  // Initialize state from URL (runs on mount and whenever the query string changes)
   useEffect(() => {
     const typesParam = searchParams.get("types");
-    // Ignore any existing levels in the URL so default is always FIRST tier
+    const levelsParam = searchParams.get("levels");
     const neighborhoodParam = searchParams.get("neighborhood");
 
-    const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
+    const initialTypes = typesParam
+      ? typesParam.split(",").filter(Boolean)
+      : [];
     const initialTypesFiltered = initialTypes.filter((t) =>
       (TYPES_BY_CATEGORY[category] || []).includes(t)
     );
 
     setSelectedTypes(initialTypesFiltered);
-    // Start with no extra levels selected – FIRST is implicit
-    setSelectedLevels([]);
+    // selectedLevels holds EXTRA levels beyond FIRST.
+    // Restore from URL so going back keeps SECOND/THIRD selection.
+    if (levelsParam) {
+      const fromUrl = levelsParam.split(",").filter(Boolean);
+      const extra = fromUrl.filter(
+        (l) => l !== "FIRST" && LEVELS.includes(l)
+      );
+      setSelectedLevels(extra);
+    } else {
+      setSelectedLevels([]);
+    }
     setSelectedNeighborhood(neighborhoodParam || "");
     
     // Reset pagination when filters change
@@ -78,7 +89,7 @@ export default function TypePage() {
     setAllRestaurants([]);
     setRestaurants([]);
     setHasMore(true);
-  }, [category]);
+  }, [category, searchParams]);
 
   // Sync URL
   useEffect(() => {
@@ -109,12 +120,25 @@ export default function TypePage() {
       .catch(console.error);
   }, []);
 
-  // Fetch restaurants: when no filters, show all for category; otherwise filter by selected tier/type/neighborhood
+  // Fetch restaurants whenever filters change
   useEffect(() => {
     setLoading(true);
-    // FIRST tier is always included; user can add SECOND/THIRD via checkboxes
+    // FIRST tier is always included.
+    // If SECOND is selected → show FIRST + SECOND.
+    // If THIRD is selected → show FIRST + SECOND + THIRD.
     const extraLevels = selectedLevels.filter((l) => l !== "FIRST");
-    const effectiveLevels = ["FIRST", ...extraLevels];
+    const levelSet = new Set(["FIRST"]);
+    extraLevels.forEach((lvl) => {
+      if (lvl === "SECOND") {
+        levelSet.add("SECOND");
+      } else if (lvl === "THIRD") {
+        levelSet.add("SECOND");
+        levelSet.add("THIRD");
+      }
+    });
+    const effectiveLevels = ["FIRST", "SECOND", "THIRD"].filter((l) =>
+      levelSet.has(l)
+    );
 
     Restaurants.list({
       category,
@@ -124,15 +148,27 @@ export default function TypePage() {
       neighborhood: selectedNeighborhood || undefined,
     })
       .then((data) => {
-        // Keep only effective levels on the client as well
-        const filtered = data.filter((r) => effectiveLevels.includes(r.level));
+        // 1) Filter by effective levels
+        let filtered = data.filter((r) => effectiveLevels.includes(r.level));
+
+        // 2) Also filter by selected types on the client (safety)
+        if (selectedTypes.length > 0) {
+          filtered = filtered.filter((r) => selectedTypes.includes(r.type));
+        }
+
+        // 3) Also filter by neighborhood on the client (safety)
+        if (selectedNeighborhood) {
+          filtered = filtered.filter(
+            (r) => r.neighborhood === selectedNeighborhood
+          );
+        }
 
         // Sort by level priority: FIRST, then SECOND, then THIRD
         const sortedData = filtered.sort((a, b) => {
-          const levelOrder = { 'FIRST': 1, 'SECOND': 2, 'THIRD': 3 };
+          const levelOrder = { FIRST: 1, SECOND: 2, THIRD: 3 };
           return levelOrder[a.level] - levelOrder[b.level];
         });
-        
+
         setAllRestaurants(sortedData);
         setRestaurants(sortedData.slice(0, 10)); // Show first 10
         setVisibleCount(10);
@@ -144,7 +180,7 @@ export default function TypePage() {
         setHasMore(false);
       })
       .finally(() => setLoading(false));
-  }, [category, selectedTypes, selectedLevels, selectedNeighborhood]);
+  }, [category, selectedTypes, selectedLevels, selectedNeighborhood, searchParams]);
 
   const loadMore = () => {
     if (!hasMore) return;

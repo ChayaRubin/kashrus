@@ -3,6 +3,7 @@
   color: #111;
   margin-top: -80px; /* Compensate for layout padding */
   margin-bottom: -80px; /* Compensate for layout padding */
+  overflow-x: hidden;
 }
 
 /* Fullscreen hero */
@@ -20,20 +21,22 @@
 /* Search overlay top-right */
 .searchBox {
   position: absolute;
-  top: 10%; /* Position below the fixed navbar */
-  right: 50px; /* small margin so the bar doesn't hide under scrollbar */
-  width: 15%;
+  top: 110px; /* Position below the fixed navbar */
+  right: 200px; /* small margin so the bar doesn't hide under scrollbar */
+  width: 8%;
   z-index: 20;
 }
 
 .searchInput {
   width: 100%;
+  max-width: 100%;
   padding: 0.9rem 1.1rem;
   border-radius: 10px;
   border: 1px solid rgba(163, 207, 215, 0.85);
-  background: rgba(255, 255, 255, 0.85); /* a little more clear */
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 4px 14px rgba(15, 47, 54, 0.12);
   font-size: 0.98rem;
+  box-sizing: border-box;
 }
 .searchInput:focus {
   outline: none;
@@ -48,7 +51,7 @@
   width: 100%;
   background: #fff;
   border: 1px solid #e5e7eb;
-  border-radius: 18px;
+  border-radius: 8px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   max-height: 260px;
   overflow-y: auto;
@@ -101,22 +104,137 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 15;
-  /* width: min(600px, 90vw); */
   width: 100%;
-  /* padding: 2px; */
   display: flex;
   justify-content: center;
   gap: 30px;
-  opacity: 0.7;
+  opacity: 0.92;
 }
 
-/* Tablets & phones: pin search with equal side margins, no overflow */
-@media screen and (max-width: 1024px)  {
+/* Category buttons (Meat / Dairy) */
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: system-ui, sans-serif;
+}
+
+.categoryBtn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(69, 155, 172, 0.35);
+  border-radius: 14px;
+  padding: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #459bac;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.categoryBtn:hover {
+  background: #f0f9fb;
+  border-color: #459bac;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Smartphone: single column, no overflow, clearer buttons */
+@media screen and (max-width: 600px) {
+  .categoryGrid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    margin: 24px auto;
+    padding: 16px 20px;
+    gap: 14px;
+    box-sizing: border-box;
+  }
+
+  .categoryBtn {
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border-color: rgba(69, 155, 172, 0.4);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .heroCategories {
+    width: 100%;
+    box-sizing: border-box;
+    left: 0;
+    transform: none;
+    padding: 0 12px;
+    opacity: 1;
+  }
+}
+
+/* Very narrow (e.g. 350px): tighter layout, no overflow */
+@media screen and (max-width: 380px) {
+  .searchBox {
+    left: 50%;
+    right: auto;
+    width: calc(100% - 20px);
+    max-width: 260px;
+    transform: translateX(-50%);
+    top: 86px;
+  }
+
+  .searchInput {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  .categoryGrid {
+    margin: 16px auto;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .categoryBtn {
+    padding: 14px 16px;
+    font-size: 1rem;
+    background: #fff;
+  }
+
+  .heroCategories {
+    padding: 0 8px;
+    transform: none;
+  }
+}
+
+/* Tablets & phones: centered search, no overflow */
+@media screen and (max-width: 1024px) {
   .searchBox {
     top: 90px;
-    left: 4%;
-    right: 4%;
-    width: 35%;
-    transform: none;
+    left: 50%;
+    right: auto;
+    width: calc(100% - 24px);
+    max-width: 320px;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+}
+
+/* Smartphone: compact search bar, fits in viewport */
+@media screen and (max-width: 600px) {
+  .searchBox {
+    width: calc(100% - 24px);
+    max-width: 280px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .searchInput {
+    font-size: 0.9rem;
+    padding: 0.75rem 0.9rem;
   }
 }
