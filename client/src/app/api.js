@@ -138,21 +138,14 @@
 // client/src/app/api.js
 import axios from "axios";
 
-// API base: env at build time, or runtime fallback when frontend is on Render
-function getApiBase() {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (typeof window !== "undefined" && window.location?.hostname?.includes("onrender.com")) {
-    return "https://kashrus-back.onrender.com";
-  }
-  return "http://localhost:5000";
-}
-const BASE = getApiBase();
-export const API_BASE = BASE;
-
+// You have axios available if you want to migrate later
 export const api = axios.create({
-  baseURL: BASE,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
   withCredentials: true,
 });
+
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // ---------- Generic helper ----------
 async function http(path, { method = "GET", params, body } = {}) {
@@ -176,39 +169,21 @@ async function http(path, { method = "GET", params, body } = {}) {
     credentials: "include", // 👈 ensures cookie (token) is always sent
   });
 
-  // Read response text once so we can safely handle empty bodies (e.g. 204 No Content)
-  const rawText = await res.text();
-
   if (!res.ok) {
-    let errorBody = rawText;
+    let errorBody;
     try {
-      // Try to parse JSON error if present
-      const parsed = rawText ? JSON.parse(rawText) : null;
-      errorBody = parsed || rawText;
+      errorBody = await res.json();
     } catch {
-      // keep rawText
+      errorBody = await res.text();
     }
 
     throw {
       status: res.status,
-      message:
-        (typeof errorBody === "object" && errorBody?.error) ||
-        errorBody ||
-        "Request failed",
+      message: errorBody?.error || errorBody || "Request failed",
     };
   }
 
-  // Successful but no content (e.g. 204) → return null
-  if (!rawText) {
-    return null;
-  }
-
-  // Try to parse JSON; if it fails, fall back to plain text
-  try {
-    return JSON.parse(rawText);
-  } catch {
-    return rawText;
-  }
+  return res.json();
 }
 
 // ---------- Restaurants ----------
@@ -283,15 +258,6 @@ export const Ratings = {
   remove: (restaurantId) =>
     http(`/ratings/${restaurantId}/rating`, { method: "DELETE" }),
   listMine: () => http("/ratings/mine"),
-};
-
-// ---------- Users (admin) ----------
-export const UsersAPI = {
-  list: () => http("/users"),
-  get: (id) => http(`/users/${id}`),
-  create: (d) => http("/users", { method: "POST", body: d }),
-  update: (id, d) => http(`/users/${id}`, { method: "PUT", body: d }),
-  remove: (id) => http(`/users/${id}`, { method: "DELETE" }),
 };
 
 // ---------- Feedback ----------

@@ -31,23 +31,14 @@ export async function uploadImage(file) {
     });
 
     if (!response.ok) {
-      let message = 'Upload failed';
-      try {
-        const errorData = await response.json();
-        message = errorData.error || message;
-      } catch (_) {
-        message = response.statusText || message;
-      }
-      throw new Error(message);
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Upload failed');
     }
 
     const result = await response.json();
     return result.url;
   } catch (error) {
     console.error('Image upload error:', error);
-    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-      throw new Error('Network error: server may be unreachable or request timed out. Try again.');
-    }
     throw error;
   }
 }

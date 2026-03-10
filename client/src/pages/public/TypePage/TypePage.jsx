@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Restaurants, Hechsheirim } from "../../../app/api.js";
+import { Restaurants } from "../../../app/api.js";
 import s from "./TypePage.module.css";
 
 const TYPES_BY_CATEGORY = {
@@ -33,55 +33,31 @@ export default function TypePage() {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedLevels, setSelectedLevels] = useState([]); // stores EXTRA levels beyond FIRST
+  const [selectedLevels, setSelectedLevels] = useState([]);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
   const [openDropdown, setOpenDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10);
   const [hasMore, setHasMore] = useState(true);
-  const [hechsheirim, setHechsheirim] = useState([]);
-  const [query, setQuery] = useState("");
-  const [showHechsheirimPopup, setShowHechsheirimPopup] = useState(false);
 
   function toggle(arr, val) {
     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
   }
 
   const onToggleType = (t) => setSelectedTypes((prev) => toggle(prev, t));
-  const onToggleLevel = (l) =>
-    setSelectedLevels((prev) => {
-      if (l === "FIRST") {
-        // FIRST is always included; clicking it does nothing
-        return prev;
-      }
-      return toggle(prev, l);
-    });
+  const onToggleLevel = (l) => setSelectedLevels((prev) => toggle(prev, l));
 
-  // Initialize state from URL (runs on mount and whenever the query string changes)
+  // Initialize state from URL
   useEffect(() => {
     const typesParam = searchParams.get("types");
     const levelsParam = searchParams.get("levels");
     const neighborhoodParam = searchParams.get("neighborhood");
 
-    const initialTypes = typesParam
-      ? typesParam.split(",").filter(Boolean)
-      : [];
-    const initialTypesFiltered = initialTypes.filter((t) =>
-      (TYPES_BY_CATEGORY[category] || []).includes(t)
-    );
+    const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
+    const initialLevels = levelsParam ? levelsParam.split(",").filter(Boolean) : [];
 
-    setSelectedTypes(initialTypesFiltered);
-    // selectedLevels holds EXTRA levels beyond FIRST.
-    // Restore from URL so going back keeps SECOND/THIRD selection.
-    if (levelsParam) {
-      const fromUrl = levelsParam.split(",").filter(Boolean);
-      const extra = fromUrl.filter(
-        (l) => l !== "FIRST" && LEVELS.includes(l)
-      );
-      setSelectedLevels(extra);
-    } else {
-      setSelectedLevels([]);
-    }
+    setSelectedTypes(initialTypes.filter((t) => (TYPES_BY_CATEGORY[category] || []).includes(t)));
+    setSelectedLevels(initialLevels.filter((l) => LEVELS.includes(l)));
     setSelectedNeighborhood(neighborhoodParam || "");
     
     // Reset pagination when filters change
@@ -89,7 +65,7 @@ export default function TypePage() {
     setAllRestaurants([]);
     setRestaurants([]);
     setHasMore(true);
-  }, [category, searchParams]);
+  }, [category]);
 
   // Sync URL
   useEffect(() => {
@@ -106,69 +82,30 @@ export default function TypePage() {
     setSearchParams(params, { replace: true });
   }, [selectedTypes, selectedLevels, selectedNeighborhood, setSearchParams]);
 
-  // Fetch hechsheirim
+  // Fetch all restaurants when filters change
   useEffect(() => {
-    Hechsheirim.list({ page: 1, pageSize: 100 })
-      .then((res) => {
-        // Normalize description → level
-        const items = (res.items || []).map((h) => ({
-          ...h,
-          level: h.description ? h.description.toUpperCase() : "OTHER",
-        }));
-        setHechsheirim(items);
-      })
-      .catch(console.error);
-  }, []);
-
-  // Fetch restaurants whenever filters change
-  useEffect(() => {
+    if (selectedTypes.length === 0 && selectedLevels.length === 0) {
+      setAllRestaurants([]);
+      setRestaurants([]);
+      setHasMore(false);
+      return;
+    }
+    
     setLoading(true);
-    // FIRST tier is always included.
-    // If SECOND is selected → show FIRST + SECOND.
-    // If THIRD is selected → show FIRST + SECOND + THIRD.
-    const extraLevels = selectedLevels.filter((l) => l !== "FIRST");
-    const levelSet = new Set(["FIRST"]);
-    extraLevels.forEach((lvl) => {
-      if (lvl === "SECOND") {
-        levelSet.add("SECOND");
-      } else if (lvl === "THIRD") {
-        levelSet.add("SECOND");
-        levelSet.add("THIRD");
-      }
-    });
-    const effectiveLevels = ["FIRST", "SECOND", "THIRD"].filter((l) =>
-      levelSet.has(l)
-    );
-
     Restaurants.list({
       category,
-      types: selectedTypes.length > 0 ? selectedTypes : undefined,
-      // send effective levels to backend too
-      levels: effectiveLevels,
+      types: selectedTypes,
+      levels: selectedLevels,
       neighborhood: selectedNeighborhood || undefined,
+      // Load all results at once (like Home page search)
     })
       .then((data) => {
-        // 1) Filter by effective levels
-        let filtered = data.filter((r) => effectiveLevels.includes(r.level));
-
-        // 2) Also filter by selected types on the client (safety)
-        if (selectedTypes.length > 0) {
-          filtered = filtered.filter((r) => selectedTypes.includes(r.type));
-        }
-
-        // 3) Also filter by neighborhood on the client (safety)
-        if (selectedNeighborhood) {
-          filtered = filtered.filter(
-            (r) => r.neighborhood === selectedNeighborhood
-          );
-        }
-
         // Sort by level priority: FIRST, then SECOND, then THIRD
-        const sortedData = filtered.sort((a, b) => {
-          const levelOrder = { FIRST: 1, SECOND: 2, THIRD: 3 };
+        const sortedData = data.sort((a, b) => {
+          const levelOrder = { 'FIRST': 1, 'SECOND': 2, 'THIRD': 3 };
           return levelOrder[a.level] - levelOrder[b.level];
         });
-
+        
         setAllRestaurants(sortedData);
         setRestaurants(sortedData.slice(0, 10)); // Show first 10
         setVisibleCount(10);
@@ -180,7 +117,7 @@ export default function TypePage() {
         setHasMore(false);
       })
       .finally(() => setLoading(false));
-  }, [category, selectedTypes, selectedLevels, selectedNeighborhood, searchParams]);
+  }, [category, selectedTypes, selectedLevels, selectedNeighborhood]);
 
   const loadMore = () => {
     if (!hasMore) return;
@@ -191,191 +128,38 @@ export default function TypePage() {
     setHasMore(nextCount < allRestaurants.length);
   };
 
-  // Group hechsheirim by tier (in order: FIRST, SECOND, THIRD)
-  const groupedHechsheirim = LEVELS.map((lvl) => ({
-    level: lvl,
-    items: hechsheirim.filter((h) => h.level === lvl),
-  }));
-  const otherHechsheirim = hechsheirim.filter((h) => !LEVELS.includes(h.level));
-
-  // Filter restaurants by search query (name + address + hechsher)
-  const lowerQuery = query.trim().toLowerCase();
-  const visibleRestaurants = lowerQuery
-    ? restaurants.filter((r) =>
-        [
-          r.name,
-          r.address,
-          r.hechsher,
-          r.neighborhood,
-          r.city,
-          r.type,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(lowerQuery)
-      )
-    : restaurants;
-
   return (
     <div className={s.wrap}>
       <div className={s.back}>
-        <button onClick={() => nav("/")} className={s.backbutton}>
-          ⬅ Back to Home
+        <button onClick={() => nav("/browse")} className={s.backbutton}>
+          Back
         </button>
       </div>
 
-      <div className={s.categoryTitleContainer}>
-        <h4 className={s.categoryTitle}>{category}</h4>
-      </div>
-      
-      <div className={s.hechsheirimButtonContainer}>
-        <button 
-          onClick={() => setShowHechsheirimPopup(true)} 
-          className={s.hechsheirimButton}
-        >
-          Hechsheirim symbols...
-        </button>
-      </div>
-      
-      {/* Mobile Popup Overlay */}
-      {showHechsheirimPopup && (
-        <div 
-          className={s.popupOverlay}
-          onClick={() => setShowHechsheirimPopup(false)}
-        >
-          <div 
-            className={s.hechsheirimPopup}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={s.popupHeader}>
-              <h3 className={s.sidebarTitle}>Hechsheirim</h3>
-              <button 
-                onClick={() => setShowHechsheirimPopup(false)}
-                className={s.closeButton}
-              >
-                ×
-              </button>
-            </div>
-            <div className={s.hechsheirimList}>
-              {groupedHechsheirim.map(({ level, items }) =>
-                items.length > 0 ? (
-                  <div key={level} className={s.tierSection}>
-                    <h4 className={s.tierTitle}>{level}</h4>
-                    {items.map((h) => (
-                      <div key={h.id} className={s.hechsherItem}>
-                        {h.symbolUrl && (
-                          <img
-                            src={h.symbolUrl}
-                            alt={h.name}
-                            className={s.hechsherLogo}
-                          />
-                        )}
-                        <span className={s.hechsherName}>{h.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null
-              )}
-              {otherHechsheirim.length > 0 && (
-                <div className={s.tierSection}>
-                  <h4 className={s.tierTitle}>Other</h4>
-                  {otherHechsheirim.map((h) => (
-                    <div key={h.id} className={s.hechsherItem}>
-                      {h.symbolUrl && (
-                        <img
-                          src={h.symbolUrl}
-                          alt={h.name}
-                          className={s.hechsherLogo}
-                        />
-                      )}
-                      <span className={s.hechsherName}>{h.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-      
-      <div className={s.mainLayout}>
-        {/* Hechsheirim Sidebar */}
-        <div className={s.hechsheirimSidebar}>
-          <h3 className={s.sidebarTitle}>Hechsheirim</h3>
-          <div className={s.hechsheirimList}>
-            {groupedHechsheirim.map(({ level, items }) =>
-              items.length > 0 ? (
-                <div key={level} className={s.tierSection}>
-                  <h4 className={s.tierTitle}>{level}</h4>
-                  {items.map((h) => (
-                    <div key={h.id} className={s.hechsherItem}>
-                      {h.symbolUrl && (
-                        <img
-                          src={h.symbolUrl}
-                          alt={h.name}
-                          className={s.hechsherLogo}
-                        />
-                      )}
-                      <span className={s.hechsherName}>{h.name}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : null
-            )}
-            {otherHechsheirim.length > 0 && (
-              <div className={s.tierSection}>
-                <h4 className={s.tierTitle}>Other</h4>
-                {otherHechsheirim.map((h) => (
-                  <div key={h.id} className={s.hechsherItem}>
-                    {h.symbolUrl && (
-                      <img
-                        src={h.symbolUrl}
-                        alt={h.name}
-                        className={s.hechsherLogo}
-                      />
-                    )}
-                    <span className={s.hechsherName}>{h.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className={s.mainContent}>
-          <div className={s.categoryTitleDesktop}>
-            <h4 className={s.categoryTitle}>{category}</h4>
-          </div>
-
-          {/* Filters Row - All three filters side by side on large screens */}
-          <div className={s.filtersRow}>
 <div className={s.section}>
-              <p className={s.filterHint}>Select one or more tiers</p>
+    <div className={s.levelNote}>
+    We recommend choosing <strong>FIRST</strong> level for the best results!
+  </div>
+  <div className={s.levelsRow}>
+  {/* <h2 className={s.levelsTitle}>Levels</h2> */}
   <div className={s.levels}>
-    {LEVELS.map((l) => {
-      const checked =
-        l === "FIRST" ? true : selectedLevels.includes(l);
-      return (
-        <label
-          key={l}
-          className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}
-        >
-          {l} TIER
-          <input
-            type="checkbox"
-            checked={checked}
-            onChange={() => onToggleLevel(l)}
-          />
-        </label>
-      );
-    })}
+    {LEVELS.map((l) => (
+  <label key={l} className={s.levelLabel}>
+    {l} TIER
+    <input
+      type="checkbox"
+      checked={selectedLevels.includes(l)}
+      onChange={() => onToggleLevel(l)}
+    />
+  </label>
+))}
   </div>
 </div>
+</div>
+      <h4 className={s.title}>{category}</h4>
+
       {/* TYPES */}
       <div className={s.section}>
-              <p className={s.filterHint}>Select one or more types</p>
         <div className={s.grid}>
           {options.map((t) => {
             const active = selectedTypes.includes(t);
@@ -391,9 +175,10 @@ export default function TypePage() {
           })}
         </div>
       </div>
+
       {/* CUSTOM NEIGHBORHOOD DROPDOWN */}
       <div className={s.section}>
-              <p className={s.filterHint}>Filter restaurants by neighborhood</p>
+        <h3 className={s.subtitle}>Neighborhood</h3>
         <div className={s.dropdownWrap}>
           <button
             className={s.dropdownBtn}
@@ -425,27 +210,17 @@ export default function TypePage() {
               ))}
             </ul>
           )}
-              </div>
         </div>
       </div>
 
       {/* RESULTS */}
       <div className={s.section}>
-        <div className={s.searchRow}>
-          <input
-            className={s.searchInput}
-            type="text"
-            placeholder="Search by name, area, or hechsher..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
         {loading ? (
           <p>Loading…</p>
-        ) : visibleRestaurants.length > 0 ? (
+        ) : restaurants.length > 0 ? (
           <>
             <ul className={s.results}>
-              {visibleRestaurants.map((r) => (
+              {restaurants.map((r) => (
                 <li
                   key={r.id}
                   onClick={() =>
@@ -507,38 +282,9 @@ export default function TypePage() {
             )}
           </>
         ) : (
-          <div className={s.emptyState}>
-            <p className={s.emptyMessage}>No restaurants found.</p>
-            <p className={s.emptyHint}>
-              Try adjusting your filters or selecting different options to see more results.
-            </p>
-            {(selectedTypes.length > 0 || selectedLevels.length > 0 || selectedNeighborhood) && (
-              <button
-                className={s.clearFiltersBtn}
-                onClick={() => {
-                  setSelectedTypes([]);
-                  setSelectedLevels([]);
-                  setSelectedNeighborhood("");
-                }}
-              >
-                Clear all filters
-              </button>
-            )}
-          </div>
+          <p>No restaurants found.</p>
         )}
       </div>
-        </div>
-      </div>
-
-      {/* Back-to-top arrow */}
-      <button
-        className={s.scrollTopButton}
-        type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Back to top"
-      >
-        ^
-      </button>
     </div>
   );
 }

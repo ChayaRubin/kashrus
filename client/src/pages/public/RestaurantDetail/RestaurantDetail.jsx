@@ -126,9 +126,14 @@ export default function RestaurantDetail() {
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     Restaurants.get(id).then(setR).catch(console.error);
   }, [id]);
+
+  useEffect(() => {
+  window.scrollTo(0, 0); // 👈 scrolls to the top
+  Restaurants.get(id).then(setR).catch(console.error);
+}, [id]);
+
 
   if (!r) return <p className={s.info}>Loading…</p>;
 
@@ -137,79 +142,71 @@ export default function RestaurantDetail() {
     : r.images
     ? [r.images]
     : [];
-  const logoUrl = images.length > 0 ? images[0] : null;
-  const otherImages = images.length > 1 ? images.slice(1) : [];
 
   return (
     <div className={s.wrap}>
+      {/* Back button */}
       <div className={s.back}>
         <button onClick={() => navigate(backTo)} className={s.backbutton}>
           {backLabel}
         </button>
       </div>
 
-      <article className={s.card}>
-        {/* Meta badge */}
-        <div className={s.metaLine}>
-          <span className={s.label}>Level</span> {r.level}
-          {r.hechsher && <> <span className={s.divider}>|</span> {r.hechsher}</>}
-          {r.city && <> <span className={s.divider}>|</span> {r.city}</>}
-          {r.category && <> <span className={s.divider}>|</span> {r.category}</>}
-        </div>
+      {/* Title + meta */}
+<div className={s.metaLine}>
+  <span className={s.label}>Level</span> {r.level}
+  {r.hechsher && <> <span className={s.divider}>|</span> {r.hechsher}</>}
+  {r.city && <> <span className={s.divider}>|</span> {r.city}</>}
+  {r.category && <> <span className={s.divider}>|</span> {r.category}</>}
+</div>
 
-        {/* Logo + name */}
-        {logoUrl && (
-          <div className={s.logoWrap}>
-            <img src={logoUrl} alt="" className={s.logo} />
+      {/* Gallery */}
+      {images.length > 0 && (
+        <div className={s.gallery}>
+          {images.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`Photo ${i + 1}`}
+              className={s.image}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Description */}
+      {r.description && <p className={s.description}>{r.description}</p>}
+
+      {/* Details */}
+      <div className={s.details}>
+        {r.address && (
+          <div>
+            <strong>Address:</strong> {r.address}
           </div>
         )}
-        <h1 className={s.title}>{r.name}</h1>
-
-        {/* Extra photos */}
-        {otherImages.length > 0 && (
-          <div className={s.gallery}>
-            {otherImages.map((src, i) => (
-              <img key={i} src={src} alt={`Photo ${i + 2}`} className={s.image} />
-            ))}
+        {r.phone && (
+          <div>
+            <strong>Phone:</strong> {r.phone}
           </div>
         )}
+        {r.website && (
+          <div>
+            <a href={r.website} target="_blank" rel="noreferrer">
+              Website
+            </a>
+          </div>
+        )}
+      </div>
 
-        {r.description && <p className={s.description}>{r.description}</p>}
-
-        {/* Contact details */}
-        <div className={s.details}>
-          {r.address && (
-            <div className={s.detailRow}>
-              <span className={s.detailLabel}>Address</span>
-              <span className={s.detailValue}>{r.address}</span>
-            </div>
-          )}
-          {r.phone && (
-            <div className={s.detailRow}>
-              <span className={s.detailLabel}>Phone</span>
-              <a href={`tel:${r.phone}`}>{r.phone}</a>
-            </div>
-          )}
-          {r.website && (
-            <div className={s.detailRow}>
-              <span className={s.detailLabel}>Website</span>
-              <a href={r.website} target="_blank" rel="noreferrer">
-                Visit website
-              </a>
-            </div>
-          )}
-        </div>
-
-        <div className={s.feedback}>
-          <Link
-            to={`/contact?restaurantId=${r.id}`}
-            state={{ from: backTo, fromHome }}
-            className={s.reportLink}
-          >
-            Report an issue with this restaurant
-          </Link>
-        </div>
-      </article>
+      {/* Feedback */}
+      <div className={s.feedback}>
+        <Link
+          to={`/contact?restaurantId=${r.id}`}
+          state={{ from: backTo, fromHome }}
+        >
+          Report an issue with this restaurant
+        </Link>
+      </div>
     </div>
   );
 }

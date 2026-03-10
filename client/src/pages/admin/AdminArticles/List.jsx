@@ -74,14 +74,9 @@ export default function ArticlesAdminList() {
           <div key={a.id} className={styles.card}>
             <div className={styles.cardHeader}>
               <h3>{a.title}</h3>
-              <div className={styles.meta}>
-                {a.author && (
-                  <span className={styles.author}>By {a.author}</span>
-                )}
-                <span className={styles.date}>
-                  {new Date(a.createdAt).toLocaleDateString()}
-                </span>
-              </div>
+              <span className={styles.date}>
+                {new Date(a.createdAt).toLocaleDateString()}
+              </span>
             </div>
             {a.content && (
               <p className={styles.snippet}>

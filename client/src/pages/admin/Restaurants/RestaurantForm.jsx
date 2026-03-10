@@ -432,11 +432,10 @@ export default function RestaurantForm() {
     address: "",
     phone: "",
     category: "MEAT",
-    type: "FAST_FOOD",
-    level: "FIRST",
+    type: "",
+    level: "",
     neighborhood: "",
     description: "",
-    images: [],
     logoUrl: ""
   });
 
@@ -450,20 +449,7 @@ export default function RestaurantForm() {
   const types = useMemo(() => TYPES_BY_CATEGORY[f.category] || [], [f.category]);
 
   useEffect(() => {
-    if (editing) {
-      Restaurants.get(id).then((data) => {
-        const typesForCat = TYPES_BY_CATEGORY[data?.category] || TYPES_BY_CATEGORY.MEAT;
-        const imagesArray = Array.isArray(data?.images) ? data.images : (data?.images ? [data.images] : []);
-        const firstImage = imagesArray.length ? imagesArray[0] : "";
-        setF({
-          ...data,
-          level: LEVELS.includes(data?.level) ? data.level : "FIRST",
-          type: typesForCat.includes(data?.type) ? data.type : typesForCat[0],
-          images: imagesArray,
-          logoUrl: firstImage,
-        });
-      }).catch(console.error);
-    }
+    if (editing) Restaurants.get(id).then(setF).catch(console.error);
   }, [editing, id]);
 
   useEffect(() => () => filePreview && revokeImagePreview(filePreview), [filePreview]);
@@ -501,43 +487,16 @@ export default function RestaurantForm() {
 
   async function submit(e) {
     e.preventDefault();
-    setSaving(true);
+    setSaving(true); // ✅ start loading
     try {
-      const typesForCat = TYPES_BY_CATEGORY[f.category] || TYPES_BY_CATEGORY.MEAT;
-      const normalizedLevel = LEVELS.includes(f.level) ? f.level : "FIRST";
-      const normalizedType =
-        f.type && typesForCat.includes(f.type) ? f.type : typesForCat[0];
-
-      // Build images array from logoUrl or existing images
-      let images = [];
-      if (f.logoUrl && f.logoUrl.trim()) {
-        images = [f.logoUrl.trim()];
-      } else if (Array.isArray(f.images) && f.images.length) {
-        images = f.images;
-      }
-
-      const payload = {
-        name: f.name.trim(),
-        category: f.category,
-        type: normalizedType,
-        level: normalizedLevel,
-        city: f.city || null,
-        neighborhood: f.neighborhood || null,
-        address: f.address || null,
-        phone: f.phone || null,
-        hechsher: f.hechsher || null,
-        website: f.website || null,
-        images,
-      };
-
-      if (editing) await Restaurants.update(id, payload);
-      else await Restaurants.create(payload);
+      if (editing) await Restaurants.update(id, f);
+      else await Restaurants.create(f);
       nav("/admin/restaurants");
     } catch (err) {
       console.error("Save error:", err);
       setError(err.message || "Save failed");
     } finally {
-      setSaving(false);
+      setSaving(false); // ✅ end loading
     }
   }
 

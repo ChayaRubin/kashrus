@@ -53,20 +53,13 @@ export default function ArticleDetail() {
       <article className={styles.article}>
         <header className={styles.header}>
           <h1 className={styles.title}>{article.title}</h1>
-          <div>
-            <time className={styles.date}>
-              {new Date(article.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-            {article.author && (
-              <span className={styles.author}>
-                {' '}· By {article.author}
-              </span>
-            )}
-          </div>
+          <time className={styles.date}>
+            {new Date(article.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>
         </header>
         
         <div className={styles.content}>

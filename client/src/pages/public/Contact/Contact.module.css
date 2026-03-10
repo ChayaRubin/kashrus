@@ -1,121 +1,121 @@
-/* Contact / Feedback card — with accent and depth */
-
 .container {
-  max-width: 460px;
-  margin: 3rem auto 4rem;
-  padding: 1.75rem 1.5rem 1.9rem;
-  background: linear-gradient(180deg, #ffffff 0%, #fafcfd 100%);
-  border-radius: 6px;
-  border: 1px solid #e4eaee;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(69, 155, 172, 0.08);
-  text-align: center;
-  font-family: system-ui, -apple-system, sans-serif;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  align-items: center;
 }
 
 .title {
-  font-size: 1.55rem;
-  margin-bottom: 1.1rem;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
   color: #459BAC;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid rgba(69, 155, 172, 0.25);
+  text-align: center;
 }
 
 .textarea {
-  width: 100%;
-  padding: 0.75rem 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #d4dde2;
-  background: #fafbfc;
+  width: 90%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
   resize: vertical;
-  margin-bottom: 1.1rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  font-family: inherit;
-  box-sizing: border-box;
-}
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  align-self: center;
 
-.textarea:focus {
-  outline: none;
-  border-color: #459BAC;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.25);
 }
 
 .button {
-  background: linear-gradient(180deg, #4ba8b8 0%, #459BAC 100%);
+  background-color: #459BAC;
   color: white;
   border: none;
-  padding: 0.6rem 1.8rem;
+  padding: 10px 16px;
   border-radius: 6px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  display: inline-block;
-  margin-top: 0.25rem;
-  box-shadow: 0 2px 8px rgba(69, 155, 172, 0.35);
+  width: 30%;
+  transition: background 0.2s ease;
+  margin-left: 34%
 }
 
 .button:hover {
-  background: linear-gradient(180deg, #459BAC 0%, #367f86 100%);
+  background-color: #367f86;
   color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(69, 155, 172, 0.4);
 }
 
 .thankyou {
-  max-width: 460px;
-  margin: 3rem auto 4rem;
-  padding: 1.75rem 1.5rem 1.9rem;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 20px;
   text-align: center;
   color: #459BAC;
-  font-size: 1.1rem;
-  background: linear-gradient(180deg, #f9fafa 0%, #f0f7f8 100%);
-  border: 1px solid #e4eaee;
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  font-size: 1.2rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.backbutton{
+      align-self: center;
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background-color: #459BAC;
+      transition: background 0.2s ease;
+
+}
+
+.backbutton:hover {
+      background-color: #367f86;
+      color: white;
 }
 
 .backbutton {
   display: inline-block;
-  margin: 1rem auto 0;
-  padding: 0.5rem 1.25rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #459BAC;
-  background: transparent;
-  border: 2px solid #459BAC;
+  margin-top: 1rem;
+  padding: 10px 16px;
   border-radius: 6px;
+  background: #459BAC;
+  color: #fff;
   text-decoration: none;
-  text-align: center;
-  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
 
 .backbutton:hover {
+  background: #367f86;
+}
+
+.backbutton {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 10px 16px;
+  border-radius: 6px;
   background: #459BAC;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(69, 155, 172, 0.35);
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.2s ease;
+  width: fit-content;
+}
+
+.backbutton:hover {
+  background: #367f86;
 }
 
 .error {
-  margin: 0.85rem auto 0;
-  padding: 0.6rem 0.8rem;
-  border-radius: 4px;
-  color: #a00000;
-  font-size: 0.9rem;
-  max-width: 90%;
-}
-
-.loginNotice {
-  margin: 0.75rem auto 1rem;
-  padding: 0.75rem 1rem;
-  max-width: 90%;
-  border-radius: 4px;
-  background: #fff5f5;
-  border: 1px solid #f5b5b5;
-  color: #a40000;
+  margin: 10px 0;
+  padding: 10px;
+  /* background-color: #ffe5e5;
+  border: 1px solid #ffaaaa; */
+  border-radius: 6px;
+  color: #a00;
   font-size: 0.95rem;
-  text-align: center;
+  width: 80%;
 }

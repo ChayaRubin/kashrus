@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './ContactSection.module.css';
-import { api, Hechsheirim } from '../../app/api.js';
-import { useAuth } from '../../contexts/AuthContext.jsx';
+import { api } from '../../app/api.js';
 
 export default function ContactPage() {
-  const { isAuthenticated, loading: authLoading } = useAuth();
   const [mode, setMode] = useState('question'); // 'question' | 'add_restaurant'
   const [formData, setFormData] = useState({
     // common
@@ -25,42 +23,14 @@ export default function ContactPage() {
     details: '',
   });
   const [images, setImages] = useState([]);
-  const [hechsheirim, setHechsheirim] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    Hechsheirim.list({ page: 1, pageSize: 200 })
-      .then((res) => setHechsheirim(res?.items ?? []))
-      .catch(() => setHechsheirim([]));
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const hasTyped =
-    mode === 'question'
-      ? !!(
-        formData.name ||
-        formData.email ||
-        formData.phone ||
-        formData.subject ||
-        formData.message
-      )
-      : !!(
-        formData.requesterName ||
-        formData.requesterEmail ||
-        formData.restaurantName ||
-        formData.city ||
-        formData.address ||
-        formData.phone ||
-        formData.website ||
-        formData.kashrus ||
-        formData.details
-      );
 
   const resetForm = () => {
     setFormData({
@@ -302,8 +272,6 @@ export default function ContactPage() {
         validationError = 'Missing required fields: Email is required';
       } else if (!formData.restaurantName) {
         validationError = 'Missing required fields: Restaurant name is required';
-      } else if (!formData.kashrus || !formData.kashrus.trim()) {
-        validationError = 'Hechsher is required. Please select one from the list.';
       }
     } else {
       if (!formData.name) {
@@ -317,12 +285,6 @@ export default function ContactPage() {
 
     if (validationError) {
       setError(validationError);
-      setLoading(false);
-      return;
-    }
-
-    if (!isAuthenticated) {
-      setError('❌ You must be logged in to send a question or request. Please log in and try again.');
       setLoading(false);
       return;
     }
@@ -406,9 +368,7 @@ export default function ContactPage() {
         const status = err.response.status;
         const data = err.response.data;
         
-        if (status === 401) {
-          errorMessage = '❌ You must be logged in to send a question or request. Please log in and try again.';
-        } else if (status === 400) {
+        if (status === 400) {
           errorMessage = data?.error || '❌ Invalid form data. Please check your inputs.';
         } else if (status === 413) {
           errorMessage = '❌ File too large. Please reduce image size.';
@@ -531,20 +491,8 @@ export default function ContactPage() {
                 </div>
 
                 <div className={styles.field}>
-                  <label htmlFor="kashrus" className={styles.label} style={{ color: '#459BAC', fontWeight: '600' }}>Hechsher *</label>
-                  <select
-                    name="kashrus"
-                    id="kashrus"
-                    value={formData.kashrus}
-                    onChange={handleChange}
-                    className={`${styles.input} ${styles.selectHechsher}`}
-                    required
-                  >
-                    <option value="">Select hechsher</option>
-                    {hechsheirim.map((h) => (
-                      <option key={h.id} value={h.name}>{h.name}</option>
-                    ))}
-                  </select>
+                  <label htmlFor="kashrus" className={styles.label}>Kashrus</label>
+                  <input name="kashrus" id="kashrus" type="text" value={formData.kashrus} onChange={handleChange} className={styles.input} />
                 </div>
 
                 <div className={styles.field}>
@@ -552,13 +500,6 @@ export default function ContactPage() {
                   <textarea name="details" id="details" rows="5" value={formData.details} onChange={handleChange} className={styles.textarea} />
                 </div>
               </>
-            )}
-
-            {/* Login notice for guests */}
-            {!isAuthenticated && hasTyped && (
-              <p className={styles.loginNotice}>
-                You must be logged in to send a question or restaurant request. Please log in!
-              </p>
             )}
 
             {/* Image Upload Section */}

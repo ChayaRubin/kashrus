@@ -6,17 +6,13 @@ import styles from './AdminRestaurants.module.css';
 export default function AdminRestaurants() {
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
   const nav = useNavigate();
 
   async function load() {
     setLoading(true);
     try {
       const list = await Restaurants.listAll();
-      const sorted = [...list].sort((a, b) =>
-        (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' })
-      );
-      setItems(sorted);
+      setItems(list);
     } finally {
       setLoading(false);
     }
@@ -29,19 +25,6 @@ export default function AdminRestaurants() {
     await Restaurants.remove(id);
     setItems((prev) => prev.filter((x) => x.id !== id));
   }
-
-  const q = (search || '').trim().toLowerCase();
-  const filtered = !items
-    ? []
-    : !q
-      ? items
-      : items.filter(
-          (r) =>
-            (r.name || '').toLowerCase().includes(q) ||
-            (r.city || '').toLowerCase().includes(q) ||
-            (r.hechsher || '').toLowerCase().includes(q) ||
-            (r.neighborhood || '').toLowerCase().includes(q)
-        );
 
   if (loading) return <p>Loading…</p>;
 
@@ -57,22 +40,11 @@ export default function AdminRestaurants() {
         </button>
       </div>
 
-      <div className={styles.searchWrap}>
-        <input
-          type="search"
-          placeholder="Search by name, city, hechsher, neighborhood…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={styles.searchInput}
-          aria-label="Search restaurants"
-        />
-      </div>
-
-      {!filtered.length ? (
-        <p>{items?.length && q ? 'No restaurants match your search.' : 'No restaurants yet.'}</p>
+      {!items?.length ? (
+        <p>No restaurants yet.</p>
       ) : (
         <div className={styles.cards}>
-          {filtered.map((r) => (
+          {items.map((r) => (
             <div key={r.id} className={styles.card}>
               {/* optional: show logo/thumbnail if r.images */}
               {r.images?.length > 0 && (
@@ -87,10 +59,9 @@ export default function AdminRestaurants() {
                 <h3>{r.name}</h3>
               </div>
               <div className={styles.desc}>
-                <p><strong>Level:</strong> {r.level ?? '—'}</p>
+                <p><strong>Level:</strong> {r.level}</p>
                 <p><strong>City:</strong> {r.city || '—'}</p>
                 <p><strong>Hechsher:</strong> {r.hechsher || '—'}</p>
-                <p><strong>Address:</strong> {r.address || '—'}</p>
               </div>
               <div className={styles.cardActions}>
                 <button
