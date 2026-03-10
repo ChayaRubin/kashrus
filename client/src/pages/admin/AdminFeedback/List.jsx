@@ -75,6 +75,9 @@ export default function AdminFeedback() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>User Feedback</h1>
+      {feedback.length === 0 ? (
+        <p className={styles.empty}>No feedback yet.</p>
+      ) : (
       <ul className={styles.list}>
         {feedback.map((f) => (
           <li key={f.id} className={styles.item}>
@@ -118,6 +121,7 @@ export default function AdminFeedback() {
           </li>
         ))}
       </ul>
+      )}
     </div>
   );
 }

@@ -13,6 +13,30 @@
   margin-bottom: 16px;
 }
 
+.searchWrap {
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #459BAC;
+  box-shadow: 0 0 0 2px rgba(69, 155, 172, 0.2);
+}
+
+.searchInput::placeholder {
+  color: #94a3b8;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 600;

@@ -17,68 +17,18 @@ function HomeCategoryPage() {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
-      <button 
+    <div className={s.categoryGrid}>
+      <button
+        type="button"
         onClick={() => handleCategoryClick('MEAT')}
-        style={{
-          background: '#fff',
-          border: '1px solid #e5e7eb',
-          borderRadius: '14px',
-          padding: '20px 20px',
-          fontSize: '1.3rem',
-          fontWeight: '600',
-          color: '#459BAC',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          textAlign: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-          width: '80%',
-          margin: 'auto'
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.background = '#f0f9fb';
-          e.target.style.borderColor = '#459BAC';
-          e.target.style.transform = 'translateY(-3px)';
-          e.target.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.background = '#fff';
-          e.target.style.borderColor = '#e5e7eb';
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-        }}
+        className={s.categoryBtn}
       >
         Meat
       </button>
-      <button 
+      <button
+        type="button"
         onClick={() => handleCategoryClick('DAIRY')}
-        style={{
-          background: '#fff',
-          border: '1px solid #e5e7eb',
-          borderRadius: '14px',
-          padding: '20px 20px',
-          fontSize: '1.3rem',
-          fontWeight: '600',
-          color: '#459BAC',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          textAlign: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-          width: '80%',
-          margin: 'auto'
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.background = '#f0f9fb';
-          e.target.style.borderColor = '#459BAC';
-          e.target.style.transform = 'translateY(-3px)';
-          e.target.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.background = '#fff';
-          e.target.style.borderColor = '#e5e7eb';
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-        }}
+        className={s.categoryBtn}
       >
         Dairy
       </button>
@@ -86,17 +36,35 @@ function HomeCategoryPage() {
   );
 }
 
+const ALL_TYPES = ["FAST_FOOD", "SIT_DOWN", "PIZZA", "SUSHI", "BAGELS", "FALAFEL", "ICE_CREAM"];
+const ALL_LEVELS = ["FIRST", "SECOND", "THIRD"];
+
 export default function Home() {
   const nav = useNavigate();
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]); // currently visible
-  const [allResults, setAllResults] = useState([]); // full list from API
+  const [search, setSearch] = useState("");
+  const [allRestaurants, setAllRestaurants] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
   const [visibleCount, setVisibleCount] = useState(8);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [slides, setSlides] = useState([]);
-  const [content, setContent] = useState(null); // ✅ texts from DB
+  const [content, setContent] = useState(null);
   const boxRef = useRef(null);
+
+  const q = (search || "").trim().toLowerCase();
+  const filtered = !allRestaurants.length
+    ? []
+    : !q
+      ? allRestaurants
+      : allRestaurants.filter(
+          (r) =>
+            (r.name || "").toLowerCase().includes(q) ||
+            (r.city || "").toLowerCase().includes(q) ||
+            (r.hechsher || "").toLowerCase().includes(q) ||
+            (r.neighborhood || "").toLowerCase().includes(q) ||
+            (r.address || "").toLowerCase().includes(q)
+        );
+  const results = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   // Check for hash immediately on mount and prevent default scroll
   useEffect(() => {
@@ -123,6 +91,21 @@ export default function Home() {
   useEffect(() => {
     HomeAPI.get().then(setContent).catch(console.error);
   }, []);
+
+  // load all restaurants once (like Manage Restaurants), then filter client-side
+  useEffect(() => {
+    setLoadingList(true);
+    Restaurants.list({ types: ALL_TYPES, levels: ALL_LEVELS })
+      .then((data) => setAllRestaurants(Array.isArray(data) ? data : []))
+      .catch(() => setAllRestaurants([]))
+      .finally(() => setLoadingList(false));
+  }, []);
+
+  // open dropdown when user has typed something
+  useEffect(() => {
+    setOpen(!!q);
+    if (!q) setVisibleCount(8);
+  }, [q]);
 
   // handle hash-based scrolling when component mounts or content loads
   useEffect(() => {
@@ -177,49 +160,12 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // debounced search
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setAllResults([]);
-      setVisibleCount(8);
-      setOpen(false);
-      return;
-    }
-    setLoading(true);
-    const t = setTimeout(async () => {
-      try {
-        const data = await Restaurants.list({
-          q: query.trim(),
-          types: ["FAST_FOOD", "SIT_DOWN", "PIZZA", "SUSHI", "BAGELS", "FALAFEL", "ICE_CREAM"],
-          levels: ["FIRST", "SECOND", "THIRD"],
-        });
-        setAllResults(data);
-        setVisibleCount(8);
-        setResults(data.slice(0, 8));
-        setOpen(true);
-      } catch {
-        setResults([]);
-        setAllResults([]);
-        setOpen(false);
-      } finally {
-        setLoading(false);
-      }
-    }, 250);
-    return () => clearTimeout(t);
-  }, [query]);
-
-  // load more when scrolled to bottom of results box
   const onResultsScroll = (e) => {
     const el = e.currentTarget;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4; // small threshold
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
     if (!atBottom) return;
-
-    // if more items available, reveal next chunk
-    if (visibleCount < allResults.length) {
-      const next = Math.min(visibleCount + 8, allResults.length);
-      setVisibleCount(next);
-      setResults(allResults.slice(0, next));
+    if (visibleCount < filtered.length) {
+      setVisibleCount((prev) => Math.min(prev + 8, filtered.length));
     }
   };
 
@@ -234,7 +180,7 @@ export default function Home() {
 
   const goToRestaurant = (id) => {
     setOpen(false);
-    setQuery("");
+    setSearch("");
     nav(`/restaurant/${id}`, { state: { fromHome: true } });
   };
 
@@ -247,38 +193,49 @@ export default function Home() {
           overlayText={content?.slideshowText}
         />
 
-        {/* Search */}
+        {/* Search – client-side filter like Manage Restaurants */}
         <div className={s.searchBox} ref={boxRef}>
           <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search for a restaurant..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Search restaurants…"
             className={s.searchInput}
+            aria-label="Search restaurants"
           />
-          {open && results.length > 0 && (
-            <div className={s.results} onScroll={onResultsScroll}>
-              {results.map((r) => (
-                <button
-                  key={r.id}
-                  onClick={() => goToRestaurant(r.id)}
-                  className={s.resultItem}
-                >
-                  <div className={s.resultText}>
-                    <div className={s.resultName}>{r.name}</div>
-                    <div className={s.resultMeta}>
-                      {[ r.address, r.hechsher, r.neighborhood].filter(Boolean).join(" • ")}
-                    </div>
-                  </div>
-                </button>
-              ))}
-              {visibleCount < allResults.length && (
-                <div className={s.noResults}>Scroll for more…</div>
+          {open && q && (
+            <>
+              {loadingList && (
+                <div className={s.noResults}>Loading…</div>
               )}
-            </div>
-          )}
-          {open && !loading && results.length === 0 && (
-            <div className={s.noResults}>No results found</div>
+              {!loadingList && results.length > 0 && (
+                <div className={s.results} onScroll={onResultsScroll}>
+                  {results.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => goToRestaurant(r.id)}
+                      className={s.resultItem}
+                    >
+                      <div className={s.resultText}>
+                        <div className={s.resultName}>{r.name}</div>
+                        <div className={s.resultMeta}>
+                          {[r.address, r.hechsher, r.neighborhood].filter(Boolean).join(" • ")}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                  {hasMore && (
+                    <div className={s.noResults}>Scroll for more…</div>
+                  )}
+                </div>
+              )}
+              {!loadingList && results.length === 0 && (
+                <div className={s.noResults}>
+                  {allRestaurants.length && q ? "No restaurants match your search." : "No restaurants yet."}
+                </div>
+              )}
+            </>
           )}
         </div>
 

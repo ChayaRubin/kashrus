@@ -24,7 +24,14 @@ export default function ArticlesPage(){
             onClick={() => navigate(`/articles/${a.id}`)}
           >
             <div className={styles.cardHeader}>{a.title}</div>
-            <small className={styles.muted}>{new Date(a.createdAt).toLocaleDateString()}</small>
+            <small className={styles.muted}>
+              {new Date(a.createdAt).toLocaleDateString()}
+              {a.author && (
+                <span className={styles.author}>
+                  {" "}· By {a.author}
+                </span>
+              )}
+            </small>
             <p className={styles.text}>{a.content.slice(0,160)}{a.content.length>160 && "…"}</p>
           </li>
         ))}

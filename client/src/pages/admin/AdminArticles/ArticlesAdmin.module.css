@@ -76,6 +76,7 @@ h1 {
 .cardHeader {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 8px;
 }
 
@@ -89,6 +90,19 @@ h1 {
 .date {
   font-size: 0.8rem;
   color: #777;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.author {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .snippet {

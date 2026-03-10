@@ -291,17 +291,36 @@
   }
 }
 
+/* Ensure fullscreen variant never has rounded corners, even in responsive modes */
+.fullScreen {
+  border-radius: 0 !important;
+}
+
 .info {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   color: white;
   font-size: 1.8rem;
   font-weight: 600;
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-  z-index: 10;       
+  z-index: 10;
   text-align: center;
   pointer-events: none;
-  white-space: pre-wrap;  
+  white-space: pre-wrap;
+  max-width: 90%;
+}
+
+@media (max-width: 600px) {
+  .info {
+    font-size: 1.1rem;
+    max-width: 85%;
+  }
+}
+
+@media (max-width: 380px) {
+  .info {
+    font-size: 1rem;
+  }
 }

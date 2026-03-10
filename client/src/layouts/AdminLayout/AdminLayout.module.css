@@ -14,23 +14,32 @@
   width: 100%;
   background: #ecf6f8; /* light teal background */
   border-bottom: 1px solid #d6e8eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px; /* extra right padding so User Site / Logout are fully visible */
 }
 
-/* nav container */
+/* nav container – one row, compact */
 .nav {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
+  gap: 6px;
+  flex: 1;
+  margin-left: 16px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
-/* links */
+/* links – smaller font, one row */
 .item {
   text-decoration: none;
-  color: #0f2f36; /* dark text */
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-weight: 400;
+  color: #0f2f36;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 }
 
@@ -52,10 +61,36 @@
   padding: 20px;
 }
 
-.right {
+/* brand logo */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+.navLeft,
+.navRight {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+/* User Site + Logout separated to the far right */
+.navRight {
+  margin-left: auto;
+  margin-right: 32px;
+  padding-left: 0;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 /* responsive */
@@ -68,25 +103,14 @@
     padding: 6px 8px;
   }
 }
-/* desktop nav */
-.header {
-  background: #ecf6f8;
-  border-bottom: 1px solid #d6e8eb;
-  padding: 10px 20px;
-}
-
-.nav {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
+/* desktop nav override fine-tuning */
 .item {
   text-decoration: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 8px;
   color: #0f2f36;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.8rem;
 }
 
 .item:hover {
@@ -108,29 +132,84 @@
   cursor: pointer;
 }
 
-/* responsive for small screens */
+/* responsive for small screens – match public Navbar hamburger */
 @media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+  }
+
+  .main {
+    padding: 20px 1.25rem;
+  }
+
   .burger {
     display: block;
+    font-size: 1.5rem;
     color: #0f2f36;
+    margin-right: 32px;
   }
 
   .nav {
     display: none;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px;
-    background: #fff;
-    position: absolute;
-    /* top: 60px; */
-    margin-top: 0;
-    left: 0;
-    right: 0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    z-index: 99;
   }
 
-  .nav.show {
+  /* Full-width mobile menu rendered in portal (outside header) */
+  .navPortal {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 12px 0;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(15, 47, 54, 0.12);
+    z-index: 9999;
+  }
+
+  .navPortal .navLeft,
+  .navPortal .navRight {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navPortal .navRight {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-top: 0;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .navPortal .item {
+    display: block;
+    width: 100%;
+    text-align: center;
+    border-radius: 0;
+    padding: 12px 16px;
+    margin: 0;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+    box-sizing: border-box;
+  }
+
+  .navPortal .item.active {
+    margin: 0;
+    text-align: center;
+  }
+}
+
+@media (min-width: 769px) {
+  .navPortal {
+    display: none !important;
   }
 }

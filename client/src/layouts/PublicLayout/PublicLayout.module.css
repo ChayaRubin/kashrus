@@ -7,22 +7,20 @@
   flex-direction: column;
 }
 
-/* .main {
+.main {
   flex: 1;
-  max-width: 100%;
-  margin: 0 auto;
-  /* padding: 20px; 
-} */
+  padding-top: 120px;     /* Account for fixed navbar + add breathing room */
+  padding-bottom: 40px;  /* Comfortable space above footer */
+}
 
 .footer {
+  width: 100%;
+  background-color: #f9f9f9;
   text-align: center;
-  padding: 20px;
-  color: #888;
-  border-top: 1px solid #eee;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid #ddd;
   font-size: 0.9rem;
-      background-color: #f5f5f5;
-      color: #367e89;
-
+  color: #367e89;
 }
 
 .footerLink {
@@ -32,23 +30,5 @@
 
 .footerLink:hover {
   text-decoration: none;
-}
-
-.main {
-  flex: 1;
-    /* background-color: #f5f5f5; */
-
-}
-
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #f9f9f9;
-  text-align: center;
-  padding: 0.75rem;
-  border-top: 1px solid #ddd;
-  z-index: 1000;
 }
 
