@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { resolveImageUrl } from '../../app/api.js';
 import styles from './AdminLayout.module.css';
 
 export default function AdminLayout() {
@@ -53,7 +54,7 @@ export default function AdminLayout() {
       <header className={styles.header}>
         <Link to="/" className={styles.brand}>
           <img
-            src="https://res.cloudinary.com/djgdnsyyf/image/upload/v1760655805/logoIsrael_zb6ci0.png"
+            src={resolveImageUrl("https://res.cloudinary.com/djgdnsyyf/image/upload/v1760655805/logoIsrael_zb6ci0.png")}
             alt="Kashrus Web"
             width="40"
             height="40"

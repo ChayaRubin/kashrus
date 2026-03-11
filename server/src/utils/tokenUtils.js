@@ -4,11 +4,17 @@ import jwt from 'jsonwebtoken';
 export function generateAndSetToken(res, payload) {
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
   const isProduction = process.env.NODE_ENV === 'production';
+
+  // Keep existing cookie-based auth for web
   res.cookie('token', token, {
     httpOnly: true,
     sameSite: isProduction ? 'none' : 'lax', // 'none' required for cross-origin (e.g. Render frontend + API)
-    secure: isProduction,                     // required when sameSite is 'none'
+    secure: isProduction,                    // required when sameSite is 'none'
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
   });
+
+  // Also return the token so API handlers can include it in JSON
+  // for mobile/Capacitor clients that prefer Authorization headers.
+  return token;
 }

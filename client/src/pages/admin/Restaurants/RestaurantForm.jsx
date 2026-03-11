@@ -421,6 +421,9 @@ const NEIGHBORHOODS = [
   "Old City / Mamilla / Yaffo",
   "Pisgat Zeev / Neve Yaakov",
   "City Center / Geula / Meah Shearim",
+  "Har Chotzvim",
+  "Rechavia",
+  "Shmuel Hanavi / Geula",
 ];
 
 export default function RestaurantForm() {
@@ -431,9 +434,12 @@ export default function RestaurantForm() {
     name: "",
     address: "",
     phone: "",
+    website: "",
     category: "MEAT",
     type: "FAST_FOOD",
     level: "FIRST",
+    hechsher: "",
+    city: "",
     neighborhood: "",
     description: "",
     images: [],
@@ -561,6 +567,11 @@ export default function RestaurantForm() {
       </label>
 
       <label className={styles.label}>
+        Website
+        <input className={styles.input} type="url" value={f.website ?? ""} onChange={e => set("website", e.target.value)} placeholder="https://..." />
+      </label>
+
+      <label className={styles.label}>
         Category
         <select className={styles.select} value={f.category} onChange={e => set("category", e.target.value)}>
           {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -579,6 +590,16 @@ export default function RestaurantForm() {
         <select className={styles.select} value={f.level} onChange={e => set("level", e.target.value)}>
           {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
         </select>
+      </label>
+
+      <label className={styles.label}>
+        Hechsher
+        <input className={styles.input} value={f.hechsher ?? ""} onChange={e => set("hechsher", e.target.value)} placeholder="e.g. Rav Rubin, Bedatz" />
+      </label>
+
+      <label className={styles.label}>
+        City
+        <input className={styles.input} value={f.city ?? ""} onChange={e => set("city", e.target.value)} placeholder="e.g. Jerusalem" />
       </label>
 
       <label className={styles.label}>

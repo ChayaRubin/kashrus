@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Restaurants } from '../../../app/api.js';
+import { Restaurants, resolveImageUrl } from '../../../app/api.js';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminRestaurants.module.css';
 
@@ -77,7 +77,7 @@ export default function AdminRestaurants() {
               {/* optional: show logo/thumbnail if r.images */}
               {r.images?.length > 0 && (
                 <img
-                  src={Array.isArray(r.images) ? r.images[0] : r.images}
+                  src={resolveImageUrl(Array.isArray(r.images) ? r.images[0] : r.images)}
                   alt={r.name}
                   className={styles.logo}
                 />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { resolveImageUrl } from '../../app/api.js';
 import styles from './NavBar.module.css';
 
 export default function Navbar() {
@@ -23,7 +24,12 @@ export default function Navbar() {
         {/* Left side (brand) */}
         <div className={styles.left}>
           <NavLink to="/" className={styles.brand}>
-            <img src="https://res.cloudinary.com/djgdnsyyf/image/upload/v1760655805/logoIsrael_zb6ci0.png" alt="Kashrus Web" width="50" height="50"/>
+            <img
+              src={resolveImageUrl("https://res.cloudinary.com/djgdnsyyf/image/upload/v1760655805/logoIsrael_zb6ci0.png")}
+              alt="Kashrus Web"
+              width="50"
+              height="50"
+            />
            </NavLink>
         </div>
 

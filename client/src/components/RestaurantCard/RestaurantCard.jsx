@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveImageUrl } from '../../app/api.js';
 
 export default function RestaurantCard({ r, onDoubleClick }) {
   return (
@@ -10,7 +11,7 @@ export default function RestaurantCard({ r, onDoubleClick }) {
       }}
       title="Double click to view details"
     >
-      <img src={r.images?.[0] ?? '/images/placeholder.jpg'} alt={r.name}
+      <img src={resolveImageUrl(r.images?.[0] ?? '/images/placeholder.jpg')} alt={r.name}
            style={{ width:120, height:80, objectFit:'cover', borderRadius:10 }} />
       <div>
         <div style={{ fontWeight:600 }}>{r.name}</div>

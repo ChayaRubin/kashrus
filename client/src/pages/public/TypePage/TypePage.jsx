@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Restaurants, Hechsheirim } from "../../../app/api.js";
+import { Restaurants, Hechsheirim, resolveImageUrl } from "../../../app/api.js";
 import s from "./TypePage.module.css";
 
 const TYPES_BY_CATEGORY = {
@@ -266,7 +266,7 @@ export default function TypePage() {
                       <div key={h.id} className={s.hechsherItem}>
                         {h.symbolUrl && (
                           <img
-                            src={h.symbolUrl}
+                            src={resolveImageUrl(h.symbolUrl)}
                             alt={h.name}
                             className={s.hechsherLogo}
                           />
@@ -284,7 +284,7 @@ export default function TypePage() {
                     <div key={h.id} className={s.hechsherItem}>
                       {h.symbolUrl && (
                         <img
-                          src={h.symbolUrl}
+                          src={resolveImageUrl(h.symbolUrl)}
                           alt={h.name}
                           className={s.hechsherLogo}
                         />

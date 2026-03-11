@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Slideshow.module.css';
+import { resolveImageUrl } from '../../app/api.js';
 
 export default function Slideshow({
   
@@ -66,7 +67,7 @@ export default function Slideshow({
         {images.map((src, i) => (
           <img
             key={i}
-            src={src}
+            src={resolveImageUrl(src)}
             alt="Advertisement"
             className={`${styles.image} ${i === idx ? styles.imageVisible : ''}`}
           />

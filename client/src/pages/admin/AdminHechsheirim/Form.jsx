@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Hechsheirim } from "../../../app/api";
+import { Hechsheirim, resolveImageUrl } from "../../../app/api.js";
 import { uploadImage, createImagePreview, revokeImagePreview, validateImageFiles } from "../../../utils/imageUpload";
 import styles from "./HechsheirimAdmin.module.css";
 
@@ -201,7 +201,7 @@ export default function HechsheirimForm() {
       {/* Logo Preview */}
       {f.symbolUrl && (
         <div className={styles.logoPreview}>
-          <img src={f.symbolUrl} alt="Current logo" />
+          <img src={resolveImageUrl(f.symbolUrl)} alt="Current logo" />
         </div>
       )}
       <div className={styles.formActions}>

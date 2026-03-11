@@ -15,10 +15,11 @@ async function signup(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
     await authService.insertPasswordHash(insertId, hashedPassword);
 
-    generateAndSetToken(res, { id: insertId, email, role: "user" });
+    const token = generateAndSetToken(res, { id: insertId, email, role: "user" });
     res.status(201).json({
       message: "Signup successful",
       user: { id: insertId, email, role: "user" },
+      token,
     });
   } catch (err) {
     console.error(err);
@@ -50,7 +51,7 @@ async function login(req, res) {
     if (!match)
       return res.status(401).json({ error: "Invalid email or password" });
 
-    generateAndSetToken(res, {
+    const token = generateAndSetToken(res, {
       id: user.id,
       email: user.email,
       role: user.role,
@@ -59,6 +60,7 @@ async function login(req, res) {
     res.json({
       message: "Login successful",
       user: { id: user.id, email: user.email, role: user.role },
+      token,
     });
   } catch (err) {
     console.error("Login error", err);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Hechsheirim } from "../../../app/api";
+import { Hechsheirim, resolveImageUrl } from "../../../app/api.js";
 import styles from "./HechsheirimAdmin.module.css";
 import { Link } from "react-router-dom";
 
@@ -37,7 +37,11 @@ export default function HechsheirimAdminList() {
         {data.items.map((h) => (
           <div key={h.id} className={styles.card}>
             {h.symbolUrl && (
-              <img src={h.symbolUrl} alt={h.name} className={styles.logo} />
+              <img
+                src={resolveImageUrl(h.symbolUrl)}
+                alt={h.name}
+                className={styles.logo}
+              />
             )}
             <div className={styles.cardHeader}>
               <h3>{h.name}</h3>

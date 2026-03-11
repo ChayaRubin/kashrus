@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Restaurants } from "../../../app/api.js";
+import { Restaurants, resolveImageUrl } from "../../../app/api.js";
 import { useLevels } from "../../../components/LevelsContext/LevelsContext.jsx";
 import s from "./LevelPage.module.css";
 
@@ -59,7 +59,13 @@ export default function LevelPage() {
               })
             }
           >
-            {r.images?.[0] && <img src={r.images[0]} alt={r.name} className={s.thumb} />}
+            {r.images?.[0] && (
+              <img
+                src={resolveImageUrl(r.images[0])}
+                alt={r.name}
+                className={s.thumb}
+              />
+            )}
             <div className={s.details}>
               <span className={s.name}>{r.name}</span>
               <div className={s.meta}>

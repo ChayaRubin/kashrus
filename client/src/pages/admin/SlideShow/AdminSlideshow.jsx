@@ -1,6 +1,6 @@
 // src/pages/admin/Slideshow/AdminSlideshow.jsx
 import { useEffect, useState, useRef } from "react";
-import { SlideshowAPI } from "../../../app/api";
+import { SlideshowAPI, resolveImageUrl } from "../../../app/api.js";
 import { uploadImage, createImagePreview, revokeImagePreview, validateImageFiles } from "../../../utils/imageUpload";
 import styles from "./AdminSlideshow_temp.module.css";
 
@@ -254,7 +254,7 @@ export default function AdminSlideshow() {
     <li key={s.id} className={styles.item}>
       {editingId === s.id ? (
         <>
-          <img src={editUrl || s.url} alt={editTitle || s.title} />
+          <img src={resolveImageUrl(editUrl || s.url)} alt={editTitle || s.title} />
           <div className={styles.form}>
             <input
               value={editUrl}
@@ -276,7 +276,7 @@ export default function AdminSlideshow() {
         </>
       ) : (
         <>
-          <img src={s.url} alt={s.title} />
+          <img src={resolveImageUrl(s.url)} alt={s.title} />
           <div className={styles.details}>
             <span>{s.title || "Untitled"}</span>
           </div>

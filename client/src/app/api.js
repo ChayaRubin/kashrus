@@ -138,25 +138,71 @@
 // client/src/app/api.js
 import axios from "axios";
 
-// API base: env at build time, or runtime fallback when frontend is on Render
+// API base: env at build time, or runtime fallback when frontend is on Render / Capacitor
 function getApiBase() {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  let fromEnv = import.meta.env.VITE_API_URL;
+  if (fromEnv) {
+    console.log("[api] Using VITE_API_URL from env:", fromEnv);
+    return fromEnv;
+  }
+
+  // Capacitor Android: emulator uses 10.0.2.2 to reach host PC
+  if (typeof window !== "undefined" && window.Capacitor?.isNativePlatform?.()) {
+    const platform = window.Capacitor.getPlatform?.();
+    console.log("[api] Detected Capacitor platform:", platform);
+    if (platform === "android") return "http://10.0.2.2:5000";
+    if (platform === "ios") return "http://localhost:5000"; // iOS simulator
+  }
+
   if (typeof window !== "undefined" && window.location?.hostname?.includes("onrender.com")) {
+    console.log("[api] Detected Render hostname, using hosted API");
     return "https://kashrus-back.onrender.com";
   }
+
+  console.log("[api] Falling back to localhost backend");
   return "http://localhost:5000";
 }
 const BASE = getApiBase();
 export const API_BASE = BASE;
+
+// In-memory auth token for mobile/Capacitor (Authorization header)
+let authToken = null;
 
 export const api = axios.create({
   baseURL: BASE,
   withCredentials: true,
 });
 
+// Resolve image URLs that may be stored as relative paths on the backend.
+// - data/blob: return as-is.
+// - Relative paths: prefix with API_BASE.
+// - HTTPS (e.g. Cloudinary): on Android WebView we proxy via our backend so the
+//   emulator/device avoids NET::ERR_CERT_AUTHORITY_INVALID when loading images.
+export function resolveImageUrl(src) {
+  if (!src) return src;
+  if (src.startsWith("data:") || src.startsWith("blob:")) {
+    return src;
+  }
+  if (src.startsWith("/")) {
+    return `${API_BASE}${src}`;
+  }
+  if (!src.startsWith("http")) {
+    return `${API_BASE}/${src}`;
+  }
+  // On Android native app, proxy HTTPS images through our backend to avoid cert errors.
+  const isAndroidApp =
+    typeof window !== "undefined" &&
+    window.Capacitor?.isNativePlatform?.() &&
+    window.Capacitor.getPlatform?.() === "android";
+  if (isAndroidApp && src.startsWith("https://")) {
+    return `${API_BASE}/api/proxy-image?url=${encodeURIComponent(src)}`;
+  }
+  return src;
+}
 // ---------- Generic helper ----------
 async function http(path, { method = "GET", params, body } = {}) {
   const url = new URL(BASE + path);
+  console.log("[api] HTTP request", { url: url.toString(), method, params });
 
   // handle array params (like types, levels)
   if (params) {
@@ -169,17 +215,29 @@ async function http(path, { method = "GET", params, body } = {}) {
     }
   }
 
-  const res = await fetch(url, {
-    method,
-    headers: body ? { "Content-Type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-    credentials: "include", // 👈 ensures cookie (token) is always sent
-  });
+  const headers = body ? { "Content-Type": "application/json" } : {};
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
+
+  let res;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      credentials: "include", // keep cookies for web as well
+    });
+  } catch (networkErr) {
+    console.error("[api] Network error while fetching", url.toString(), networkErr);
+    throw { status: 0, message: "Network error: " + (networkErr?.message || "Failed to fetch") };
+  }
 
   // Read response text once so we can safely handle empty bodies (e.g. 204 No Content)
   const rawText = await res.text();
 
   if (!res.ok) {
+    console.error("[api] HTTP error", { status: res.status, url: url.toString(), rawText });
     let errorBody = rawText;
     try {
       // Try to parse JSON error if present
@@ -224,17 +282,35 @@ export const Restaurants = {
 // ---------- Auth ----------
 export const Auth = {
   async login(email, password) {
-    await http("/auth/login", { method: "POST", body: { email, password } });
-    return http("/auth/me");
+    const data = await http("/auth/login", {
+      method: "POST",
+      body: { email, password },
+    });
+    if (data?.token) {
+      authToken = data.token;
+    }
+    // Prefer the user object returned by the login endpoint; fall back to /auth/me.
+    return data?.user || http("/auth/me");
   },
   async signup(name, email, password) {
-    return http("/auth/signup", { method: "POST", body: { name, email, password } });
+    const data = await http("/auth/signup", {
+      method: "POST",
+      body: { name, email, password },
+    });
+    if (data?.token) {
+      authToken = data.token;
+    }
+    return data?.user || data;
   },
   async me() {
     return http("/auth/me");
   },
   async logout() {
-    return http("/auth/logout", { method: "POST" });
+    try {
+      await http("/auth/logout", { method: "POST" });
+    } finally {
+      authToken = null;
+    }
   },
 };
 

@@ -101,7 +101,7 @@
 // }
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
-import { Restaurants } from "../../../app/api.js";
+import { Restaurants, resolveImageUrl } from "../../../app/api.js";
 import s from "./RestaurantDetail.module.css";
 
 export default function RestaurantDetail() {
@@ -137,8 +137,8 @@ export default function RestaurantDetail() {
     : r.images
     ? [r.images]
     : [];
-  const logoUrl = images.length > 0 ? images[0] : null;
-  const otherImages = images.length > 1 ? images.slice(1) : [];
+  const logoUrl = images.length > 0 ? resolveImageUrl(images[0]) : null;
+  const otherImages = images.length > 1 ? images.slice(1).map(resolveImageUrl) : [];
 
   return (
     <div className={s.wrap}>

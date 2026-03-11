@@ -1,6 +1,6 @@
 // src/pages/public/Hechsheirim/HechsheirimPage.jsx
 import { useEffect, useState } from "react";
-import { Hechsheirim } from "../../../app/api";
+import { Hechsheirim, resolveImageUrl } from "../../../app/api";
 import styles from "./Hechsheirim.module.css";
 
 const LEVELS = ["FIRST", "SECOND", "THIRD"];
@@ -51,7 +51,7 @@ export default function HechsheirimPage() {
                   {h.symbolUrl && (
                     <img
                       className={styles.logo}
-                      src={h.symbolUrl}
+                      src={resolveImageUrl(h.symbolUrl)}
                       alt={h.name}
                     />
                   )}
@@ -67,18 +67,18 @@ export default function HechsheirimPage() {
         <section className={styles.section}>
           <h2 className={styles.levelTitle}>Other</h2>
           <ul className={styles.grid}>
-            {other.map((h) => (
-              <li key={h.id} className={styles.card}>
-                {h.symbolUrl && (
-                  <img
-                    className={styles.logo}
-                    src={h.symbolUrl}
-                    alt={h.name}
-                  />
-                )}
-                <div className={styles.cardHeader}>{h.name}</div>
-              </li>
-            ))}
+                {other.map((h) => (
+                  <li key={h.id} className={styles.card}>
+                    {h.symbolUrl && (
+                      <img
+                        className={styles.logo}
+                        src={resolveImageUrl(h.symbolUrl)}
+                        alt={h.name}
+                      />
+                    )}
+                    <div className={styles.cardHeader}>{h.name}</div>
+                  </li>
+                ))}
           </ul>
         </section>
       )}
