@@ -2,7 +2,8 @@ import prisma from '../lib/prisma.js';
 
 export async function createFeedback({ userId, restaurantId, message }) {
   return prisma.feedback.create({
-    data: { userId, restaurantId, message }
+    data: { userId, restaurantId, message },
+    include: { restaurant: true, user: true },
   });
 }
 

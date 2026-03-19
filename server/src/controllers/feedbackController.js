@@ -79,8 +79,9 @@ export async function submitFeedback(req, res) {
       to: process.env.CONTACT_TO_EMAIL || process.env.EMAIL_REPLY_TO || process.env.RESEND_FROM_EMAIL,
       subject: "New Feedback Submitted",
       html: feedbackTemplate({
-        userName: req.user?.name,
-        restaurantId,
+        userName: fb.user?.name,
+        userEmail: fb.user?.email,
+        restaurantName: fb.restaurant?.name,
         message,
       }),
     });

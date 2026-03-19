@@ -92,13 +92,14 @@ export const questionTemplate = ({ name, email, subject, message, hasImages, ima
   </div>
 `;
 
-export const feedbackTemplate = ({ userName, restaurantId, message }) => `
+export const feedbackTemplate = ({ userName, userEmail, restaurantName, message }) => `
   <div style="direction: ltr; font-family: Arial; background-color: #f9f9f9; padding: 20px;">
     <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 10px; padding: 30px;">
       <h2 style="color: #2e7d32; text-align: center;">💬 New Feedback Received</h2>
       <hr />
       <p><strong>User:</strong> ${userName || "Guest"}</p>
-      ${restaurantId ? `<p><strong>Restaurant ID:</strong> ${restaurantId}</p>` : ""}
+      ${userEmail ? `<p><strong>Email:</strong> <a href="mailto:${userEmail}">${userEmail}</a></p>` : ""}
+      ${restaurantName ? `<p><strong>Restaurant:</strong> ${restaurantName}</p>` : ""}
       <p><strong>Message:</strong></p>
       <div style="background-color: #f1f1f1; padding: 15px; border-radius:8px;">
         ${message.replace(/\n/g, "<br>")}
