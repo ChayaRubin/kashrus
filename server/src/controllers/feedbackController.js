@@ -77,6 +77,7 @@ export async function submitFeedback(req, res) {
     await sendEmail({
       from: process.env.EMAIL_FROM || process.env.RESEND_FROM_EMAIL,
       to: process.env.CONTACT_TO_EMAIL || process.env.EMAIL_REPLY_TO || process.env.RESEND_FROM_EMAIL,
+      reply_to: fb.user?.email,
       subject: "New Feedback Submitted",
       html: feedbackTemplate({
         userName: fb.user?.name,
