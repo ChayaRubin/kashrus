@@ -196,11 +196,21 @@ h4{
   gap: 12px;
   margin: 0;
   padding: 0;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.resultListItem {
+  list-style: none;
+  display: flex;
 }
 
 .resultItem {
-  list-style: none;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -240,6 +250,8 @@ h4{
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  flex: 1;
 }
 
 .cardHeader {
@@ -305,7 +317,7 @@ h4{
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: auto;
 }
 
 .metaItem {

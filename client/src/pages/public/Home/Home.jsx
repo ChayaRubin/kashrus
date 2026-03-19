@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Slideshow from "../../../components/Slideshow/Slideshow.jsx";
 import CategoryPage, { setFromHomePage } from "../CategoryPage/CategoryPage.jsx";
 import ContactSection from "../../../components/ContactSection/ContactSection.jsx";
@@ -41,7 +41,9 @@ const ALL_LEVELS = ["FIRST", "SECOND", "THIRD"];
 
 export default function Home() {
   const nav = useNavigate();
-  const [search, setSearch] = useState("");
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(() => searchParams.get("q") || "");
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [visibleCount, setVisibleCount] = useState(8);
@@ -65,6 +67,13 @@ export default function Home() {
         );
   const results = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
+
+  useEffect(() => {
+    const qParam = searchParams.get("q") || "";
+    if (qParam !== search) {
+      setSearch(qParam);
+    }
+  }, [searchParams, search]);
 
   // Check for hash immediately on mount and prevent default scroll
   useEffect(() => {
@@ -180,8 +189,12 @@ export default function Home() {
 
   const goToRestaurant = (id) => {
     setOpen(false);
-    setSearch("");
-    nav(`/restaurant/${id}`, { state: { fromHome: true } });
+    nav(`/restaurant/${id}`, {
+      state: {
+        from: `${location.pathname}${location.search}${location.hash}`,
+        fromHome: true,
+      },
+    });
   };
 
   return (
@@ -198,7 +211,14 @@ export default function Home() {
           <input
             type="search"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              const nextValue = e.target.value;
+              setSearch(nextValue);
+              const params = new URLSearchParams(searchParams);
+              if (nextValue.trim()) params.set("q", nextValue);
+              else params.delete("q");
+              setSearchParams(params, { replace: true });
+            }}
             onClick={(e) => e.stopPropagation()}
             placeholder="Search restaurants…"
             className={s.searchInput}

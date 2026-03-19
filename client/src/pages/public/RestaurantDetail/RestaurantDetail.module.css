@@ -11,6 +11,18 @@
   min-height: 60vh;
 }
 
+/* Remove any list bullets/circles inside detail page */
+.wrap ul,
+.wrap ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wrap li::marker {
+  content: "";
+}
+
 @media (max-width: 768px) {
   .wrap {
     max-width: 640px;

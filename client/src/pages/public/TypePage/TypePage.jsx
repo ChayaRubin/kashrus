@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Restaurants, Hechsheirim, resolveImageUrl } from "../../../app/api.js";
 import s from "./TypePage.module.css";
 
@@ -9,6 +9,32 @@ const TYPES_BY_CATEGORY = {
 };
 
 const LEVELS = ["FIRST", "SECOND", "THIRD"];
+const sameStringArray = (a, b) =>
+  a.length === b.length && a.every((value, index) => value === b[index]);
+const getUiStateKey = (category) => `type-page-ui:${category || ""}`;
+const parseFiltersFromSearch = (category, search) => {
+  const params = new URLSearchParams(search);
+  const typesParam = params.get("types");
+  const levelsParam = params.get("levels");
+  const neighborhoodParam = params.get("neighborhood");
+  const queryParam = params.get("q");
+
+  const initialTypes = typesParam ? typesParam.split(",").filter(Boolean) : [];
+  const allowedTypes = TYPES_BY_CATEGORY[category] || [];
+  const selectedTypes = initialTypes.filter((t) => allowedTypes.includes(t));
+
+  const levelsFromUrl = levelsParam ? levelsParam.split(",").filter(Boolean) : [];
+  const selectedLevels = levelsFromUrl.filter(
+    (l) => l !== "FIRST" && LEVELS.includes(l)
+  );
+
+  return {
+    selectedTypes,
+    selectedLevels,
+    selectedNeighborhood: neighborhoodParam || "",
+    query: queryParam || "",
+  };
+};
 
 const NEIGHBORHOODS = [
   "Bayit Vegan / Kriyat Yovel",
@@ -27,21 +53,25 @@ const NEIGHBORHOODS = [
 export default function TypePage() {
   const { category } = useParams();
   const nav = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const options = TYPES_BY_CATEGORY[category] || [];
+  const initialFilters = parseFiltersFromSearch(category, location.search);
 
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedLevels, setSelectedLevels] = useState([]); // stores EXTRA levels beyond FIRST
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState(initialFilters.selectedTypes);
+  const [selectedLevels, setSelectedLevels] = useState(initialFilters.selectedLevels); // stores EXTRA levels beyond FIRST
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(initialFilters.selectedNeighborhood);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10);
   const [hasMore, setHasMore] = useState(true);
   const [hechsheirim, setHechsheirim] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialFilters.query);
   const [showHechsheirimPopup, setShowHechsheirimPopup] = useState(false);
+  const [lastClickedRestaurantId, setLastClickedRestaurantId] = useState("");
+  const pendingRestoreScrollYRef = useRef(null);
 
   function toggle(arr, val) {
     return arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val];
@@ -57,54 +87,80 @@ export default function TypePage() {
       return toggle(prev, l);
     });
 
-  // Initialize state from URL (runs on mount and whenever the query string changes)
+  // Reinitialize filters when category changes
   useEffect(() => {
-    const typesParam = searchParams.get("types");
-    const levelsParam = searchParams.get("levels");
-    const neighborhoodParam = searchParams.get("neighborhood");
-
-    const initialTypes = typesParam
-      ? typesParam.split(",").filter(Boolean)
-      : [];
-    const initialTypesFiltered = initialTypes.filter((t) =>
-      (TYPES_BY_CATEGORY[category] || []).includes(t)
-    );
-
-    setSelectedTypes(initialTypesFiltered);
-    // selectedLevels holds EXTRA levels beyond FIRST.
-    // Restore from URL so going back keeps SECOND/THIRD selection.
-    if (levelsParam) {
-      const fromUrl = levelsParam.split(",").filter(Boolean);
-      const extra = fromUrl.filter(
-        (l) => l !== "FIRST" && LEVELS.includes(l)
-      );
-      setSelectedLevels(extra);
-    } else {
-      setSelectedLevels([]);
+    const next = parseFiltersFromSearch(category, location.search);
+    let restoredVisibleCount = 10;
+    let restoredLastClickedId = "";
+    let restoredScrollY = null;
+    try {
+      const raw = sessionStorage.getItem(getUiStateKey(category));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const vc = Number(parsed?.visibleCount);
+        if (Number.isFinite(vc) && vc > 0) restoredVisibleCount = vc;
+        if (parsed?.lastClickedRestaurantId) {
+          restoredLastClickedId = String(parsed.lastClickedRestaurantId);
+        }
+        const y = Number(parsed?.scrollY);
+        if (Number.isFinite(y) && y >= 0) restoredScrollY = y;
+      }
+    } catch {
+      // Ignore malformed session data
     }
-    setSelectedNeighborhood(neighborhoodParam || "");
-    
-    // Reset pagination when filters change
-    setVisibleCount(10);
+
+    setSelectedTypes((prev) =>
+      sameStringArray(prev, next.selectedTypes) ? prev : next.selectedTypes
+    );
+    setSelectedLevels((prev) =>
+      sameStringArray(prev, next.selectedLevels) ? prev : next.selectedLevels
+    );
+    setSelectedNeighborhood((prev) =>
+      prev === next.selectedNeighborhood ? prev : next.selectedNeighborhood
+    );
+    setQuery((prev) => (prev === next.query ? prev : next.query));
+    setVisibleCount(restoredVisibleCount);
+    setLastClickedRestaurantId(restoredLastClickedId);
+    pendingRestoreScrollYRef.current = restoredScrollY;
     setAllRestaurants([]);
     setRestaurants([]);
     setHasMore(true);
-  }, [category, searchParams]);
+  }, [category]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        getUiStateKey(category),
+        JSON.stringify({
+          visibleCount,
+          lastClickedRestaurantId,
+          scrollY: window.scrollY || 0,
+        })
+      );
+    } catch {
+      // Ignore storage errors
+    }
+  }, [category, visibleCount, lastClickedRestaurantId]);
 
   // Sync URL
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams();
     if (selectedTypes.length > 0) params.set("types", selectedTypes.join(","));
-    else params.delete("types");
 
     if (selectedLevels.length > 0) params.set("levels", selectedLevels.join(","));
-    else params.delete("levels");
 
     if (selectedNeighborhood) params.set("neighborhood", selectedNeighborhood);
-    else params.delete("neighborhood");
 
-    setSearchParams(params, { replace: true });
-  }, [selectedTypes, selectedLevels, selectedNeighborhood, setSearchParams]);
+    if (query.trim()) params.set("q", query);
+
+    const next = params.toString();
+    const current = location.search.startsWith("?")
+      ? location.search.slice(1)
+      : location.search;
+    if (next !== current) {
+      setSearchParams(params, { replace: true });
+    }
+  }, [selectedTypes, selectedLevels, selectedNeighborhood, query, location.search, setSearchParams]);
 
   // Fetch hechsheirim
   useEffect(() => {
@@ -169,10 +225,13 @@ export default function TypePage() {
           return levelOrder[a.level] - levelOrder[b.level];
         });
 
+        const countToShow = Math.min(
+          Math.max(visibleCount, 10),
+          sortedData.length
+        );
         setAllRestaurants(sortedData);
-        setRestaurants(sortedData.slice(0, 10)); // Show first 10
-        setVisibleCount(10);
-        setHasMore(sortedData.length > 10);
+        setRestaurants(sortedData.slice(0, countToShow));
+        setHasMore(countToShow < sortedData.length);
       })
       .catch(() => {
         setAllRestaurants([]);
@@ -180,7 +239,7 @@ export default function TypePage() {
         setHasMore(false);
       })
       .finally(() => setLoading(false));
-  }, [category, selectedTypes, selectedLevels, selectedNeighborhood, searchParams]);
+  }, [category, selectedTypes, selectedLevels, selectedNeighborhood]);
 
   const loadMore = () => {
     if (!hasMore) return;
@@ -190,6 +249,23 @@ export default function TypePage() {
     setRestaurants(allRestaurants.slice(0, nextCount));
     setHasMore(nextCount < allRestaurants.length);
   };
+
+  useEffect(() => {
+    if (!lastClickedRestaurantId || loading) return;
+    const el = document.getElementById(`restaurant-${lastClickedRestaurantId}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [lastClickedRestaurantId, loading, restaurants.length]);
+
+  useEffect(() => {
+    if (loading) return;
+    if (pendingRestoreScrollYRef.current == null) return;
+    const y = pendingRestoreScrollYRef.current;
+    pendingRestoreScrollYRef.current = null;
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: y, behavior: "auto" });
+    });
+  }, [loading, restaurants.length]);
 
   // Group hechsheirim by tier (in order: FIRST, SECOND, THIRD)
   const groupedHechsheirim = LEVELS.map((lvl) => ({
@@ -445,61 +521,85 @@ export default function TypePage() {
         ) : visibleRestaurants.length > 0 ? (
           <>
             <ul className={s.results}>
-              {visibleRestaurants.map((r) => (
-                <li
-                  key={r.id}
-                  onClick={() =>
-                    nav(`/restaurant/${r.id}`, {
-                      state: {
-                        from: `/browse/${category}?types=${selectedTypes.join(",")}&levels=${selectedLevels.join(",")}&neighborhood=${selectedNeighborhood}`,
-                      },
-                    })
-                  }
-                  className={s.resultItem}
-                >
-                  <div className={s.resultContent}>
-                    <div className={s.cardHeader}>
-                      <strong>{r.name}</strong>
-                      <span className={`${s.levelBadge} ${s[`level${r.level}`]}`}>
-                        {r.level}
-                      </span>
-                    </div>
-                    
-                    <div className={s.typeInfo}>
-                      <span className={s.typeLabel}>{r.type.replace(/_/g, ' ')}</span>
-                    </div>
-                    
-                    <div className={s.meta}>
-                      <div className={s.metaItem}>
-                        <span className={s.metaLabel}>Hechsher:</span>
-                        <span className={s.metaText}>{r.hechsher || "N/A"}</span>
-                      </div>
-                      <div className={s.metaItem}>
-                        <span className={s.metaLabel}>Address:</span>
-                        <span className={s.metaText}>{r.address || "N/A"}</span>
-                      </div>
-                      <div className={s.metaItem}>
-                        <span className={s.metaLabel}>Area:</span>
-                        <span className={s.metaText}>{r.neighborhood || "N/A"}</span>
-                      </div>
-                      {r.city && (
-                        <div className={s.metaItem}>
-                          <span className={s.metaLabel}>City:</span>
-                          <span className={s.metaText}>{r.city}</span>
+              {visibleRestaurants.map((r) => {
+                const restaurantId = String(r.id);
+                return (
+                  <li key={r.id} id={`restaurant-${r.id}`} className={s.resultListItem}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setLastClickedRestaurantId(restaurantId);
+                        try {
+                          sessionStorage.setItem(
+                            getUiStateKey(category),
+                            JSON.stringify({
+                              visibleCount,
+                              lastClickedRestaurantId: restaurantId,
+                              scrollY: window.scrollY || 0,
+                            })
+                          );
+                        } catch {
+                          // Ignore storage errors
+                        }
+                        nav(`/restaurant/${restaurantId}`, {
+                          state: {
+                            from: searchParams.toString()
+                              ? `${location.pathname}?${searchParams.toString()}`
+                              : location.pathname,
+                          },
+                        });
+                      }}
+                      className={s.resultItem}
+                    >
+                      <div className={s.resultContent}>
+                        <div className={s.cardHeader}>
+                          <strong>{r.name}</strong>
+                          <span className={`${s.levelBadge} ${s[`level${r.level}`]}`}>
+                            {r.level}
+                          </span>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </li>
-              ))}
+
+                        <div className={s.typeInfo}>
+                          <span className={s.typeLabel}>{r.type.replace(/_/g, " ")}</span>
+                        </div>
+
+                        <div className={s.meta}>
+                          <div className={s.metaItem}>
+                            <span className={s.metaLabel}>Hechsher:</span>
+                            <span className={s.metaText}>{r.hechsher || "N/A"}</span>
+                          </div>
+                          <div className={s.metaItem}>
+                            <span className={s.metaLabel}>Address:</span>
+                            <span className={s.metaText}>{r.address || "N/A"}</span>
+                          </div>
+                          <div className={s.metaItem}>
+                            <span className={s.metaLabel}>Area:</span>
+                            <span className={s.metaText}>{r.neighborhood || "N/A"}</span>
+                          </div>
+                          {r.city && (
+                            <div className={s.metaItem}>
+                              <span className={s.metaLabel}>City:</span>
+                              <span className={s.metaText}>{r.city}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
 
             {/* Load more */}
             {restaurants.length > 0 && hasMore && (
               <div className={s.loadMoreWrap}>
                 <button
+                  type="button"
                   className={s.loadMoreBtn}
-                  onClick={loadMore}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    loadMore();
+                  }}
                 >
                   Load more
                 </button>

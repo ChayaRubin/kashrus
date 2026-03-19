@@ -116,14 +116,23 @@ export default function RestaurantDetail() {
   const fromHome = location.state?.fromHome;
 
   let backTo = "/browse"; // default
-  let backLabel = "⬅ Back to Restaurants";
+  let backLabel = "Back to Restaurants";
 
-  if (fromHome) {
-    backTo = "/";
-    backLabel = "⬅ Back to Home";
-  } else if (from) {
+  if (from) {
     backTo = from;
+    backLabel = from.startsWith("/") ? "Back to Results" : backLabel;
+  } else if (fromHome) {
+    backTo = "/";
+    backLabel = "Back to Home";
   }
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate(backTo);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -143,7 +152,7 @@ export default function RestaurantDetail() {
   return (
     <div className={s.wrap}>
       <div className={s.back}>
-        <button onClick={() => navigate(backTo)} className={s.backbutton}>
+        <button onClick={handleBack} className={s.backbutton}>
           {backLabel}
         </button>
       </div>
