@@ -21,7 +21,6 @@ export default function Navbar() {
   return (
     <header className={styles.wrap}>
       <div className={styles.inner}>
-        {/* Left side (brand) */}
         <div className={styles.left}>
           <NavLink to="/" className={styles.brand}>
             <img
@@ -32,8 +31,6 @@ export default function Navbar() {
             />
            </NavLink>
         </div>
-
-        {/* Burger (mobile only) */}
         <button
           className={styles.burger}
           onClick={() => setOpen((prev) => !prev)}
@@ -41,8 +38,6 @@ export default function Navbar() {
         >
           ☰
         </button>
-
-        {/* Desktop navigation */}
         <nav className={`${styles.nav} ${open ? styles.show : ''}`}>
           <div className={styles.navLeft}>
             <NavLink

@@ -100,22 +100,6 @@ export default function RabanimAdminList() {
           + New
         </Link>
       </div>
-
-      {/* <div className={styles.filters}>
-        <input
-          className={styles.input}
-          placeholder="Search…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <input
-          className={styles.input}
-          placeholder="Area…"
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-        />
-      </div> */}
-
       <div className={styles.cards}>
         {data.items.map((r) => (
           <div key={r.id} className={styles.card}>

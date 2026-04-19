@@ -36,19 +36,10 @@ import AdminRabanimForm from '../../pages/admin/AdminRabanim/Form.jsx';
 import AdminHechsheirim from '../../pages/admin/AdminHechsheirim/AdminHechsheirim.jsx';
 import AdminHechsheirimForm from '../../pages/admin/AdminHechsheirim/Form.jsx';
 import AdminUsers from '../../pages/admin/AdimUsers/AdminUsers.jsx';
-
-// NEW — admin feedback pages (create these if you don’t have them yet)
 import AdminFeedbackList from '../../pages/admin/AdminFeedback/List.jsx';
-//import AdminFeedbackDetail from '../../pages/admin/AdminFeedback/AdminFeedbackDetail.jsx';
-
-// NEW — scroll helper
-//import ScrollToAnchor from './components/ScrollToAnchor.jsx';
-
-// Wrap layouts so ScrollToAnchor runs at the router level
 function PublicRoot() {
   return (
     <>
-    {/* <ScrollToAnchor offset={-96} /> */}
       <PublicLayout />
     </>
   );
@@ -56,7 +47,6 @@ function PublicRoot() {
 function AdminRoot() {
   return (
     <>
-      {/* <ScrollToAnchor offset={-96} /> */}
       <ProtectedRoute role="admin">
         <AdminLayout />
       </ProtectedRoute>
@@ -64,7 +54,6 @@ function AdminRoot() {
   );
 }
 
-// NEW — /contact route that lands on Home and jumps to #contact, keeping the query string
 function ContactRoute() {
   const location = useLocation();
   return (

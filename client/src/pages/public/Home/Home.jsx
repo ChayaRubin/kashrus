@@ -205,8 +205,6 @@ export default function Home() {
           fullScreen
           overlayText={content?.slideshowText}
         />
-
-        {/* Search – client-side filter like Manage Restaurants */}
         <div className={s.searchBox} ref={boxRef}>
           <input
             type="search"
@@ -258,14 +256,10 @@ export default function Home() {
             </>
           )}
         </div>
-
-        {/* Categories */}
         <div className={s.heroCategories}>
           <HomeCategoryPage />
         </div>
       </div>
-
-      {/* Sections */}
       <div className={s.section} id="about">
         <AboutUs text={content?.aboutUsText} />
       </div>

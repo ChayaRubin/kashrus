@@ -374,12 +374,8 @@ export default function Login() {
           </button>
         </div>
         {errors.password && <p className={styles.error}>{errors.password}</p>}
-
         <button type="submit" className={styles.authButton}>Log In</button>
-        {/* <button type="button" onClick={handleAdminLogin} className={`${styles.authButton} ${styles.adminButton}`}>Admin Login</button> */}
-
         <div className={styles.divider}>or</div>
-
         <a href={`${API_BASE}/auth/google`} className={styles.socialButton}>
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -388,7 +384,6 @@ export default function Login() {
           />
           Continue with Google
         </a>
-
         <Link to="/signup" className={styles.authLink}>
           Don’t have an account? Sign up
         </Link>

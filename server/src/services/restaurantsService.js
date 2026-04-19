@@ -1,4 +1,3 @@
-// server/src/services/restaurantsService.js
 import prisma from '../lib/prisma.js';
 
 const VALID_LEVELS = ["FIRST", "SECOND", "THIRD"];
@@ -13,7 +12,6 @@ const VALID_TYPES = [
   "ICE_CREAM",
 ];
 
-// Helper: normalize images array -> string
 function serializeImages(images) {
   if (!images) return null;
   if (Array.isArray(images)) {
@@ -22,7 +20,6 @@ function serializeImages(images) {
   return String(images);
 }
 
-// Helper: parse stored string -> array
 function parseImages(images) {
   if (!images) return [];
   try {
@@ -42,7 +39,6 @@ export async function list({ where = {}, skip = 0, take = 100, orderBy = { id: "
   return rows.map((r) => ({ ...r, images: parseImages(r.images) }));
 }
 
-/** Return all restaurants (no limit) for admin list. */
 export async function listAll(orderBy = { name: "asc" }) {
   const rows = await prisma.restaurant.findMany({ orderBy });
   return rows.map((r) => ({ ...r, images: parseImages(r.images) }));

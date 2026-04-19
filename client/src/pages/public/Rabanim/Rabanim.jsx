@@ -23,7 +23,6 @@ export default function RabanimPage(){
           aria-label="Search rabbanim"
         />
       </div>
-
       <ul className={styles.grid}>
         {data.items.map(r => (
           <li key={r.id} className={styles.card}>
@@ -33,12 +32,6 @@ export default function RabanimPage(){
           </li>
         ))}
       </ul>
-
-      {/* <div className={styles.pager}>
-        <button className={styles.btn} disabled={page<=1} onClick={()=>setPage(p=>p-1)}>Prev</button>
-        <span className={styles.pageInfo}>{page}/{pages}</span>
-        <button className={styles.btn} disabled={page>=pages} onClick={()=>setPage(p=>p+1)}>Next</button>
-      </div> */}
     </div>
   );
 }

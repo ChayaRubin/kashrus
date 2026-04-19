@@ -56,48 +56,43 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* Default: desktop — always show vertical scrollbar */
 html {
   overflow-x: hidden;
   overflow-y: scroll;
 }
 
-/* ==== Custom Scrollbar for Desktop ==== */
 body::-webkit-scrollbar {
-  width: 10px;                /* width of vertical scrollbar */
+  width: 10px;                
 }
 
 body::-webkit-scrollbar-track {
-  background: #f1f1f1;        /* track background */
+  background: #f1f1f1;        
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #459BAC;  /* thumb color */
-  border-radius: 6px;         /* rounded edges */
-  border: 2px solid #f1f1f1;  /* space around thumb */
+  background-color: #459BAC;  
+  border-radius: 6px;         
+  border: 2px solid #f1f1f1;  
 }
 
-/* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
   scrollbar-color: #459BAC #f1f1f1;
 }
 
-/* Hide scrollbar on small screens (phones) */
 @media screen and (max-width: 768px) {
   html, body {
     overflow-x: hidden;
-    overflow-y: auto;         /* allow scroll but no forced bar */
-    scrollbar-width: none;    /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    overflow-y: auto;         
+    scrollbar-width: none;  
+    -ms-overflow-style: none; 
   }
 
   body::-webkit-scrollbar {
-    display: none;            /* Chrome, Safari */
+    display: none;           
   }
 }
 
-/* Light theme overrides */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

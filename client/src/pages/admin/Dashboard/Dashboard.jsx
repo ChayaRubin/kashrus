@@ -44,8 +44,41 @@ export default function Dashboard() {
 
   const displayName = resolvedName || 'Admin';
 
+  // return (
+  //   <div className={styles.wrap}>
+  //     <section className={styles.hero}>
+  //       <h1 className={styles.title}>Welcome back, {displayName}!</h1>
+  //       <p className={styles.subtitle}>
+  //         Use the shortcuts below to quickly jump into the most common admin tasks.
+  //       </p>
+  //     </section>
+
+  //     <section className={styles.grid}>
+  //       <Link to="/admin/restaurants" className={styles.card}>
+  //         <h2>Manage Restaurants</h2>
+  //         <p>Update details, add new listings, and keep information fresh.</p>
+  //       </Link>
+
+  //       <Link to="/admin/articles" className={styles.card}>
+  //         <h2>Manage Articles</h2>
+  //         <p>Write, edit, and publish new content for your users.</p>
+  //       </Link>
+
+  //       <Link to="/admin/feedback" className={styles.card}>
+  //         <h2>View Feedback</h2>
+  //         <p>See what users are saying and track issues in one place.</p>
+  //       </Link>
+
+  //       <Link to="/admin/home" className={styles.card}>
+  //         <h2>Home Page</h2>
+  //         <p>Fine‑tune the texts and hero section visitors see first.</p>
+  //       </Link>
+  //     </section>
+  //   </div>
+  // );
   return (
-    <div className={styles.wrap}>
+  <div className={styles.wrap}>
+    <div className={styles.container}>
       <section className={styles.hero}>
         <h1 className={styles.title}>Welcome back, {displayName}!</h1>
         <p className={styles.subtitle}>
@@ -71,9 +104,10 @@ export default function Dashboard() {
 
         <Link to="/admin/home" className={styles.card}>
           <h2>Home Page</h2>
-          <p>Fine‑tune the texts and hero section visitors see first.</p>
+          <p>Fine-tune the texts and hero section visitors see first.</p>
         </Link>
       </section>
     </div>
-  );
+  </div>
+);
 }

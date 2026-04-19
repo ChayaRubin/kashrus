@@ -114,7 +114,7 @@ export default function ContactPage() {
 
   const captureImage = async () => {
     console.log('Capture image clicked');
-    
+
     try {
       // Check if we're on HTTPS or localhost (required for camera access)
       const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
       console.log('Requesting camera access...');
       // Request camera access with simpler constraints
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: true
       });
       console.log('Camera access granted');
@@ -222,13 +222,13 @@ export default function ContactPage() {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         ctx.drawImage(video, 0, 0);
-        
+
         canvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], `camera-capture-${Date.now()}.jpg`, {
               type: 'image/jpeg'
             });
-            
+
             // Create a fake event object to use with handleImageChange
             const fakeEvent = {
               target: {
@@ -257,9 +257,9 @@ export default function ContactPage() {
 
     } catch (error) {
       console.error('Camera access error:', error);
-      
+
       let errorMessage = 'Camera access denied or not available. Using file picker instead.';
-      
+
       if (error.name === 'NotAllowedError') {
         errorMessage = 'Camera permission denied. Please allow camera access or use "Choose from PC" instead.';
       } else if (error.name === 'NotFoundError') {
@@ -267,9 +267,9 @@ export default function ContactPage() {
       } else if (error.name === 'NotSupportedError') {
         errorMessage = 'Camera not supported on this device. Using file picker instead.';
       }
-      
+
       setError(errorMessage);
-      
+
       // Fallback to file input
       setTimeout(() => {
         const input = document.createElement('input');
@@ -294,7 +294,7 @@ export default function ContactPage() {
 
     // Client-side validation
     let validationError = '';
-    
+
     if (mode === 'add_restaurant') {
       if (!formData.requesterName && !formData.name) {
         validationError = 'Missing required fields: Name is required';
@@ -329,7 +329,7 @@ export default function ContactPage() {
 
     try {
       const formDataToSend = new FormData();
-      
+
       // Add images to FormData
       images.forEach((imageObj, index) => {
         formDataToSend.append('images', imageObj.file);
@@ -367,22 +367,22 @@ export default function ContactPage() {
 
       console.log('Sending payload:', payload);
       console.log('Images to send:', images.length);
-      
+
       // Debug: Log all FormData entries
       console.log('FormData contents:');
       for (let [key, value] of formDataToSend.entries()) {
         console.log(`${key}:`, value);
       }
-      
+
       await api.post('/contact', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+
       const imageText = images.length > 0 ? ` with ${images.length} image${images.length > 1 ? 's' : ''}` : '';
-      setSuccess(mode === 'add_restaurant' 
-        ? `✅ Your restaurant request was sent successfully${imageText}.` 
+      setSuccess(mode === 'add_restaurant'
+        ? `✅ Your restaurant request was sent successfully${imageText}.`
         : `✅ Your question was sent successfully${imageText}.`);
       resetForm();
     } catch (err) {
@@ -398,14 +398,14 @@ export default function ContactPage() {
           headers: err.config?.headers
         }
       });
-      
+
       let errorMessage = '❌ There was a server connection error.';
-      
+
       if (err.response) {
         // Server responded with error status
         const status = err.response.status;
         const data = err.response.data;
-        
+
         if (status === 401) {
           errorMessage = '❌ You must be logged in to send a question or request. Please log in and try again.';
         } else if (status === 400) {
@@ -426,7 +426,7 @@ export default function ContactPage() {
         // Other error
         errorMessage = `❌ Error: ${err.message}`;
       }
-      
+
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -553,15 +553,11 @@ export default function ContactPage() {
                 </div>
               </>
             )}
-
-            {/* Login notice for guests */}
             {!isAuthenticated && hasTyped && (
               <p className={styles.loginNotice}>
                 You must be logged in to send a question or restaurant request. Please log in!
               </p>
             )}
-
-            {/* Image Upload Section */}
             <div className={styles.imageUploadSection}>
               <label className={styles.imageUploadLabel}>Add Images (Optional)</label>
               <div className={styles.imageUploadButtons}>
@@ -581,8 +577,8 @@ export default function ContactPage() {
                 </button>
               </div>
               <div style={{ fontSize: '0.8rem', color: '#666', textAlign: 'center', marginTop: '0.5rem' }}>
-                {window.location.protocol === 'https:' || window.location.hostname === 'localhost' 
-                  ? '✅ Camera access available' 
+                {window.location.protocol === 'https:' || window.location.hostname === 'localhost'
+                  ? '✅ Camera access available'
                   : '⚠️ Camera requires HTTPS connection'}
               </div>
               <input
@@ -593,8 +589,6 @@ export default function ContactPage() {
                 onChange={handleImageChange}
                 style={{ display: 'none' }}
               />
-              
-              {/* Image Previews */}
               {images.length > 0 && (
                 <div className={styles.imagePreviews}>
                   {images.map((imageObj) => (

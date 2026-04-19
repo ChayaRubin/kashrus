@@ -243,7 +243,7 @@ export default function TypePage() {
 
   const loadMore = () => {
     if (!hasMore) return;
-    
+
     const nextCount = Math.min(visibleCount + 10, allRestaurants.length);
     setVisibleCount(nextCount);
     setRestaurants(allRestaurants.slice(0, nextCount));
@@ -278,19 +278,19 @@ export default function TypePage() {
   const lowerQuery = query.trim().toLowerCase();
   const visibleRestaurants = lowerQuery
     ? restaurants.filter((r) =>
-        [
-          r.name,
-          r.address,
-          r.hechsher,
-          r.neighborhood,
-          r.city,
-          r.type,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase()
-          .includes(lowerQuery)
-      )
+      [
+        r.name,
+        r.address,
+        r.hechsher,
+        r.neighborhood,
+        r.city,
+        r.type,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(lowerQuery)
+    )
     : restaurants;
 
   return (
@@ -304,29 +304,27 @@ export default function TypePage() {
       <div className={s.categoryTitleContainer}>
         <h4 className={s.categoryTitle}>{category}</h4>
       </div>
-      
+
       <div className={s.hechsheirimButtonContainer}>
-        <button 
-          onClick={() => setShowHechsheirimPopup(true)} 
+        <button
+          onClick={() => setShowHechsheirimPopup(true)}
           className={s.hechsheirimButton}
         >
           Hechsheirim symbols...
         </button>
       </div>
-      
-      {/* Mobile Popup Overlay */}
       {showHechsheirimPopup && (
-        <div 
+        <div
           className={s.popupOverlay}
           onClick={() => setShowHechsheirimPopup(false)}
         >
-          <div 
+          <div
             className={s.hechsheirimPopup}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={s.popupHeader}>
               <h3 className={s.sidebarTitle}>Hechsheirim</h3>
-              <button 
+              <button
                 onClick={() => setShowHechsheirimPopup(false)}
                 className={s.closeButton}
               >
@@ -374,9 +372,8 @@ export default function TypePage() {
           </div>
         </div>
       )}
-      
+
       <div className={s.mainLayout}>
-        {/* Hechsheirim Sidebar */}
         <div className={s.hechsheirimSidebar}>
           <h3 className={s.sidebarTitle}>Hechsheirim</h3>
           <div className={s.hechsheirimList}>
@@ -418,219 +415,209 @@ export default function TypePage() {
             )}
           </div>
         </div>
-
-        {/* Main Content */}
         <div className={s.mainContent}>
           <div className={s.categoryTitleDesktop}>
             <h4 className={s.categoryTitle}>{category}</h4>
           </div>
-
-          {/* Filters Row - All three filters side by side on large screens */}
           <div className={s.filtersRow}>
-<div className={s.section}>
+            <div className={s.section}>
               <p className={s.filterHint}>Select one or more tiers</p>
-  <div className={s.levels}>
-    {LEVELS.map((l) => {
-      const checked =
-        l === "FIRST" ? true : selectedLevels.includes(l);
-      return (
-        <label
-          key={l}
-          className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}
-        >
-          {l} TIER
-          <input
-            type="checkbox"
-            checked={checked}
-            onChange={() => onToggleLevel(l)}
-          />
-        </label>
-      );
-    })}
-  </div>
-</div>
-      {/* TYPES */}
-      <div className={s.section}>
-              <p className={s.filterHint}>Select one or more types</p>
-        <div className={s.grid}>
-          {options.map((t) => {
-            const active = selectedTypes.includes(t);
-            return (
-              <button
-                key={t}
-                onClick={() => onToggleType(t)}
-                className={`${s.card} ${active ? s.cardActive : ""}`}
-              >
-                {t.replaceAll("_", " ")}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-      {/* CUSTOM NEIGHBORHOOD DROPDOWN */}
-      <div className={s.section}>
-              <p className={s.filterHint}>Filter restaurants by neighborhood</p>
-        <div className={s.dropdownWrap}>
-          <button
-            className={s.dropdownBtn}
-            onClick={() => setOpenDropdown(!openDropdown)}
-          >
-            {selectedNeighborhood || "All"}
-            <span className={s.arrow}>▼</span>
-          </button>
-          {openDropdown && (
-            <ul className={s.dropdownList}>
-              <li
-                onClick={() => {
-                  setSelectedNeighborhood("");
-                  setOpenDropdown(false);
-                }}
-              >
-                All
-              </li>
-              {NEIGHBORHOODS.map((n) => (
-                <li
-                  key={n}
-                  onClick={() => {
-                    setSelectedNeighborhood(n);
-                    setOpenDropdown(false);
-                  }}
-                >
-                  {n}
-                </li>
-              ))}
-            </ul>
-          )}
+              <div className={s.levels}>
+                {LEVELS.map((l) => {
+                  const checked =
+                    l === "FIRST" ? true : selectedLevels.includes(l);
+                  return (
+                    <label
+                      key={l}
+                      className={`${s.levelLabel} ${s[`levelLabel${l}`]}`}
+                    >
+                      {l} TIER
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => onToggleLevel(l)}
+                      />
+                    </label>
+                  );
+                })}
               </div>
-        </div>
-      </div>
+            </div>
+            <div className={s.section}>
+              <p className={s.filterHint}>Select one or more types</p>
+              <div className={s.grid}>
+                {options.map((t) => {
+                  const active = selectedTypes.includes(t);
+                  return (
+                    <button
+                      key={t}
+                      onClick={() => onToggleType(t)}
+                      className={`${s.card} ${active ? s.cardActive : ""}`}
+                    >
+                      {t.replaceAll("_", " ")}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className={s.section}>
+              <p className={s.filterHint}>Filter restaurants by neighborhood</p>
+              <div className={s.dropdownWrap}>
+                <button
+                  className={s.dropdownBtn}
+                  onClick={() => setOpenDropdown(!openDropdown)}
+                >
+                  {selectedNeighborhood || "All"}
+                  <span className={s.arrow}>▼</span>
+                </button>
+                {openDropdown && (
+                  <ul className={s.dropdownList}>
+                    <li
+                      onClick={() => {
+                        setSelectedNeighborhood("");
+                        setOpenDropdown(false);
+                      }}
+                    >
+                      All
+                    </li>
+                    {NEIGHBORHOODS.map((n) => (
+                      <li
+                        key={n}
+                        onClick={() => {
+                          setSelectedNeighborhood(n);
+                          setOpenDropdown(false);
+                        }}
+                      >
+                        {n}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
 
-      {/* RESULTS */}
-      <div className={s.section}>
-        <div className={s.searchRow}>
-          <input
-            className={s.searchInput}
-            type="text"
-            placeholder="Search by name, area, or hechsher..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </div>
-        {loading ? (
-          <p>Loading…</p>
-        ) : visibleRestaurants.length > 0 ? (
-          <>
-            <ul className={s.results}>
-              {visibleRestaurants.map((r) => {
-                const restaurantId = String(r.id);
-                return (
-                  <li key={r.id} id={`restaurant-${r.id}`} className={s.resultListItem}>
+          <div className={s.section}>
+            <div className={s.searchRow}>
+              <input
+                className={s.searchInput}
+                type="text"
+                placeholder="Search by name, area, or hechsher..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            {loading ? (
+              <p>Loading…</p>
+            ) : visibleRestaurants.length > 0 ? (
+              <>
+                <ul className={s.results}>
+                  {visibleRestaurants.map((r) => {
+                    const restaurantId = String(r.id);
+                    return (
+                      <li key={r.id} id={`restaurant-${r.id}`} className={s.resultListItem}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setLastClickedRestaurantId(restaurantId);
+                            try {
+                              sessionStorage.setItem(
+                                getUiStateKey(category),
+                                JSON.stringify({
+                                  visibleCount,
+                                  lastClickedRestaurantId: restaurantId,
+                                  scrollY: window.scrollY || 0,
+                                })
+                              );
+                            } catch {
+                              // Ignore storage errors
+                            }
+                            nav(`/restaurant/${restaurantId}`, {
+                              state: {
+                                from: searchParams.toString()
+                                  ? `${location.pathname}?${searchParams.toString()}`
+                                  : location.pathname,
+                              },
+                            });
+                          }}
+                          className={s.resultItem}
+                        >
+                          <div className={s.resultContent}>
+                            <div className={s.cardHeader}>
+                              <strong>{r.name}</strong>
+                              <span className={`${s.levelBadge} ${s[`level${r.level}`]}`}>
+                                {r.level}
+                              </span>
+                            </div>
+
+                            <div className={s.typeInfo}>
+                              <span className={s.typeLabel}>{r.type.replace(/_/g, " ")}</span>
+                            </div>
+
+                            <div className={s.meta}>
+                              <div className={s.metaItem}>
+                                <span className={s.metaLabel}>Hechsher:</span>
+                                <span className={s.metaText}>{r.hechsher || "N/A"}</span>
+                              </div>
+                              <div className={s.metaItem}>
+                                <span className={s.metaLabel}>Address:</span>
+                                <span className={s.metaText}>{r.address || "N/A"}</span>
+                              </div>
+                              <div className={s.metaItem}>
+                                <span className={s.metaLabel}>Area:</span>
+                                <span className={s.metaText}>{r.neighborhood || "N/A"}</span>
+                              </div>
+                              {r.city && (
+                                <div className={s.metaItem}>
+                                  <span className={s.metaLabel}>City:</span>
+                                  <span className={s.metaText}>{r.city}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                {restaurants.length > 0 && hasMore && (
+                  <div className={s.loadMoreWrap}>
                     <button
                       type="button"
-                      onClick={() => {
-                        setLastClickedRestaurantId(restaurantId);
-                        try {
-                          sessionStorage.setItem(
-                            getUiStateKey(category),
-                            JSON.stringify({
-                              visibleCount,
-                              lastClickedRestaurantId: restaurantId,
-                              scrollY: window.scrollY || 0,
-                            })
-                          );
-                        } catch {
-                          // Ignore storage errors
-                        }
-                        nav(`/restaurant/${restaurantId}`, {
-                          state: {
-                            from: searchParams.toString()
-                              ? `${location.pathname}?${searchParams.toString()}`
-                              : location.pathname,
-                          },
-                        });
+                      className={s.loadMoreBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        loadMore();
                       }}
-                      className={s.resultItem}
                     >
-                      <div className={s.resultContent}>
-                        <div className={s.cardHeader}>
-                          <strong>{r.name}</strong>
-                          <span className={`${s.levelBadge} ${s[`level${r.level}`]}`}>
-                            {r.level}
-                          </span>
-                        </div>
-
-                        <div className={s.typeInfo}>
-                          <span className={s.typeLabel}>{r.type.replace(/_/g, " ")}</span>
-                        </div>
-
-                        <div className={s.meta}>
-                          <div className={s.metaItem}>
-                            <span className={s.metaLabel}>Hechsher:</span>
-                            <span className={s.metaText}>{r.hechsher || "N/A"}</span>
-                          </div>
-                          <div className={s.metaItem}>
-                            <span className={s.metaLabel}>Address:</span>
-                            <span className={s.metaText}>{r.address || "N/A"}</span>
-                          </div>
-                          <div className={s.metaItem}>
-                            <span className={s.metaLabel}>Area:</span>
-                            <span className={s.metaText}>{r.neighborhood || "N/A"}</span>
-                          </div>
-                          {r.city && (
-                            <div className={s.metaItem}>
-                              <span className={s.metaLabel}>City:</span>
-                              <span className={s.metaText}>{r.city}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                      Load more
                     </button>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* Load more */}
-            {restaurants.length > 0 && hasMore && (
-              <div className={s.loadMoreWrap}>
-                <button
-                  type="button"
-                  className={s.loadMoreBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    loadMore();
-                  }}
-                >
-                  Load more
-                </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className={s.emptyState}>
+                <p className={s.emptyMessage}>No restaurants found.</p>
+                <p className={s.emptyHint}>
+                  Try adjusting your filters or selecting different options to see more results.
+                </p>
+                {(selectedTypes.length > 0 || selectedLevels.length > 0 || selectedNeighborhood) && (
+                  <button
+                    className={s.clearFiltersBtn}
+                    onClick={() => {
+                      setSelectedTypes([]);
+                      setSelectedLevels([]);
+                      setSelectedNeighborhood("");
+                    }}
+                  >
+                    Clear all filters
+                  </button>
+                )}
               </div>
             )}
-          </>
-        ) : (
-          <div className={s.emptyState}>
-            <p className={s.emptyMessage}>No restaurants found.</p>
-            <p className={s.emptyHint}>
-              Try adjusting your filters or selecting different options to see more results.
-            </p>
-            {(selectedTypes.length > 0 || selectedLevels.length > 0 || selectedNeighborhood) && (
-              <button
-                className={s.clearFiltersBtn}
-                onClick={() => {
-                  setSelectedTypes([]);
-                  setSelectedLevels([]);
-                  setSelectedNeighborhood("");
-                }}
-              >
-                Clear all filters
-              </button>
-            )}
           </div>
-        )}
-      </div>
         </div>
       </div>
-
-      {/* Back-to-top arrow */}
       <button
         className={s.scrollTopButton}
         type="button"

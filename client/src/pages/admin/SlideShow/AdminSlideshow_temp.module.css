@@ -1,5 +1,4 @@
 .container {
-  max-width: 900px;
   margin: 0 auto;
   padding: 24px 20px 40px;
   box-sizing: border-box;
@@ -9,7 +8,7 @@
 
 @media (max-width: 768px) {
   .container {
-    max-width: 520px;
+    width: 100%;
     padding: 28px 1.5rem 40px;
     margin-left: 1.5rem;
     margin-right: 1.5rem;
@@ -106,9 +105,8 @@
   margin: auto;
 }
 
-/* ✅ Delete button style override */
 .deleteButton {
-  all: unset; /* reset ALL global + browser styles */
+  all: unset; 
   display: inline-block;
   padding: 8px 16px;
   background: #e53e3e;
@@ -143,7 +141,7 @@
   height: 20%;
   border-radius: 6px;
   object-fit: cover;
-  flex-shrink: 0; /* don’t let it shrink */
+  flex-shrink: 0; 
   margin: auto;
 }
 
@@ -178,8 +176,6 @@
   transform: scale(1.05);
 }
 .container {
-  max-width: 900px;
-  margin: 0 auto;
   padding: 24px 20px 40px;
   font-family: system-ui, sans-serif;
   color: #111;
@@ -190,12 +186,9 @@
   box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .container {
-    max-width: 520px;
     padding: 28px 1.5rem 40px;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
   }
 }
 
@@ -250,7 +243,6 @@
   transform: translateY(-1px);
 }
 
-/* Cards grid – 4 per row, spaced evenly */
 .list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -299,7 +291,6 @@
   color: #222;
 }
 
-/* Buttons */
 .deleteButton {
   padding: 6px 12px;
   background: #459BAC;
@@ -330,7 +321,7 @@
     padding: 16px;
   }
   .list {
-    grid-template-columns: 1fr; /* stack on very small screens */
+    grid-template-columns: 1fr; 
   }
   .item img {
     width: 100%;
@@ -378,7 +369,6 @@
   transform: translateY(-1px);
 }
 
-/* Upload Mode Toggle */
 .modeToggle {
   display: flex;
   gap: 8px;
@@ -407,7 +397,6 @@
   color: #fff;
 }
 
-/* Error Message */
 .errorMessage {
   background: #fee;
   color: #c53030;
@@ -419,7 +408,6 @@
   font-size: 0.9rem;
 }
 
-/* Upload Area */
 .uploadArea {
   width: 100%;
   margin-bottom: 12px;
@@ -464,7 +452,6 @@
   color: #999;
 }
 
-/* File Preview */
 .filePreview {
   position: relative;
   display: inline-block;
@@ -504,3 +491,9 @@
   cursor: not-allowed;
 }
 
+@media screen and (width < 600px) {
+  .container{
+    width: 100%;
+    margin: 0 auto;
+  }
+}

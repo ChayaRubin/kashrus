@@ -18,7 +18,6 @@
   display: block;
 }
 
-/* Slideshow.module.css */
 .container {
   width: 100%;
   overflow: hidden;
@@ -48,7 +47,6 @@
 .imageVisible {
   opacity: 1;
 }
-/* Slideshow.module.css */
 .container {
   width: 100%;
   overflow: hidden;
@@ -72,14 +70,13 @@
   top: 0;
   left: 0;
   opacity: 0;
-  transition: opacity 1.2s ease-in-out; /* slower + smoother */
+  transition: opacity 1.2s ease-in-out; 
 }
 
 .imageVisible {
   opacity: 1;
 }
 
-/* ContactModal.module.css */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -259,39 +256,32 @@
   text-align: center;
 }
 
-/* --- Responsive Media Queries --- */
-
-/* Small phones */
 @media (max-width: 600px) {
   .container {
-    height: 200px;     /* smaller slideshow on phones */
+    height: 200px;     
     border-radius: 8px;
   }
 }
 
-/* Tablets */
 @media (min-width: 601px) and (max-width: 1024px) {
   .container {
-    height: 300px;     /* medium slideshow */
+    height: 300px;    
     border-radius: 12px;
   }
 }
 
-/* Laptops / small desktops */
 @media (min-width: 1025px) and (max-width: 1440px) {
   .container {
-    height: 400px;     /* bigger slideshow */
+    height: 400px;     
   }
 }
 
-/* Large desktops / wide screens */
 @media (min-width: 1441px) {
   .container {
-    height: 500px;     /* immersive slideshow */
+    height: 500px;     
   }
 }
 
-/* Ensure fullscreen variant never has rounded corners, even in responsive modes */
 .fullScreen {
   border-radius: 0 !important;
 }

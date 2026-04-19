@@ -44,12 +44,11 @@ h1 {
   margin: 0;
 }
 
-/* Cards grid */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
   gap: 16px;
-  justify-content: center; /* center the grid */
+  justify-content: center; 
 }
 
 .card {
@@ -99,7 +98,6 @@ h1 {
   gap: 8px;
 }
 
-/* Buttons */
 .btnPrimary {
   padding: 8px 16px;
   background: #459BAC;
@@ -157,8 +155,8 @@ h1 {
 
 .logo {
   width: 100%;
-  max-height: 180px;   /* bigger than 80px */
-  object-fit: cover;   /* crop nicely */
+  max-height: 180px;   
+  object-fit: cover;   
   border-radius: 8px;
   margin-bottom: 12px;
 }

@@ -1,7 +1,7 @@
 .wrap {
   max-width: 1400px;
-  margin: -40px auto 0; /* pull page up to reduce empty space under navbar */
-  padding: 12px 20px 12px 20px; /* smaller vertical padding to raise content */
+  margin: -40px auto 0; 
+  padding: 12px 20px 12px 20px; 
   font-family: system-ui, sans-serif;
   color: #111;
 }
@@ -61,7 +61,7 @@
   color: #459BAC;
   margin: 0 0 8px 0;
   letter-spacing: 0.5px;
-  text-align: left; /* align FIRST/SECOND/THIRD labels to the left */
+  text-align: left; 
 }
 
 .hechsherItem {
@@ -104,8 +104,6 @@ h4{
 }
 
 .section .levelNote {
-  /* margin-top: 5%; */
-  /* margin-bottom: 5%; */
   width: 100%;
 }
 
@@ -124,16 +122,14 @@ h4{
   font-style: italic;
 }
 
-/* Grid for type selection */
 .grid {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  justify-content: center; /* center them */
+  justify-content: center; 
 }
 
 
-/* Type option cards */
 .card {
   background: #fff;
   border: 1px solid #e5e7eb;
@@ -158,14 +154,13 @@ h4{
   box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
 }
 
-/* Levels */
 .levels {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
 }
 .levels{
-  justify-content: center; /* center them */
+  justify-content: center; 
 }
 .levelLabel {
   display: inline-flex;
@@ -176,10 +171,9 @@ h4{
 }
 
 .levelNote {
-  /* margin-top: 10px; */
   padding: 12px 16px;
   border: 1px solid #459BAC;
-  background: #e6f4f7; /* light shade of your brand color */
+  background: #e6f4f7; 
   color: #2f6e7d;
   font-size: 0.95rem;
   border-radius: 8px;
@@ -190,7 +184,6 @@ h4{
   color: #459BAC;
 }
 
-/* Restaurant results */
 .results {
   display: grid;
   gap: 12px;
@@ -347,7 +340,6 @@ h4{
   flex: 1;
 }
 
-/* Load more button styles */
 .loadMoreWrap {
   display: flex;
   justify-content: center;
@@ -378,7 +370,6 @@ h4{
   cursor: not-allowed;
 }
 
-/* Empty state styles */
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -482,7 +473,6 @@ h4{
   }
 }
 
-/* Mobile Popup Styles */
 .popupOverlay {
   display: flex;
   position: fixed;
@@ -619,13 +609,13 @@ h4{
 
 .scrollTopButton {
   position: fixed;
-  right: 90px;        /* move further left from the scrollbar */
+  right: 90px;        
   bottom: 28px;
   width: 44px;
   height: 32px;
-  border-radius: 10px;  /* less rounded */
-  border: 1px solid transparent; /* no visible border */
-  outline: none;                  /* remove default focus border */
+  border-radius: 10px; 
+  border: 1px solid transparent; 
+  outline: none;                  
   background: #459BAC;
   color: #fff;
   font-size: 1.1rem;
@@ -690,11 +680,6 @@ h4{
   .categoryTitle {
     font-size: 3rem;
   }
-  
-  /* .categoryTitleDesktop {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-  } */
 }
 
 .backbutton:hover {
@@ -710,8 +695,6 @@ h4{
 }
 
 .dropdown {
-  /* width: 100%; */
-  /* max-width: 320px; */
   padding: 10px 14px;
   font-size: 1rem;
   border: 1px solid #459BAC;
@@ -721,7 +704,7 @@ h4{
   outline: none;
   transition: all 0.2s ease;
   cursor: pointer;
-  appearance: none; /* removes default arrow in most browsers */
+  appearance: none; 
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23459BAC' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
   background-position: right 12px center;
@@ -761,7 +744,6 @@ h4{
   background: #e6f4f7;
 }
 
-/* ///////////// */
 .dropdownWrap {
   position: relative;
   min-width: 260px;
@@ -770,7 +752,7 @@ h4{
 
 .dropdownBtn {
   width: 100%;
-  padding: 8px 14px;          /* normal horizontal padding so it doesn’t look huge */
+  padding: 8px 14px;         
   font-size: 0.9rem;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -829,8 +811,6 @@ h4{
   margin-top: 4px;
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-
-  /* remove list bullets + spacing */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -840,14 +820,14 @@ h4{
   padding: 8px 12px;
   cursor: pointer;
   font-size: 0.9rem;
-  user-select: none;   /* prevent blue text selection */
+  user-select: none;  
 }
 
 .dropdownList li:hover {
   background: #459BAC;
   color: #fff;
 }
-/* TypePage.module.css */
+
 .levels {
   display: flex;
   justify-content: space-evenly;
@@ -858,15 +838,10 @@ h4{
 .levelLabel {
   display: flex;
   align-items: center;
-  gap: 6px; /* space between checkbox and text */
+  gap: 6px; 
   font-size: 0.95rem;
 }
-/* .levelsRow {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 1rem;
-} */
+
 
 .levelsTitle {
   margin: 0;
@@ -877,8 +852,8 @@ h4{
 
 .levels {
   display: flex;
-  gap: 20px;         /* even spacing between checkboxes */
-  justify-content: flex-start; /* keep them grouped instead of spread apart */
+  gap: 20px;        
+  justify-content: flex-start; 
 }
 .levelLabel {
   display: flex;
@@ -916,17 +891,13 @@ h4{
   box-shadow: 0 0 0 2px rgba(69,155,172,0.18);
 }
 
-/* Wrapper for filters row on large screens */
 .filtersRow {
   display: flex;
   flex-direction: column;
-  gap: 16px;           /* space between each filter block */
+  gap: 16px;         
   margin-bottom: 24px;
 }
 
-/* keep stacked layout even on large screens so filters appear in separate rows */
-
-/* ✨ Level note (tip box) */
 .levelNote {
   background: linear-gradient(135deg, #e6f4f7, #d9f0f5);
   color: #256b78;
@@ -950,7 +921,6 @@ h4{
   box-shadow: 0 4px 14px rgba(69, 155, 172, 0.18);
 }
 
-/* 🧩 Levels */
 .levels {
   display: flex;
   flex-wrap: wrap;
@@ -978,7 +948,6 @@ h4{
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Tier-specific colors matching badges */
 .levelLabelFIRST {
   background: linear-gradient(135deg, #10b981, #059669);
   color: #fff;
@@ -1028,8 +997,6 @@ h4{
 }
 
 
-
-/* 📱 Responsive */
 @media (max-width: 600px) {
   .levelNote {
     font-size: 0.9rem;

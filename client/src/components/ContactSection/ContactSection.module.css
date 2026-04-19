@@ -1,5 +1,5 @@
 .wrapper {
-  background-color: #459BAC; /* main accent */
+  background-color: #459BAC; 
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -129,17 +129,14 @@
   text-align: center;
 }
 
-/* Info box */
 .infoBox {
   flex: 1 1 300px;
   background-color: #fff;
   border: 2px solid #459BAC;
-  /* border-radius: 16px; */
   padding: 1.5rem;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   color: #444;
   line-height: 1.8;
-  /* height: 475px; */
   height: 200%;
   margin: auto;
   display: flex;
@@ -155,7 +152,6 @@
   margin-bottom: 1rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .cardContainer {
     flex-direction: column;
@@ -168,14 +164,14 @@ body {
 }
 
 .wrapper {
-  background-color: #459BAC; /* main accent */
+  background-color: #459BAC; 
   padding: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;   /* ✅ center vertically */
+  align-items: center;   
   direction: ltr;
   width: 100%;
-  min-height: 100vh;     /* ✅ full screen height */
+  min-height: 100vh;     
 
 }
 
@@ -184,8 +180,8 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: center;   /* ✅ center children horizontally */
-  align-items: center;       /* ✅ center vertically inside wrapper */
+  justify-content: center;   
+  align-items: center;       
   width: 100%;
   max-width: 1100px;
   margin: auto;
@@ -199,7 +195,7 @@ body {
   width: 100%;
   max-width: 800px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-  margin: auto;             /* ✅ center card horizontally */
+  margin: auto;            
 
 }
 
@@ -212,15 +208,13 @@ body {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Focus effect */
 .input:focus,
 .textarea:focus {
-  border-color: #459BAC;        /* main accent color */
-  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.25); /* soft glow */
-  outline: none;                /* remove default browser outline */
+  border-color: #459BAC;        
+  box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.25); 
+  outline: none;                
 }
 
-/* Hechsher select – turquoise highlight in dropdown */
 .selectHechsher {
   accent-color: #459BAC;
   border-color: #459BAC;
@@ -231,7 +225,7 @@ body {
 }
 
 .wrapper {
-  background-color: #459BAC; /* main accent */
+  background-color: #459BAC; 
   display: flex;
   justify-content: center;   
   align-items: center;       
@@ -275,7 +269,6 @@ body {
   background-color: #367e89;
 }
 
-/* Image Upload Styles */
 .imageUploadSection {
   margin: 1.5rem 0;
   padding: 1rem;
@@ -361,7 +354,6 @@ body {
   background-color: rgba(255, 0, 0, 1);
 }
 
-/* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .imageUploadButtons {
     flex-direction: column;

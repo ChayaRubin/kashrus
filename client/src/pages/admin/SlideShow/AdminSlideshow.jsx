@@ -157,8 +157,6 @@ export default function AdminSlideshow() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Manage Slideshow</h1>
-
-      {/* Upload Mode Toggle */}
       <div className={styles.modeToggle}>
         <button
           className={`${styles.modeButton} ${uploadMode === "url" ? styles.active : ""}`}
@@ -173,11 +171,7 @@ export default function AdminSlideshow() {
            Upload Image
         </button>
       </div>
-
-      {/* Error Message */}
       {error && <div className={styles.errorMessage}>{error}</div>}
-
-      {/* Add Slide Form */}
       <div className={styles.form}>
         {uploadMode === "url" ? (
           <>

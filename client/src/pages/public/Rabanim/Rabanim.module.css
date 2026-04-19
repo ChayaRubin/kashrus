@@ -1,16 +1,4 @@
-/* .container { max-width: 1000px; margin: 0 auto; padding: 16px; }
-.title { margin: 0 0 12px; }
-.filters { display: flex; gap: 8px; margin-bottom: 12px; }
-.input { flex: 1; padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px; }
-.grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-.card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.04); display:flex; flex-direction:column; gap:8px; }
-.cardHeader { font-weight: 600; }
-.badge { display:inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background:#f3f4f6; color:#111827; }
-.text { color: #444; margin: 0; }
-.pager { display:flex; align-items:center; gap: 8px; justify-content:center; margin-top: 12px; }
-.btn { padding: 6px 10px; border: 1px solid #ddd; background: #fafafa; border-radius: 8px; cursor: pointer; }
-.btn:disabled { opacity: .5; cursor: not-allowed; }
-.pageInfo { font-size: 14px; } */
+
 .container {
   max-width: 1000px;
   margin: 0 auto;
@@ -25,7 +13,6 @@
   color: #459BAC;
 }
 
-/* Search bar – always visible, centered */
 .searchBarWrap {
   margin-bottom: 20px;
   width: 100%;
@@ -57,7 +44,6 @@
   outline: none;
 }
 
-/* Smartphone: compact centered search */
 @media screen and (max-width: 600px) {
   .searchBarWrap {
     margin-bottom: 16px;
@@ -70,7 +56,6 @@
   }
 }
 
-/* Very narrow (e.g. 350px) */
 @media screen and (max-width: 380px) {
   .container {
     padding: 12px 16px;
@@ -100,7 +85,6 @@
   }
 }
 
-/* Grid of rabbanim */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -142,15 +126,12 @@
   font-weight: 500;
 }
 
-
-
 .text {
   font-size: 0.9rem;
   line-height: 1.4;
   color: #444;
 }
 
-/* Pager */
 .pager {
   display: flex;
   align-items: center;

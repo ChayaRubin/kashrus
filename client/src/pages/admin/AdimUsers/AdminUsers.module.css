@@ -1,9 +1,5 @@
-/* ----- Page – regular on desktop, narrow + margins only when responsive ----- */
 .container {
   min-height: 100vh;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
   padding: 32px 24px 48px;
   box-sizing: border-box;
   background: #fff;
@@ -13,10 +9,8 @@
 
 @media (max-width: 768px) {
   .container {
-    max-width: 520px;
+    width: min(90%, 520px);
     padding: 28px 1.5rem 48px;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
   }
 }
 
@@ -39,10 +33,9 @@
   color: #64748b;
 }
 
-/* ----- Cards – full width of narrow container ----- */
 .formCard,
 .tableCard {
-  width: 100%;
+  width: 90%;
   margin: 0 0 24px;
   background: #fff;
   border-radius: 12px;
@@ -52,13 +45,13 @@
 
 .formCard {
   overflow: visible;
-  margin-bottom: 16px; /* slightly closer to Users card so borders feel natural */
+  margin-bottom: 16px; 
   padding: 24px 28px 28px;
 }
 
 .tableCard {
-  overflow: hidden; /* let rounded corners clip the table */
-  padding: 20px 28px 24px; /* back to original width */
+  overflow: hidden; 
+  padding: 20px 28px 24px; 
 }
 
 .cardTitle {
@@ -70,13 +63,11 @@
   text-align: center;
 }
 
-/* "Users" title spacing within table card */
 .tableCard .cardTitle {
   padding: 0;
   margin-bottom: 16px;
 }
 
-/* ----- Form – stacked, narrow inputs ----- */
 .formSection {
   display: flex;
   flex-direction: column;
@@ -128,7 +119,7 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: #459BAC; /* match global teal focus */
+  border-color: #459BAC; 
   box-shadow: 0 0 0 3px rgba(69, 155, 172, 0.2);
 }
 
@@ -161,7 +152,6 @@
   background: #367f86;
 }
 
-/* ----- Messages ----- */
 .error {
   width: 100%;
   margin: 0 0 20px;
@@ -202,7 +192,6 @@
   font-size: 0.9rem;
 }
 
-/* ----- Table ----- */
 .tableWrap {
   overflow-x: auto;
 }
@@ -240,11 +229,10 @@
 
 .thActions {
   width: 120px;
-  text-align: right !important; /* ensure "Actions" text sits at end of header cell */
+  text-align: right !important; 
   padding-right: 20px;
 }
 
-/* tighten padding on last column so header and icons sit at the very end */
 .userTable th:last-child,
 .userTable td:last-child {
   padding-right: 20px;
@@ -324,7 +312,6 @@
   color: #475569;
 }
 
-/* ----- Row actions ----- */
 .actions {
   display: flex;
   gap: 8px;
@@ -399,7 +386,6 @@
   background: #e2e8f0;
 }
 
-/* ----- Responsive ----- */
 @media (max-width: 640px) {
   .container {
     padding: 24px 1.25rem 36px;
@@ -428,13 +414,12 @@
   .userTable tbody tr {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px 16px;
+    gap: 15px 16px;
     padding: 16px 18px;
     margin: 0 16px 12px;
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    align-items: center;
   }
 
   .userTable tbody tr:hover td {
@@ -472,13 +457,10 @@
   }
 }
 
-/* ~370px / phone: comfortable padding, no overflow */
 @media (max-width: 400px) {
   .container {
-    max-width: 100%;
+    width: 80%;
     padding: 20px 1rem 32px;
-    margin-left: 0.75rem;
-    margin-right: 0.75rem;
     overflow-x: hidden;
     box-sizing: border-box;
   }
@@ -512,7 +494,6 @@
   }
 
   .formSection {
-    max-width: 100%;
     gap: 12px;
     box-sizing: border-box;
   }

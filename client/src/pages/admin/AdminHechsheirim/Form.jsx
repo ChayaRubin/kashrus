@@ -79,15 +79,15 @@ export default function HechsheirimForm() {
     try {
       const uploadedUrl = await uploadImage(selectedFile);
       set('symbolUrl', uploadedUrl);
-      
+
       // Clear selected file and preview
       revokeImagePreview(filePreview);
       setSelectedFile(null);
       setFilePreview(null);
-      
+
       // Switch back to URL mode
       setUploadMode('url');
-      
+
     } catch (error) {
       console.error('Upload error:', error);
       setError(error.message || 'Upload failed');
@@ -121,8 +121,6 @@ export default function HechsheirimForm() {
       <label className={styles.label}>
         Logo
       </label>
-      
-      {/* Mode Toggle */}
       <div className={styles.modeToggle}>
         <button
           type="button"
@@ -139,18 +137,14 @@ export default function HechsheirimForm() {
           Upload File
         </button>
       </div>
-
-      {/* URL Input Mode */}
       {uploadMode === 'url' && (
-        <input 
-          className={styles.input} 
-          value={f.symbolUrl || ""} 
-          onChange={e => set("symbolUrl", e.target.value)} 
+        <input
+          className={styles.input}
+          value={f.symbolUrl || ""}
+          onChange={e => set("symbolUrl", e.target.value)}
           placeholder="Enter logo URL"
         />
       )}
-
-      {/* File Upload Mode */}
       {uploadMode === 'upload' && (
         <div className={styles.uploadArea}>
           <div
@@ -166,8 +160,6 @@ export default function HechsheirimForm() {
               className={styles.fileInput}
             />
           </div>
-
-          {/* File Preview */}
           {filePreview && (
             <div className={styles.filePreview}>
               <img src={filePreview} alt="Preview" />
@@ -180,8 +172,6 @@ export default function HechsheirimForm() {
               </button>
             </div>
           )}
-
-          {/* Upload Button */}
           {selectedFile && (
             <button
               type="button"
@@ -192,13 +182,9 @@ export default function HechsheirimForm() {
               {uploading ? 'Uploading...' : 'Upload Logo'}
             </button>
           )}
-
-          {/* Error Message */}
           {error && <p className={styles.error}>{error}</p>}
         </div>
       )}
-
-      {/* Logo Preview */}
       {f.symbolUrl && (
         <div className={styles.logoPreview}>
           <img src={resolveImageUrl(f.symbolUrl)} alt="Current logo" />

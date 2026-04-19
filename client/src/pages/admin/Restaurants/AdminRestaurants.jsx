@@ -74,7 +74,6 @@ export default function AdminRestaurants() {
         <div className={styles.cards}>
           {filtered.map((r) => (
             <div key={r.id} className={styles.card}>
-              {/* optional: show logo/thumbnail if r.images */}
               {r.images?.length > 0 && (
                 <img
                   src={resolveImageUrl(Array.isArray(r.images) ? r.images[0] : r.images)}
